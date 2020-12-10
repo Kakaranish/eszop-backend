@@ -1,0 +1,14 @@
+version: '3.4'
+
+services:
+  products.api:
+    image: ${DOCKER_REGISTRY-}productsapi
+    build:
+      context: .
+      dockerfile: Products.API/Dockerfile
+    networks:
+        - eszop-network
+
+networks:
+  eszop-network:
+    external: true

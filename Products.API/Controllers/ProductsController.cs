@@ -19,9 +19,9 @@ namespace Products.API.Controllers
         }
 
         [HttpGet("")]
-        public IEnumerable<Product> GetAllProducts()
+        public IActionResult GetAllProducts()
         {
-            return _productRepository.GetAll();
+            return Ok(_productRepository.GetAll());
         }
 
         [HttpPost("")]

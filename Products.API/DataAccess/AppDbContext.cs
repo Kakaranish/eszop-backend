@@ -15,6 +15,10 @@ namespace Products.API.DataAccess
         {
             modelBuilder.Entity<Product>()
                 .HasKey(x => x.Id);
+
+            modelBuilder.Entity<Product>()
+                .Property(x => x.Price)
+                .HasColumnType("decimal(18,4)");
         }
     }
 }
