@@ -6,8 +6,6 @@ services:
     build:
       context: .
       dockerfile: Products.API/Dockerfile
-    networks:
-        - eszop-network
 
 networks:
   eszop-network:

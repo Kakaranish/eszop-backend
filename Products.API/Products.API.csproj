@@ -5,8 +5,7 @@
     <UserSecretsId>b5be61e3-ffa2-4891-abdd-3553a2e56686</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
-
-    <DockerfileRunArguments>--network eszop-network -p 32791:80</DockerfileRunArguments>
+    <DockerfileRunArguments>--network eszop-network -p 5000:80 -p 5001:443</DockerfileRunArguments>
   </PropertyGroup>
 
   <ItemGroup>
@@ -22,6 +21,15 @@
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.9" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="appsettings.DevelopmentLocal.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="appsettings.Development.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>

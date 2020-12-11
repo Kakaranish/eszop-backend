@@ -1,0 +1,15 @@
+# @productsUrl = http://localhost:5000
+@productsUrl = https://localhost:5001
+
+###
+
+GET {{productsUrl}}/api/products HTTP/1.1
+
+### 
+POST {{productsUrl}}/api/products HTTP/1.1
+Content-Type:  application/json
+
+{
+    "Name": "Some product",
+    "Price": 10.00
+}

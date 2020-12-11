@@ -1,9 +1,5 @@
-using System;
-using System.Linq;
-using System.Net;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -26,16 +22,7 @@ namespace Products.API
         {
             services.AddControllers();
 
-            // For test purposes
-            //services.AddDbContext<AppDbContext>(builder => 
-            //    builder.UseInMemoryDatabase("eSzop"));
-
             var connectionString = Configuration.GetConnectionString("SqlServer");
-            var connectionStringBuilder = new SqlConnectionStringBuilder(connectionString);
-            var hostnameToResolve = connectionStringBuilder.DataSource.Split(",").First();
-            var hostIp = Dns.GetHostEntry(hostnameToResolve).AddressList.First();
-            connectionString = connectionString.Replace(hostnameToResolve, hostIp.ToString());
-
             services.AddDbContext<AppDbContext>(builder =>
                 builder.UseSqlServer(connectionString));
 
