@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Products.API.DataAccess;
 using Products.API.DataAccess.Repositories;
+using System.Linq;
 
 namespace Products.API
 {
@@ -20,6 +20,16 @@ namespace Products.API
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(corsOptions =>
+            {
+                corsOptions.AddPolicy("LocalhostCorsPolicy", builder =>
+                {
+                    builder.AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader();
+                });
+            });
+
             services.AddControllers();
 
             var connectionString = Configuration.GetConnectionString("SqlServer");
@@ -31,9 +41,16 @@ namespace Products.API
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
+            var developmentEnvironments = new[]
+            {
+                "Development",
+                "DevelopmentLocal"
+            };
+
+            if (developmentEnvironments.Contains(env.EnvironmentName))
             {
                 app.UseDeveloperExceptionPage();
+                app.UseCors("LocalhostCorsPolicy");
             }
 
             app.UseHttpsRedirection();
