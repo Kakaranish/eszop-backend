@@ -1,0 +1,41 @@
+@url = https://localhost:6001
+
+### HEALTHCHECK ################################################################
+
+POST {{url}}/healthcheck HTTP/1.1
+Content-Type: application/json
+
+### AUTH COMMANDS ##############################################################
+
+
+### Invalid sign up 
+POST {{url}}/api/auth/sign-up HTTP/1.1
+Content-Type: application/json
+
+{
+    "email": "user@",
+    "password": "test",
+    "firstName": ""
+}
+
+### Valid sign up
+
+POST {{url}}/api/auth/sign-up HTTP/1.1
+Content-Type: application/json
+
+{
+    "email": "user@mail.com",
+    "password": "Test123",
+    "firstName": "SomeFirstName",
+    "lastName": "SomeLastName"
+}
+
+### Valid sign in
+
+POST {{url}}/api/auth/sign-in HTTP/1.1
+Content-Type: application/json
+
+{
+    "email": "user@mail.com",
+    "password": "Test123"
+}
