@@ -1,4 +1,4 @@
-﻿namespace Products.API.Domain
+﻿namespace Common.Types
 {
     public interface IAggregateRoot
     {

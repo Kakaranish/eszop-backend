@@ -1,4 +1,4 @@
-﻿namespace Products.API.Controllers
+﻿namespace Products.API.Dto
 {
     public class ProductDto
     {

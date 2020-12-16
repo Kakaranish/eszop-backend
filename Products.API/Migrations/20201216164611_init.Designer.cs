@@ -10,8 +10,8 @@ using Products.API.DataAccess;
 namespace Products.API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20201209193604_Init")]
-    partial class Init
+    [Migration("20201216164611_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
