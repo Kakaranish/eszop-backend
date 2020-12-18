@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Products.API.DataAccess.Repositories;
 using Products.API.Domain;
+using Products.API.Dto;
+using System;
+using System.Threading.Tasks;
 
 namespace Products.API.Controllers
 {
