@@ -9,9 +9,9 @@ namespace Identity.API.Domain
     {
         public string Name { get; }
 
-        public static readonly Role User = new Role(nameof(User));
-        public static readonly Role Admin = new Role(nameof(Admin));
-        public static readonly Role Owner = new Role(nameof(Owner));
+        public static readonly Role User = new(nameof(User));
+        public static readonly Role Admin = new(nameof(Admin));
+        public static readonly Role Owner = new(nameof(Owner));
 
         private static IDictionary<string, Role> _rolesCache;
 

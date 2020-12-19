@@ -1,6 +1,6 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
-using Common.Types;
+﻿using Common.Types;
+using FluentValidation;
+using System;
 
 namespace Identity.API.Domain
 {
@@ -9,8 +9,6 @@ namespace Identity.API.Domain
         public string Email { get; private set; }
         public HashedPassword HashedPassword { get; private set; }
         public Role Role { get; private set; }
-        public string FirstName { get; private set; }
-        public string LastName { get; private set; }
         public DateTime CreatedAt { get; private set; }
         public DateTime UpdatedAt { get; private set; }
 
@@ -18,7 +16,7 @@ namespace Identity.API.Domain
         {
         }
 
-        public User(string email, HashedPassword hashedPassword, Role role, string firstName, string lastName)
+        public User(string email, HashedPassword hashedPassword, Role role)
         {
             ValidateEmail(email);
             Email = email;
@@ -26,12 +24,6 @@ namespace Identity.API.Domain
             HashedPassword = hashedPassword ?? throw new DomainException($"'{nameof(hashedPassword)}' cannot be null");
 
             Role = role ?? throw new DomainException($"'{nameof(hashedPassword)}' cannot be null");
-
-            ValidateFirstName(firstName);
-            FirstName = firstName;
-
-            ValidateLastName(lastName);
-            LastName = lastName;
 
             CreatedAt = DateTime.UtcNow;
             UpdatedAt = DateTime.UtcNow;
@@ -42,28 +34,15 @@ namespace Identity.API.Domain
             HashedPassword = newPassword ?? throw new ArgumentNullException(nameof(newPassword));
         }
 
-        private void ValidateFirstName(string firstName)
+        private static void ValidateEmail(string email)
         {
-            if (string.IsNullOrWhiteSpace(firstName) || firstName.Trim().Length < 3)
-            {
-                throw new DomainException($"'{nameof(firstName)}' must have at least 3 characters");
-            }
-        }
+            var validator = new InlineValidator<string>();
+            validator.RuleFor(x => x)
+                .NotNull()
+                .EmailAddress();
 
-        private void ValidateLastName(string lastName)
-        {
-            if (string.IsNullOrWhiteSpace(lastName) || lastName.Trim().Length < 3)
-            {
-                throw new DomainException($"'{nameof(lastName)}' must have at least 3 characters");
-            }
-        }
-
-        private void ValidateEmail(string email)
-        {
-            if (string.IsNullOrWhiteSpace(email) || !new EmailAddressAttribute().IsValid(email))
-            {
-                throw new DomainException("Invalid email");
-            }
+            var result = validator.Validate(email);
+            if (!result.IsValid) throw new DomainException($"'{nameof(email)}' is invalid email");
         }
     }
 }

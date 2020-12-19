@@ -61,7 +61,7 @@ namespace Identity.API.Controllers
             }
 
             var password = _passwordHasher.Hash(signUpDto.Password);
-            var user = new User(signUpDto.Email, password, Role.User, signUpDto.FirstName, signUpDto.LastName);
+            var user = new User(signUpDto.Email, password, Role.User);
             await _userRepository.AddUserAsync(user);
 
             var userClaims = user.ExtractUserClaims();
