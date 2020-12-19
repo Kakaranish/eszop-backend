@@ -26,8 +26,6 @@ namespace Identity.API
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.Configure<JwtConfig>(Configuration.GetSection("JwtConfig"));
-            
             services.AddHttpContextAccessor();
 
             services.AddCors(corsOptions =>
@@ -40,6 +38,7 @@ namespace Identity.API
                 });
             });
 
+            services.Configure<JwtConfig>(Configuration.GetSection("JwtConfig"));
             services.AddJwtAuthentication();
 
             var sqlServerConnectionString = Configuration.GetConnectionString("SqlServer");
@@ -88,6 +87,9 @@ namespace Identity.API
             }));
 
             app.UseRouting();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
