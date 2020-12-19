@@ -10,5 +10,6 @@ namespace Identity.API.DataAccess.Repositories
         Task<User> FindByIdAsync(Guid id);
         Task<User> FindByEmailAsync(string email);
         Task AddUserAsync(User user);
+        Task UpdateAsync(User user);
     }
 }

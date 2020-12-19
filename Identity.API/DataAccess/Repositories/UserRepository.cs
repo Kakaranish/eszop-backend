@@ -29,5 +29,11 @@ namespace Identity.API.DataAccess.Repositories
             await _appDbContext.Users.AddAsync(user);
             await _appDbContext.SaveChangesAsync();
         }
+
+        public async Task UpdateAsync(User user)
+        {
+            _appDbContext.Update(user);
+            await _appDbContext.SaveChangesAsync();
+        }
     }
 }

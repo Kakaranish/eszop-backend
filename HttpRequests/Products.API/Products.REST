@@ -9,6 +9,6 @@ POST {{productsUrl}}/api/products HTTP/1.1
 Content-Type:  application/json
 
 {
-    "Name": "Some product4",
+    "Name": "Some product",
     "Price": 10.00
 }

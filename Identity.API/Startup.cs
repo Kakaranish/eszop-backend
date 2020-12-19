@@ -1,7 +1,5 @@
 using Common.Authentication;
 using Common.Types;
-using Common.Types.ErrorHandling.CustomFluentValidation;
-using FluentValidation.AspNetCore;
 using Identity.API.DataAccess;
 using Identity.API.Extensions;
 using Identity.API.HealthCheck;
@@ -28,19 +26,8 @@ namespace Identity.API
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers(options =>
-                {
-                    options.Filters.Add<CustomFluentValidationFailureActionFilter>();
-                })
-                .ConfigureApiBehaviorOptions(options =>
-                {
-                    options.SuppressModelStateInvalidFilter = true;
-                })
-                .AddFluentValidation(configuration =>
-                {
-                    configuration.RegisterValidatorsFromAssemblyContaining<Startup>();
-                });
-
+            services.Configure<JwtConfig>(Configuration.GetSection("JwtConfig"));
+            
             services.AddHttpContextAccessor();
 
             services.AddCors(corsOptions =>
@@ -53,18 +40,28 @@ namespace Identity.API
                 });
             });
 
-            services.Configure<JwtConfig>(Configuration.GetSection("JwtConfig"));
             services.AddJwtAuthentication();
 
-            var connectionString = Configuration.GetConnectionString("SqlServer");
-            services.AddDbContext<AppDbContext>(builder => builder.UseSqlServer(connectionString));
+            var sqlServerConnectionString = Configuration.GetConnectionString("SqlServer");
+            services.AddDbContext<AppDbContext>(builder => builder.UseSqlServer(sqlServerConnectionString));
+
+            var redisConnectionString = Configuration.GetConnectionString("Redis");
+            services.AddDistributedRedisCache(options =>
+            {
+                options.Configuration = redisConnectionString;
+            });
 
             services.AddHealthChecks()
                 .AddCheck(
                     name: "SqlServerCheck",
-                    instance: new SqlConnectionHealthCheck(connectionString),
+                    instance: new SqlConnectionHealthCheck(sqlServerConnectionString),
+                    failureStatus: HealthStatus.Unhealthy)
+                .AddCheck(
+                    name: "RedisCheck",
+                    instance: new RedisConnectionHealthCheck(redisConnectionString),
                     failureStatus: HealthStatus.Unhealthy);
 
+            services.AddFluentValidation();
             services.AddInternalServices();
         }
 
