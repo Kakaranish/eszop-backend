@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Common.Types
+namespace Common.Types.Domain
 {
     public class DomainException : Exception
     {

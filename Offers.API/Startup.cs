@@ -1,6 +1,7 @@
 using System.Linq;
 using Common.Authentication;
 using Common.Extensions;
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -29,6 +30,9 @@ namespace Offers.API
 
             services.AddJwtAuthentication();
             services.AddMediatR(typeof(Startup).Assembly);
+            AssemblyScanner.FindValidatorsInAssembly(typeof(Startup).Assembly)
+                .ForEach(item => services.AddScoped(item.InterfaceType, item.ValidatorType));
+            services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
             var connectionString = Configuration.GetConnectionString("SqlServer");
             services.AddDbContext<AppDbContext>(builder =>
@@ -51,6 +55,8 @@ namespace Offers.API
                 app.UseCors("LocalhostCorsPolicy");
             }
 
+            app.UseExceptionHandler("/error");
+            
             app.UseHttpsRedirection();
 
             app.UseRouting();
