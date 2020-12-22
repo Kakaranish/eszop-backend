@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Common.Types
+namespace Common.Types.Domain
 {
     public abstract class EntityBase
     {
         private List<IDomainEvent> _domainEvents;
 
         public Guid Id { get; protected set; }
-        public IReadOnlyList<IDomainEvent> DomainEvents => _domainEvents?.AsReadOnly();
-        public bool IsTransient => Id == default;
+        [NotMapped] public IReadOnlyList<IDomainEvent> DomainEvents => _domainEvents?.AsReadOnly();
+        [NotMapped] public bool IsTransient => Id == default;
 
         public void AddDomainEvent(IDomainEvent domainEvent)
         {

@@ -6,6 +6,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Products.API.DataAccess;
 using Products.API.DataAccess.Repositories;
 using System.Linq;
+using Common.Authentication;
+using MediatR;
 
 namespace Products.API
 {
@@ -20,6 +22,8 @@ namespace Products.API
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddControllers();
+            
             services.AddCors(corsOptions =>
             {
                 corsOptions.AddPolicy("LocalhostCorsPolicy", builder =>
@@ -30,13 +34,15 @@ namespace Products.API
                 });
             });
 
-            services.AddControllers();
+            services.AddJwtAuthentication();
+            services.AddHttpContextAccessor();
+            services.AddMediatR(typeof(Startup).Assembly);
 
             var connectionString = Configuration.GetConnectionString("SqlServer");
             services.AddDbContext<AppDbContext>(builder =>
                 builder.UseSqlServer(connectionString));
 
-            services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<IOfferRepository, OfferRepository>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -58,6 +64,7 @@ namespace Products.API
             app.UseRouting();
 
             app.UseAuthorization();
+            app.UseAuthentication();
 
             app.UseEndpoints(endpoints =>
             {

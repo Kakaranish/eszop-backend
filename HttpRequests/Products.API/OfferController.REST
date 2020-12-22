@@ -1,0 +1,18 @@
+@url = https://localhost:5001
+@accessToken = 
+
+###
+
+GET {{url}}/api/offers HTTP/1.1
+
+### 
+
+POST {{url}}/api/offers HTTP/1.1
+Authorization: Bearer {{accessToken}}
+Content-Type:  application/json
+
+{
+    "Name": "Offer1",
+    "Description": "Some offer",
+    "Price": 20.21
+}

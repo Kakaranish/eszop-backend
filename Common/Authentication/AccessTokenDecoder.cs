@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Text;
+﻿using Common.Extensions;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using System;
+using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
+using System.Text;
 
 namespace Common.Authentication
 {
@@ -12,10 +12,10 @@ namespace Common.Authentication
     {
         private readonly JwtSecurityTokenHandler _jwtSecurityTokenHandler;
         private readonly TokenValidationParameters _tokenValidationParams;
-        
+
         public AccessTokenDecoder(IOptions<JwtConfig> jwtOptions)
         {
-            if(jwtOptions?.Value == null) throw new ArgumentNullException(nameof(jwtOptions));
+            if (jwtOptions?.Value == null) throw new ArgumentNullException(nameof(jwtOptions));
 
             _jwtSecurityTokenHandler = new JwtSecurityTokenHandler();
             _tokenValidationParams = CreateTokenValidationParams(jwtOptions.Value);
@@ -46,21 +46,7 @@ namespace Common.Authentication
                     return null;
                 }
 
-                var claimsDict = jwtSecurityToken.Claims.ToDictionary(x => x.Type, x => x.Value);
-
-                return new TokenPayload
-                {
-                    Id = Guid.Parse(claimsDict["TokenId"]),
-                    Issuer = jwtSecurityToken.Issuer,
-                    Audience = jwtSecurityToken.Audiences.FirstOrDefault(),
-                    Expires = jwtSecurityToken.ValidTo,
-                    UserClaims = new UserClaims
-                    {
-                        Id = Guid.Parse(claimsDict["UserId"]),
-                        Role = claimsDict["Role"],
-                        Email = claimsDict["Email"]
-                    }
-                };
+                return jwtSecurityToken.Claims.ToTokenPayload();
             }
             catch (Exception)
             {
