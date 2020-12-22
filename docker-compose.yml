@@ -1,11 +1,11 @@
 version: '3.4'
 
 services:
-  products.api:
-    image: ${DOCKER_REGISTRY-}productsapi
+  offers.api:
+    image: ${DOCKER_REGISTRY-}offersapi
     build:
       context: .
-      dockerfile: Products.API/Dockerfile
+      dockerfile: Offers.API/Dockerfile
 
 networks:
   eszop-network:
