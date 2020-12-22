@@ -12,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using System.Collections.Generic;
+using Common.Extensions;
 
 namespace Identity.API
 {
@@ -28,16 +29,8 @@ namespace Identity.API
         {
             services.AddHttpContextAccessor();
 
-            services.AddCors(corsOptions =>
-            {
-                corsOptions.AddPolicy("LocalhostCorsPolicy", builder =>
-                {
-                    builder.AllowAnyOrigin()
-                        .AllowAnyMethod()
-                        .AllowAnyHeader();
-                });
-            });
-
+            services.AddLocalhostCorsPolicy();
+            
             services.Configure<JwtConfig>(Configuration.GetSection("JwtConfig"));
             services.AddJwtAuthentication();
 

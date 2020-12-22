@@ -1,25 +1,22 @@
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Products.API.DataAccess;
-using Products.API.DataAccess.Repositories;
-using System.Linq;
 using Common.Authentication;
 using Common.Extensions;
 using MediatR;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using System.Collections;
 
-namespace Products.API
+namespace ShoppingCart.API
 {
     public class Startup
     {
+        public IConfiguration Configuration { get; }
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
-
-        public IConfiguration Configuration { get; }
 
         public void ConfigureServices(IServiceCollection services)
         {
@@ -29,12 +26,6 @@ namespace Products.API
 
             services.AddJwtAuthentication();
             services.AddMediatR(typeof(Startup).Assembly);
-
-            var connectionString = Configuration.GetConnectionString("SqlServer");
-            services.AddDbContext<AppDbContext>(builder =>
-                builder.UseSqlServer(connectionString));
-
-            services.AddScoped<IOfferRepository, OfferRepository>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -45,7 +36,7 @@ namespace Products.API
                 "DevelopmentLocal"
             };
 
-            if (developmentEnvironments.Contains(env.EnvironmentName))
+            if (((IList)developmentEnvironments).Contains(env.EnvironmentName))
             {
                 app.UseDeveloperExceptionPage();
                 app.UseCors("LocalhostCorsPolicy");
