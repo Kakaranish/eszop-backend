@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace Common.Types.Domain
 {
@@ -9,8 +10,14 @@ namespace Common.Types.Domain
         private List<IDomainEvent> _domainEvents;
 
         public Guid Id { get; protected set; }
-        [NotMapped] public IReadOnlyList<IDomainEvent> DomainEvents => _domainEvents?.AsReadOnly();
-        [NotMapped] public bool IsTransient => Id == default;
+        
+        [JsonIgnore]
+        [NotMapped] 
+        public IReadOnlyList<IDomainEvent> DomainEvents => _domainEvents?.AsReadOnly();
+        
+        [JsonIgnore]
+        [NotMapped] 
+        public bool IsTransient => Id == default;
 
         public void AddDomainEvent(IDomainEvent domainEvent)
         {

@@ -21,6 +21,11 @@ namespace Offers.API.DataAccess.Repositories
             await _appDbContext.SaveChangesAsync();
         }
 
+        public async Task<Offer> GetByIdAsync(Guid offerId)
+        {
+            return await _appDbContext.Offers.FirstOrDefaultAsync(x => x.Id == offerId);
+        }
+
         public async Task<IList<Offer>> GetAllAsync()
         {
             return await _appDbContext.Offers.ToListAsync();

@@ -6,6 +6,7 @@ using Common.Types;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Offers.API.Application.Commands.CreateOffer;
+using Offers.API.Application.Queries.GetOffer;
 using Offers.API.DataAccess.Repositories;
 using Offers.API.Domain;
 
@@ -28,6 +29,13 @@ namespace Offers.API.Controllers
         public async Task<IList<Offer>> GetAll()
         {
             return await _offerRepository.GetAllAsync();
+        }
+        
+        [HttpGet("{offerId}")]
+        public async Task<Offer> GetById(string offerId)
+        {
+            var query = new GetOfferQuery(offerId);
+            return await _mediator.Send(query);
         }
         
         [HttpPost("")]
