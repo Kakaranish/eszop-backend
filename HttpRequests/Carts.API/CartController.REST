@@ -1,0 +1,10 @@
+@url = https://localhost:7001
+@accessToken = 
+
+### 
+
+GET {{url}}/api/cart/all HTTP/1.1
+
+###
+
+POST {{url}}/api/cart/add HTTP/1.1

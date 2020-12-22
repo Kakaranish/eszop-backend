@@ -1,0 +1,6 @@
+@url = https://localhost:7001
+
+### HEALTHCHECK
+
+POST {{url}}/healthcheck HTTP/1.1
+Content-Type: application/json

@@ -5,7 +5,7 @@ docker run `
     -e MSSQL_PID=Developer `
     -e MSSQL_SA_PASSWORD=Test1234 `
     -p 7100:1433 `
-    -v eszop-shoppingcart-sqlserver:/var/opt/mssql `
-    --name eszop-shoppingcart-sqlserver `
+    -v eszop-carts-sqlserver:/var/opt/mssql `
+    --name eszop-carts-sqlserver `
     --network eszop-network `
     mcr.microsoft.com/mssql/server:2019-latest

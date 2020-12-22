@@ -8,7 +8,7 @@
     }
   },
   "profiles": {
-    "ShoppingCart.API": {
+    "Carts.API": {
       "commandName": "Project",
       "dotnetRunMessages": "true",
       "applicationUrl": "https://localhost:7001;http://localhost:7000",

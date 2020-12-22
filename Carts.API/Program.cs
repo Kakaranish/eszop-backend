@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
-namespace ShoppingCart.API
+namespace Carts.API
 {
     public class Program
     {

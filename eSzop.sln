@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Identity.API", "Identity.AP
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "Common\Common.csproj", "{7FF39A70-1DF1-4EBA-A487-3F2EC9846F9C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShoppingCart.API", "ShoppingCart.API\ShoppingCart.API.csproj", "{FE7F0CA9-F429-4759-851D-076015FAB95B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Carts.API", "Carts.API\Carts.API.csproj", "{FE7F0CA9-F429-4759-851D-076015FAB95B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
