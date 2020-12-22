@@ -2,7 +2,6 @@ using Common.Authentication;
 using Common.Types;
 using Identity.API.DataAccess;
 using Identity.API.Extensions;
-using Identity.API.HealthCheck;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
@@ -13,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using System.Collections.Generic;
 using Common.Extensions;
+using Common.HealthCheck;
 
 namespace Identity.API
 {

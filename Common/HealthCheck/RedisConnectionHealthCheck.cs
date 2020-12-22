@@ -1,10 +1,10 @@
-﻿using Microsoft.Extensions.Diagnostics.HealthChecks;
-using StackExchange.Redis;
-using System;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+using StackExchange.Redis;
 
-namespace Identity.API.HealthCheck
+namespace Common.HealthCheck
 {
     public class RedisConnectionHealthCheck : IHealthCheck
     {
@@ -16,7 +16,7 @@ namespace Identity.API.HealthCheck
         }
 
         public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context,
-            CancellationToken cancellationToken = new CancellationToken())
+            CancellationToken cancellationToken = new())
         {
             var redis = await ConnectionMultiplexer.ConnectAsync(_connectionString);
 

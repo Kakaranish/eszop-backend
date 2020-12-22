@@ -1,11 +1,11 @@
-﻿using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
-using System;
+﻿using System;
 using System.Data.Common;
+using System.Data.SqlClient;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 
-namespace Identity.API.HealthCheck
+namespace Common.HealthCheck
 {
     public class SqlConnectionHealthCheck : IHealthCheck
     {
@@ -18,7 +18,7 @@ namespace Identity.API.HealthCheck
         }
 
         public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, 
-            CancellationToken cancellationToken = new CancellationToken())
+            CancellationToken cancellationToken = new())
         {
             await using (var connection = new SqlConnection(_connectionString))
             {
