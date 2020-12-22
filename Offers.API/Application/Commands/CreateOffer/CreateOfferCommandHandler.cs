@@ -7,14 +7,14 @@ using Microsoft.AspNetCore.Http;
 using Offers.API.DataAccess.Repositories;
 using Offers.API.Domain;
 
-namespace Offers.API.Commands
+namespace Offers.API.Application.Commands.CreateOffer
 {
-    public class OfferAddedCommandHandler : IRequestHandler<OfferAddedCommand>
+    public class CreateOfferCommandHandler : IRequestHandler<CreateOfferCommand, Guid>
     {
         private readonly IOfferRepository _offerRepository;
         private readonly HttpContext _httpContext;
 
-        public OfferAddedCommandHandler(IHttpContextAccessor httpContextAccessor,
+        public CreateOfferCommandHandler(IHttpContextAccessor httpContextAccessor,
             IOfferRepository offerRepository)
         {
             _httpContext = httpContextAccessor?.HttpContext ??
@@ -22,23 +22,23 @@ namespace Offers.API.Commands
             _offerRepository = offerRepository ?? throw new ArgumentNullException(nameof(offerRepository));
         }
 
-        public async Task<Unit> Handle(OfferAddedCommand command, CancellationToken cancellationToken)
+        public async Task<Guid> Handle(CreateOfferCommand command, CancellationToken cancellationToken)
         {
             var tokenPayload = _httpContext.User.Claims.ToTokenPayload();
 
             var offer = new Offer
             {
-                CreatedAt = DateTime.UtcNow,
-                Description = command.Description,
-                EndsAt = DateTime.UtcNow.AddDays(14),
                 Name = command.Name,
-                OwnerId = tokenPayload.UserClaims.Id,
-                Price = command.Price
+                Price = command.Price,
+                Description = command.Description,
+                CreatedAt = DateTime.UtcNow,
+                EndsAt = DateTime.UtcNow.AddDays(14),
+                OwnerId = tokenPayload.UserClaims.Id
             };
 
             await _offerRepository.AddAsync(offer);
 
-            return await Task.FromResult(Unit.Value);
+            return await Task.FromResult(offer.Id);
         }
     }
 }

@@ -5,7 +5,7 @@ using Common.Authentication;
 using Common.Types;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Offers.API.Commands;
+using Offers.API.Application.Commands.CreateOffer;
 using Offers.API.DataAccess.Repositories;
 using Offers.API.Domain;
 
@@ -32,11 +32,11 @@ namespace Offers.API.Controllers
         
         [HttpPost("")]
         [JwtAuthorize]
-        public async Task<IActionResult> Create(OfferAddedCommand command)
+        public async Task<IActionResult> Create(CreateOfferCommand command)
         {
-            await _mediator.Send(command);
+            var offerId = await _mediator.Send(command);
 
-            return Ok();
+            return Ok(new { OfferId = offerId });
         }
     }
 }
