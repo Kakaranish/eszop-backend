@@ -55,7 +55,7 @@ namespace Identity.API.Controllers
         public async Task<IActionResult> SignUp(SignUpDto signUpDto)
         {
             var otherUser = await _userRepository.FindByEmailAsync(signUpDto.Email);
-            if (otherUser != null)
+            if (otherUser is not null)
             {
                 return ErrorResponse("Other user has the same email");
             }

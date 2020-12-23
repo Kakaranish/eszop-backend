@@ -35,7 +35,7 @@ namespace Identity.API.Services
             if (userClaims == null) throw new ArgumentNullException(nameof(userClaims));
 
             var tokenId = Guid.NewGuid();
-            var claims = new List<Claim> { new Claim("TokenId", tokenId.ToString()) };
+            var claims = new List<Claim> { new("TokenId", tokenId.ToString()) };
             claims.AddRange(userClaims.ToTokenClaims());
 
             var jwtHeader = new JwtHeader(_tokenSigningCredentials);

@@ -36,10 +36,10 @@ namespace Carts.API.DataAccess
                 .HasKey(x => x.Id);
         }
 
-        public async Task SaveChangesAndDispatchDomainEventsAsync(CancellationToken cancellationToken = default)
+        public async Task<bool> SaveChangesAndDispatchDomainEventsAsync(CancellationToken cancellationToken = default)
         {
             await this.DispatchDomainEvents(_mediator, cancellationToken);
-            await base.SaveChangesAsync(cancellationToken);
+            return await base.SaveChangesAsync(cancellationToken) > 0;
         }
     }
 }

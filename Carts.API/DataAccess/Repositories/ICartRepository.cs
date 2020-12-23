@@ -6,7 +6,7 @@ using Common.Types;
 
 namespace Carts.API.DataAccess.Repositories
 {
-    public interface ICartRepository : IRepository<Cart>
+    public interface ICartRepository : IDomainRepository<Cart>
     {
         Task<IList<Cart>> GetAllAsync();
         Task<Cart> GetByIdAsync(Guid id);

@@ -6,7 +6,7 @@ using Offers.API.Domain;
 
 namespace Offers.API.DataAccess.Repositories
 {
-    public interface IOfferRepository : IRepository<Offer>
+    public interface IOfferRepository : IDomainRepository<Offer>
     {
         Task AddAsync(Offer product);
         Task<Offer> GetByIdAsync(Guid offerId);

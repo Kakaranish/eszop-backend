@@ -10,7 +10,7 @@ namespace Common.Types.Domain
         private List<IDomainEvent> _domainEvents;
 
         public Guid Id { get; protected set; }
-        
+
         [JsonIgnore]
         [NotMapped] 
         public IReadOnlyList<IDomainEvent> DomainEvents => _domainEvents?.AsReadOnly();

@@ -6,6 +6,7 @@ using Common.Types;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Offers.API.Application.Commands.CreateOffer;
+using Offers.API.Application.Commands.UpdateOffer;
 using Offers.API.Application.Queries.GetOffer;
 using Offers.API.DataAccess.Repositories;
 using Offers.API.Domain;
@@ -45,6 +46,13 @@ namespace Offers.API.Controllers
             var offerId = await _mediator.Send(command);
 
             return Ok(new { OfferId = offerId });
+        }
+
+        [HttpPut("")]
+        public async Task<IActionResult> Update(UpdateOfferCommand command)
+        {
+            await _mediator.Send(command);
+            return Ok();
         }
     }
 }

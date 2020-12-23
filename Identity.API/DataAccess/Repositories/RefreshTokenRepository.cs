@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading.Tasks;
-using Common.Types;
 
 namespace Identity.API.DataAccess.Repositories
 {

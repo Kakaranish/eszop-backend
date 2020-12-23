@@ -13,6 +13,7 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using System.Collections.Generic;
 using Common.Extensions;
 using Common.HealthCheck;
+using Common.Types.Domain;
 
 namespace Identity.API
 {

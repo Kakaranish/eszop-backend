@@ -30,10 +30,10 @@ namespace Offers.API.DataAccess
                 .HasColumnType("decimal(18,4)");
         }
 
-        public async Task SaveChangesAndDispatchDomainEventsAsync(CancellationToken cancellationToken = default)
+        public async Task<bool> SaveChangesAndDispatchDomainEventsAsync(CancellationToken cancellationToken = default)
         {
             await this.DispatchDomainEvents(_mediator, cancellationToken);
-            await base.SaveChangesAsync(cancellationToken);
+            return await base.SaveChangesAsync(cancellationToken) > 0;
         }
     }
 }

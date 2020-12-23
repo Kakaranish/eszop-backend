@@ -1,4 +1,4 @@
-﻿using System;
+﻿using Common.Extensions;
 using FluentValidation;
 using MediatR;
 using Offers.API.Domain;
@@ -21,8 +21,7 @@ namespace Offers.API.Application.Queries.GetOffer
         {
             RuleFor(x => x.OfferId)
                 .NotNull()
-                .Must(id => Guid.TryParse(id, out _))
-                .WithMessage("Invalid guid");
+                .IsGuid();
         }
     }
 }
