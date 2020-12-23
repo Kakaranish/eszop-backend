@@ -1,9 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using Common.Types;
+using Microsoft.EntityFrameworkCore;
 using Offers.API.Domain;
 
 namespace Offers.API.DataAccess
 {
-    public class AppDbContext : DbContext
+    public class AppDbContext : DbContext, IUnitOfWork
     {
         public DbSet<Offer> Offers { get; private set; }
 
@@ -19,6 +22,11 @@ namespace Offers.API.DataAccess
             modelBuilder.Entity<Offer>()
                 .Property(x => x.Price)
                 .HasColumnType("decimal(18,4)");
+        }
+
+        public Task<bool> SaveAsync(CancellationToken cancellationToken = default)
+        {
+            return Task.FromResult(true); // TEMP
         }
     }
 }

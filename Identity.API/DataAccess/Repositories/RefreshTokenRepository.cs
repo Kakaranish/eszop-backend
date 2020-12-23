@@ -2,12 +2,15 @@
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading.Tasks;
+using Common.Types;
 
 namespace Identity.API.DataAccess.Repositories
 {
     public class RefreshTokenRepository : IRefreshTokenRepository
     {
         private readonly AppDbContext _appDbContext;
+        
+        public IUnitOfWork UnitOfWork => _appDbContext;
 
         public RefreshTokenRepository(AppDbContext appDbContext)
         {

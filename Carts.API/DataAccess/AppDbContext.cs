@@ -1,9 +1,12 @@
-﻿using Carts.API.Domain;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using Carts.API.Domain;
+using Common.Types;
 using Microsoft.EntityFrameworkCore;
 
 namespace Carts.API.DataAccess
 {
-    public class AppDbContext : DbContext
+    public class AppDbContext : DbContext, IUnitOfWork
     {
         public DbSet<Cart> Carts{ get; set; }
         public DbSet<CartItem> CartItems { get; set; }
@@ -25,6 +28,11 @@ namespace Carts.API.DataAccess
 
             model.Entity<Domain.Cart>()
                 .HasKey(x => x.Id);
+        }
+
+        public Task<bool> SaveAsync(CancellationToken cancellationToken = default)
+        {
+            return Task.FromResult(true); // TEMP
         }
     }
 }

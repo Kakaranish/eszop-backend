@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Common.Types;
 using Microsoft.EntityFrameworkCore;
 using Offers.API.Domain;
 
@@ -9,6 +10,8 @@ namespace Offers.API.DataAccess.Repositories
     public class OfferRepository : IOfferRepository
     {
         private readonly AppDbContext _appDbContext;
+
+        public IUnitOfWork UnitOfWork => _appDbContext;
 
         public OfferRepository(AppDbContext appDbContext)
         {

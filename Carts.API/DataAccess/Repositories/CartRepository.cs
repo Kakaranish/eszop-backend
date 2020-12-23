@@ -3,12 +3,15 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Common.Types;
 
 namespace Carts.API.DataAccess.Repositories
 {
     public class CartRepository : ICartRepository
     {
         private readonly AppDbContext _appDbContext;
+
+        public IUnitOfWork UnitOfWork => _appDbContext;
 
         public CartRepository(AppDbContext appDbContext)
         {

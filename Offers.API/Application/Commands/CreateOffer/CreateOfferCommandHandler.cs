@@ -26,15 +26,12 @@ namespace Offers.API.Application.Commands.CreateOffer
         {
             var tokenPayload = _httpContext.User.Claims.ToTokenPayload();
 
-            var offer = new Offer
-            {
-                Name = command.Name,
-                Price = command.Price,
-                Description = command.Description,
-                CreatedAt = DateTime.UtcNow,
-                EndsAt = DateTime.UtcNow.AddDays(14),
-                OwnerId = tokenPayload.UserClaims.Id
-            };
+            var offer = new Offer(
+                ownerId: tokenPayload.UserClaims.Id, 
+                name: command.Name, 
+                description: command.Description, 
+                price: command.Price
+            );
 
             await _offerRepository.AddAsync(offer);
 
