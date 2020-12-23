@@ -5,6 +5,6 @@ namespace Common.Types
 {
     public interface IUnitOfWork
     {
-        Task<bool> SaveAsync(CancellationToken cancellationToken = default);
+        Task SaveChangesAndDispatchDomainEventsAsync(CancellationToken cancellationToken = default);
     }
 }

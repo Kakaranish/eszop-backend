@@ -10,8 +10,6 @@ namespace Identity.API.DataAccess.Repositories
     {
         private readonly AppDbContext _appDbContext;
         
-        public IUnitOfWork UnitOfWork => _appDbContext;
-
         public RefreshTokenRepository(AppDbContext appDbContext)
         {
             _appDbContext = appDbContext ?? throw new ArgumentNullException(nameof(appDbContext));

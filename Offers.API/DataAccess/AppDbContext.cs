@@ -1,17 +1,23 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
+﻿using Common.Extensions;
 using Common.Types;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Offers.API.Domain;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Offers.API.DataAccess
 {
     public class AppDbContext : DbContext, IUnitOfWork
     {
+        private readonly IMediator _mediator;
+        
         public DbSet<Offer> Offers { get; private set; }
 
-        public AppDbContext(DbContextOptions options) : base(options)
+        public AppDbContext(DbContextOptions options, IMediator mediator) : base(options)
         {
+            _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -24,9 +30,10 @@ namespace Offers.API.DataAccess
                 .HasColumnType("decimal(18,4)");
         }
 
-        public Task<bool> SaveAsync(CancellationToken cancellationToken = default)
+        public async Task SaveChangesAndDispatchDomainEventsAsync(CancellationToken cancellationToken = default)
         {
-            return Task.FromResult(true); // TEMP
+            await this.DispatchDomainEvents(_mediator, cancellationToken);
+            await base.SaveChangesAsync(cancellationToken);
         }
     }
 }
