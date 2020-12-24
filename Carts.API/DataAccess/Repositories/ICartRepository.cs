@@ -10,6 +10,7 @@ namespace Carts.API.DataAccess.Repositories
     {
         Task<IList<Cart>> GetAllAsync();
         Task<Cart> GetByIdAsync(Guid id);
+        Task<Cart> GetOrCreateByUserIdAsync(Guid userId);
         Task AddAsync(Cart cart);
     }
 }

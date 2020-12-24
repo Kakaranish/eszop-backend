@@ -28,6 +28,16 @@ namespace Carts.API.DataAccess.Repositories
             return await _appDbContext.Carts.FirstOrDefaultAsync(x => x.Id == id);
         }
 
+        public async Task<Cart> GetOrCreateByUserIdAsync(Guid userId)
+        {
+            var cart = await _appDbContext.Carts.FirstOrDefaultAsync(x => x.UserId == userId);
+            if (cart is not null) return cart;
+            
+            cart = new Cart(userId);
+            await AddAsync(cart);
+            return cart;
+        }
+
         public async Task AddAsync(Cart cart)
         {
             await _appDbContext.Carts.AddAsync(cart);

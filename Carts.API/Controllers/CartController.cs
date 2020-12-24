@@ -1,10 +1,11 @@
-﻿using Carts.API.DataAccess.Repositories;
+﻿using Carts.API.Application.Queries;
+using Carts.API.Domain;
+using Common.Authentication;
 using Common.Types;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using Carts.API.Domain;
 
 namespace Carts.API.Controllers
 {
@@ -12,48 +13,18 @@ namespace Carts.API.Controllers
     [Route("/api/[controller]/")]
     public class CartController : BaseController
     {
-        private readonly ICartRepository _cartRepository;
+        private readonly IMediator _mediator;
 
-        public CartController(ICartRepository cartRepository)
+        public CartController(IMediator mediator)
         {
-            _cartRepository = cartRepository ?? throw new ArgumentNullException(nameof(cartRepository));
+            _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
-        // TEMP Endpoint
-        [HttpGet("all")]
-        public async Task<IList<Cart>> GetAll()
+        [HttpGet("")]
+        [JwtAuthorize]
+        public async Task<Cart> GetCart()
         {
-            return await _cartRepository.GetAllAsync();
-        }
-
-        // TEMP Endpoint
-        [HttpPost("add")]
-        public async Task<IActionResult> Add()
-        {
-            var cartItems = new List<CartItem>
-            {
-                new()
-                {
-                    TotalPrice = 200m,
-                    PricePerItem = 200m,
-                    Quantity = 1,
-                    OfferId = Guid.NewGuid(),
-                    OfferName = $"Offer name {DateTime.UtcNow.ToLongTimeString()}",
-                    SellerEmail = $"Seller email {DateTime.UtcNow.ToLongTimeString()}",
-                    OfferPhotoUrl = $"Offer photo url {DateTime.UtcNow.ToLongTimeString()}",
-                    SellerId = Guid.NewGuid()
-                }
-            };
-
-            var cart = new Cart
-            {
-                UserId = Guid.NewGuid(),
-                CartItems = cartItems
-            };
-
-            await _cartRepository.AddAsync(cart);
-
-            return Ok();
+            return await _mediator.Send(new GetOrCreateCartQuery());
         }
     }
 }

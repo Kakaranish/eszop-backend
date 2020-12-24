@@ -1,6 +1,5 @@
-﻿using System;
-using Common.Types;
-using Common.Types.Domain;
+﻿using Common.Types.Domain;
+using System;
 
 namespace Carts.API.Domain
 {
