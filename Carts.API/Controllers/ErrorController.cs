@@ -1,0 +1,25 @@
+﻿using Common.Types;
+using Common.Types.ErrorHandling;
+using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Mvc;
+
+namespace Carts.API.Controllers
+{
+    [ApiExplorerSettings(IgnoreApi = true)]
+    public class ErrorController : BaseController
+    {
+        [Route("error")]
+        public IActionResult Error()
+        {
+            var context = HttpContext.Features.Get<IExceptionHandlerFeature>();
+            var exception = context.Error;
+
+            if (exception is ValidationException validationException)
+                return ValidationFailureResponse(validationException.PropertiesErrors);
+            if (exception is CartDomainException cartDomainException)
+                return ErrorResponse(cartDomainException.Message);
+
+            return ErrorResponse("Internal error");
+        }
+    }
+}

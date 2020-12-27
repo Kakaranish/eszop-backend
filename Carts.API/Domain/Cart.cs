@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using Common.Types;
 using Common.Types.Domain;
 
@@ -11,6 +12,8 @@ namespace Carts.API.Domain
         public virtual IList<CartItem> CartItems { get; set; }
         public DateTime CreatedAt { get; }
         public DateTime UpdatedAt { get; }
+
+        [NotMapped] public bool IsEmpty => (CartItems?.Count ?? 0) == 0;
 
         public Cart(Guid userId)
         {

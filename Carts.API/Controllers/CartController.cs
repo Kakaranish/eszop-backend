@@ -1,4 +1,4 @@
-﻿using Carts.API.Application.Queries;
+﻿using Carts.API.Application.Queries.GetOrCreateCart;
 using Carts.API.Domain;
 using Common.Authentication;
 using Common.Types;
@@ -6,6 +6,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
+using Carts.API.Application.Commands.FinalizeCart;
 
 namespace Carts.API.Controllers
 {
@@ -25,6 +26,14 @@ namespace Carts.API.Controllers
         public async Task<Cart> GetCart()
         {
             return await _mediator.Send(new GetOrCreateCartQuery());
+        }
+
+        [HttpPost("finalize")]
+        [JwtAuthorize]
+        public async Task<IActionResult> FinalizeCart()
+        {
+            await _mediator.Send(new FinalizeCartCommand());
+            return Ok();
         }
     }
 }

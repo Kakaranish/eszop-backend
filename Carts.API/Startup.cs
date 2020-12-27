@@ -71,6 +71,8 @@ namespace Carts.API
                 app.UseDeveloperExceptionPage();
                 app.UseCors("LocalhostCorsPolicy");
             }
+            
+            app.UseExceptionHandler("/error");
 
             app.UseHttpsRedirection();
 

@@ -5,3 +5,8 @@
 
 GET {{url}}/api/cart HTTP/1.1
 Authorization: Bearer {{accessToken}}
+
+###
+
+POST {{url}}/api/cart/finalize HTTP/1.1
+Authorization: Bearer {{accessToken}}

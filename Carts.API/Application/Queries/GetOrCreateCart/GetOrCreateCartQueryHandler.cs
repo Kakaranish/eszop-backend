@@ -1,13 +1,13 @@
-﻿using Carts.API.DataAccess.Repositories;
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
+using Carts.API.DataAccess.Repositories;
+using Carts.API.Domain;
 using Common.Extensions;
 using MediatR;
 using Microsoft.AspNetCore.Http;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
-using Carts.API.Domain;
 
-namespace Carts.API.Application.Queries
+namespace Carts.API.Application.Queries.GetOrCreateCart
 {
     public class GetOrCreateCartQueryHandler : IRequestHandler<GetOrCreateCartQuery, Cart>
     {
