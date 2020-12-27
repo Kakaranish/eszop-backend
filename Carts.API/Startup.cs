@@ -1,9 +1,12 @@
 using System.Collections;
+using Carts.API.Application.IntegrationEventsHandlers;
 using Carts.API.DataAccess;
 using Carts.API.DataAccess.Repositories;
 using Common.Authentication;
 using Common.Extensions;
 using Common.HealthCheck;
+using Common.IntegrationEvents;
+using Common.ServiceBus;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -40,7 +43,19 @@ namespace Carts.API
                     instance: new SqlConnectionHealthCheck(connectionString),
                     failureStatus: HealthStatus.Unhealthy);
 
+
+            services.AddRabbitMqEventBus();
+            AddSubscriptions(services);
+
             services.AddScoped<ICartRepository, CartRepository>();
+        }
+
+        public void AddSubscriptions(IServiceCollection services)
+        {
+            using var serviceProvider = services.BuildServiceProvider();
+            var eventBus = serviceProvider.GetRequiredService<IEventBus>();
+
+            eventBus.SubscribeAsync<OfferChangedEvent, OfferChangedEventHandler>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

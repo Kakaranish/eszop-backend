@@ -1,6 +1,6 @@
-using System.Linq;
 using Common.Authentication;
 using Common.Extensions;
+using Common.ServiceBus;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Offers.API.DataAccess;
 using Offers.API.DataAccess.Repositories;
+using System.Linq;
 
 namespace Offers.API
 {
@@ -39,6 +40,8 @@ namespace Offers.API
                 builder.UseSqlServer(connectionString));
 
             services.AddScoped<IOfferRepository, OfferRepository>();
+
+            services.AddRabbitMqEventBus();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -56,7 +59,7 @@ namespace Offers.API
             }
 
             app.UseExceptionHandler("/error");
-            
+
             app.UseHttpsRedirection();
 
             app.UseRouting();
