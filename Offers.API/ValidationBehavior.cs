@@ -26,8 +26,6 @@ namespace Offers.API
 
         public Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
         {
-            _logger.LogInformation($"Handling {typeof(TRequest).Name}");
-
             var validationFailures = _validators
                 .Select(validator => validator.Validate(request))
                 .SelectMany(validationResult => validationResult.Errors)
@@ -40,7 +38,7 @@ namespace Offers.API
                 throw new ValidationException(validationFailures.ToPropertiesErrors());
             }
 
-            _logger.LogInformation($"Handling {typeof(TRequest).Name}");
+            _logger.LogInformation($"Processing {typeof(TRequest).Name} request");
 
             return next();
         }

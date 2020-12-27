@@ -9,13 +9,13 @@ namespace Common.ServiceBus
     {
         public static IServiceCollection AddRabbitMqEventBus(this IServiceCollection services)
         {
-            using var serviceProvider = services.BuildServiceProvider();
+            var serviceProvider = services.BuildServiceProvider();
             var configuration = serviceProvider.GetRequiredService<IConfiguration>();
 
             var rabbitMqConfig = new RawRabbitConfiguration();
             configuration.GetSection("EventBus:RabbitMq").Bind(rabbitMqConfig);
             var busClient = BusClientFactory.CreateDefault(rabbitMqConfig);
-            var eventBus = new RabbitMqEventBus(busClient);
+            var eventBus = new RabbitMqEventBus(busClient, serviceProvider);
             
             services.AddSingleton<IEventBus>(eventBus);
 

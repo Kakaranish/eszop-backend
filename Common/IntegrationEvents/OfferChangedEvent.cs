@@ -1,18 +1,20 @@
-﻿using Common.ServiceBus;
+﻿using System;
+using Common.ServiceBus;
+using Common.Types;
 
 namespace Common.IntegrationEvents
 {
     public class OfferChangedEvent : IntegrationEvent
     {
-        public string Name { get; private set; }
-        public string Description { get; private set; }
-        public decimal? Price { get; private set; }
+        public Guid OfferId { get;}
 
-        public OfferChangedEvent(string name, string description, decimal? price)
+        public ChangeState<string> Name { get; init; }
+        public ChangeState<string> Description { get; init; }
+        public ChangeState<decimal?> Price { get; init; }
+
+        public OfferChangedEvent(Guid offerId)
         {
-            Name = name;
-            Description = description;
-            Price = price;
+            OfferId = offerId;
         }
     }
 }

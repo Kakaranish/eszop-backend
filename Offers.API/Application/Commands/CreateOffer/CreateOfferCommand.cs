@@ -1,21 +1,14 @@
-﻿using System;
-using FluentValidation;
+﻿using FluentValidation;
 using MediatR;
+using System;
 
 namespace Offers.API.Application.Commands.CreateOffer
 {
     public class CreateOfferCommand : IRequest<Guid>
     {
-        public string Name { get; }
-        public string Description { get; }
-        public decimal Price { get; }
-
-        public CreateOfferCommand(string name, string description, decimal price)
-        {
-            Name = name;
-            Description = description;
-            Price = price;
-        }
+        public string Name { get; init; }
+        public string Description { get; init; }
+        public decimal Price { get; init; }
     }
 
     public class CreateOfferCommandValidator : AbstractValidator<CreateOfferCommand>
@@ -26,10 +19,10 @@ namespace Offers.API.Application.Commands.CreateOffer
                 .NotNull()
                 .NotEmpty()
                 .MinimumLength(5);
-            
+
             RuleFor(x => x.Price)
                 .GreaterThan(0);
-            
+
             RuleFor(x => x.Description)
                 .NotNull()
                 .NotEmpty()

@@ -6,18 +6,10 @@ namespace Offers.API.Application.Commands.UpdateOffer
 {
     public class UpdateOfferCommand : IRequest
     {
-        public string OfferId { get; }
-        public string Name { get; }
-        public string Description { get; }
-        public decimal? Price { get; }
-
-        public UpdateOfferCommand(string offerId, string name, string description, decimal? price)
-        {
-            OfferId = offerId;
-            Name = name;
-            Description = description;
-            Price = price;
-        }
+        public string OfferId { get; init; }
+        public string Name { get; init; }
+        public string Description { get; init; }
+        public decimal? Price { get; init; }
     }
 
     public class UpdateOfferCommandValidator : AbstractValidator<UpdateOfferCommand>
