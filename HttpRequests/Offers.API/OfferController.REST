@@ -1,9 +1,10 @@
 @url = https://localhost:5001
 @accessToken = 
+@offerId = 
 
 ###
 
-GET {{url}}/api/offers HTTP/1.1
+GET {{url}}/api/offers/{{offerId}} HTTP/1.1
 
 ### 
 
@@ -12,7 +13,19 @@ Authorization: Bearer {{accessToken}}
 Content-Type:  application/json
 
 {
-    "Name": "Offer1",
-    "Description": "Some offer",
-    "Price": 20.21
+    "Name": "Some name",
+    "Description": "Some offer {{$datetime iso8601}}",
+    "Price": {{$randomInt 1 100}}
+}
+
+###
+
+PUT  {{url}}/api/offers HTTP/1.1
+Authorization: Bearer {{accessToken}}
+Content-Type:  application/json
+
+{
+    "OfferId": "{{offerId}}",
+    "Name": "Some name {{$datetime iso8601}}",
+    "Description": "Some offer {{$datetime iso8601}}"
 }
