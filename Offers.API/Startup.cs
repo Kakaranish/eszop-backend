@@ -11,7 +11,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Offers.API.DataAccess;
 using Offers.API.DataAccess.Repositories;
-using System.Linq;
 
 namespace Offers.API
 {
@@ -49,13 +48,7 @@ namespace Offers.API
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            var developmentEnvironments = new[]
-            {
-                "Development",
-                "DevelopmentLocal"
-            };
-
-            if (developmentEnvironments.Contains(env.EnvironmentName))
+            if (env.IsCustomDevelopment())
             {
                 app.UseDeveloperExceptionPage();
                 app.UseCors("LocalhostCorsPolicy");

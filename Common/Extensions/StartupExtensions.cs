@@ -1,4 +1,6 @@
-﻿using Common.Types;
+﻿using System.Linq;
+using Common.Types;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -6,6 +8,11 @@ namespace Common.Extensions
 {
     public static class StartupExtensions
     {
+        private static readonly string[] DevelopmentEnvironments = {
+            "Development",
+            "DevelopmentLocal"
+        };
+
         public static IServiceCollection AddLocalhostCorsPolicy(this IServiceCollection services)
         {
             services.AddCors(corsOptions =>
@@ -29,6 +36,11 @@ namespace Common.Extensions
             services.Configure<UrlsConfig>(configuration.GetSection("Urls"));
             
             return services;
+        }
+        
+        public static bool IsCustomDevelopment(this IWebHostEnvironment env)
+        {
+            return DevelopmentEnvironments.Contains(env.EnvironmentName);
         }
     }
 }

@@ -1,5 +1,7 @@
 using Common.Authentication;
-using Common.Types;
+using Common.Extensions;
+using Common.HealthCheck;
+using Common.Types.Domain;
 using Identity.API.DataAccess;
 using Identity.API.Extensions;
 using Microsoft.AspNetCore.Builder;
@@ -10,10 +12,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
-using System.Collections.Generic;
-using Common.Extensions;
-using Common.HealthCheck;
-using Common.Types.Domain;
 
 namespace Identity.API
 {
@@ -31,7 +29,7 @@ namespace Identity.API
             services.AddHttpContextAccessor();
 
             services.AddLocalhostCorsPolicy();
-            
+
             services.Configure<JwtConfig>(Configuration.GetSection("JwtConfig"));
             services.AddJwtAuthentication();
 
@@ -60,7 +58,7 @@ namespace Identity.API
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (IsDevelopmentEnv(env))
+            if (env.IsCustomDevelopment())
             {
                 app.UseDeveloperExceptionPage();
                 app.UseCors("LocalhostCorsPolicy");
@@ -90,12 +88,6 @@ namespace Identity.API
                 endpoints.MapHealthChecks("/healthcheck");
                 endpoints.MapControllers();
             });
-        }
-
-        private static bool IsDevelopmentEnv(IWebHostEnvironment env)
-        {
-            var developmentEnvironments = new List<string> { "Development", "DevelopmentLocal" };
-            return developmentEnvironments.Contains(env.EnvironmentName);
         }
     }
 }
