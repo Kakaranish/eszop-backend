@@ -9,6 +9,7 @@ namespace Offers.API.Application.Commands.CreateOffer
         public string Name { get; init; }
         public string Description { get; init; }
         public decimal Price { get; init; }
+        public int TotalStock { get; init; }
     }
 
     public class CreateOfferCommandValidator : AbstractValidator<CreateOfferCommand>
@@ -27,6 +28,9 @@ namespace Offers.API.Application.Commands.CreateOffer
                 .NotNull()
                 .NotEmpty()
                 .MinimumLength(5);
+
+            RuleFor(x => x.TotalStock)
+                .GreaterThanOrEqualTo(1);
         }
     }
 }

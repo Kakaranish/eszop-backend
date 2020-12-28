@@ -2,6 +2,7 @@
 using FluentValidation;
 using System;
 using Common.Types;
+using Offers.API.Application.DomainEvents.OutOfStock;
 
 namespace Offers.API.Domain
 {
@@ -14,13 +15,16 @@ namespace Offers.API.Domain
         public string Name { get; private set; }
         public string Description { get; private set; }
         public decimal Price { get; private set; }
+        public int AvailableStock { get; private set; }
+        public int TotalStock { get; private set; }
 
-        public Offer(Guid ownerId, string name, string description, decimal price)
+        public Offer(Guid ownerId, string name, string description, decimal price, int totalStock)
         {
             SetOwnerId(ownerId);
             SetName(name);
             SetDescription(description);
             SetPrice(price);
+            SetTotalStock(totalStock);
             
             CreatedAt = DateTime.UtcNow;
             EndsAt = CreatedAt.AddDays(14);
@@ -30,6 +34,7 @@ namespace Offers.API.Domain
         {
             if (OwnerId == ownerId) return;
             ValidateOwnerId(ownerId);
+            
             OwnerId = ownerId;
             UpdatedAt = DateTime.UtcNow;
         }
@@ -61,6 +66,32 @@ namespace Offers.API.Domain
             UpdatedAt = DateTime.UtcNow;
         }
         
+        public void SetTotalStock(int totalStock)
+        {
+            if(TotalStock == totalStock) return;
+            ValidateTotalStock(totalStock);
+
+            TotalStock = totalStock;
+            AvailableStock = totalStock;
+            UpdatedAt = DateTime.UtcNow;
+        }
+
+        public void DecreaseAvailableStock(int toDecrease)
+        {
+            if(AvailableStock < toDecrease)
+            {
+                throw new DomainException($"'{nameof(toDecrease)}' cannot be less than AvailableStock");
+            }
+
+            AvailableStock -= toDecrease;
+            if (AvailableStock != 0) return;
+
+            var domainEvent = new OfferOutOfStockDomainEvent();
+            AddDomainEvent(domainEvent);
+        }
+
+        #region Validation
+
         private static void ValidateOwnerId(Guid ownerId)
         {
             if (ownerId == Guid.Empty) throw new DomainException($"'{nameof(ownerId)}' is invalid id");
@@ -94,5 +125,12 @@ namespace Offers.API.Domain
         {
             if (price <= 0) throw new DomainException($"'{nameof(price)}' is invalid price");
         }
+
+        private static void ValidateTotalStock(int totalStock)
+        {
+            if (totalStock < 1) throw new DomainException($"'{nameof(totalStock)}' must be >= 1");
+        }
+
+        #endregion
     }
 }
