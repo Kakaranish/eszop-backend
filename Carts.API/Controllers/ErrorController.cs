@@ -1,13 +1,22 @@
-﻿using Common.Types;
+﻿using System;
+using Common.Types;
 using Common.Types.ErrorHandling;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace Carts.API.Controllers
 {
     [ApiExplorerSettings(IgnoreApi = true)]
     public class ErrorController : BaseController
     {
+        private readonly ILogger<ErrorController> _logger;
+
+        public ErrorController(ILogger<ErrorController> logger)
+        {
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        }
+
         [Route("error")]
         public IActionResult Error()
         {
@@ -19,6 +28,7 @@ namespace Carts.API.Controllers
             if (exception is CartDomainException cartDomainException)
                 return ErrorResponse(cartDomainException.Message);
 
+            _logger.LogError(exception.ToString());
             return ErrorResponse("Internal error");
         }
     }

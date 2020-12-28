@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System;
+using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -42,20 +43,30 @@ namespace Carts.API.Application.Commands.AddToCart
             var contentStr = await response.Content.ReadAsStringAsync(cancellationToken);
             var offerDto = JsonConvert.DeserializeObject<OfferDto>(contentStr);
 
-            // TODO: Validate if offer does not belong to user
-            
+            if (request.Quantity > offerDto.AvailableStock)
+            {
+                throw new CartDomainException($"Quantity out of range. AvailableStock for offer {offerDto.Id} is {offerDto.AvailableStock}");
+            }
+
             var userId = _httpContext.User.Claims.ToTokenPayload().UserClaims.Id;
+            if (userId == offerDto.OwnerId)
+            {
+                throw new CartDomainException("Buying from himself/herself is illegal");
+            }
+
             var cart = await _cartRepository.GetOrCreateByUserIdAsync(userId);
+            if (cart.CartItems?.Any(item => item.SellerId != offerDto.OwnerId) ?? false)
+            {
+                throw new CartDomainException("Offer from other seller is already in cart");
+            }
+            if (cart.CartItems?.Any(item => item.OfferId == offerDto.Id) ?? false)
+            {
+                throw new CartDomainException($"Offer {offerDto.Id} is already in cart");
+            }
 
-            // TODO: Validate if offer is not already in cart
-            // TODO: Validate if offer quantity is legal
-            // TODO: Validate if there is no offer from other seller in cart
-
-            var cartItem = new CartItem(cart.Id, Guid.Parse(request.OfferId), userId, 
+            var cartItem = new CartItem(cart.Id, Guid.Parse(request.OfferId), userId,
                 offerDto.Name, request.Quantity, offerDto.Price);
-
             cart.AddCartItem(cartItem);
-
             await _cartRepository.UpdateAsync(cart);
 
             return await Unit.Task;
@@ -63,8 +74,12 @@ namespace Carts.API.Application.Commands.AddToCart
 
         private class OfferDto
         {
-            public string Name { get; set; }
-            public decimal Price { get; set; }
+            public Guid Id { get; init; }
+            public Guid OwnerId { get; init; }
+            public string Name { get; init; }
+            public decimal Price { get; init; }
+            public int AvailableStock { get; init; }
+            public int TotalStock { get; init; }
         }
     }
 }

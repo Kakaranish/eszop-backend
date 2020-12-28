@@ -8,10 +8,10 @@ namespace Carts.API.Domain
 {
     public class Cart : EntityBase, IAggregateRoot, ITimeStamped
     {
-        public Guid UserId { get; set; }
-        public virtual IList<CartItem> CartItems { get; set; }
-        public DateTime CreatedAt { get; }
-        public DateTime UpdatedAt { get; }
+        public Guid UserId { get; private set; }
+        public virtual IList<CartItem> CartItems { get; private set; }
+        public DateTime CreatedAt { get; private set; }
+        public DateTime UpdatedAt { get; private set; }
 
         [NotMapped] public bool IsEmpty => (CartItems?.Count ?? 0) == 0;
 
