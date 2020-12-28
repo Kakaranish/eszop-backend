@@ -15,7 +15,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
-using System.Collections;
 using Microsoft.Extensions.Logging;
 
 namespace Carts.API
@@ -42,7 +41,7 @@ namespace Carts.API
             services.AddMediatR(typeof(Startup).Assembly);
 
             var connectionString = Configuration.GetConnectionString("SqlServer");
-            services.AddDbContext<AppDbContext>(builder => 
+            services.AddDbContext<AppDbContext>(builder =>
                 builder
                     .UseSqlServer(connectionString)
                     .UseLazyLoadingProxies()
@@ -72,7 +71,7 @@ namespace Carts.API
             using var serviceProvider = services.BuildServiceProvider();
             var eventBus = serviceProvider.GetRequiredService<IEventBus>();
 
-            eventBus.SubscribeAsync<OfferChangedIntegrationEvent, OfferChangedEventHandler>();
+            eventBus.SubscribeAsync<OfferChangedIntegrationEvent, OfferChangedIntegrationEventHandler>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
