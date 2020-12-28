@@ -2,10 +2,10 @@ using Carts.API.Application.IntegrationEventsHandlers;
 using Carts.API.DataAccess;
 using Carts.API.DataAccess.Repositories;
 using Common.Authentication;
+using Common.EventBus;
 using Common.Extensions;
 using Common.HealthCheck;
 using Common.IntegrationEvents;
-using Common.ServiceBus;
 using Common.Types.ErrorHandling;
 using FluentValidation;
 using MediatR;
@@ -58,12 +58,11 @@ namespace Carts.API
                 .ForEach(item => services.AddScoped(item.InterfaceType, item.ValidatorType));
             services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
+            services.AddScoped<ICartRepository, CartRepository>();
             services.AddScoped<ICartItemRepository, CartItemRepository>();
 
             services.AddRabbitMqEventBus();
             AddSubscriptions(services);
-
-            services.AddScoped<ICartRepository, CartRepository>();
         }
 
         public void AddSubscriptions(IServiceCollection services)
@@ -72,6 +71,7 @@ namespace Carts.API
             var eventBus = serviceProvider.GetRequiredService<IEventBus>();
 
             eventBus.SubscribeAsync<OfferChangedIntegrationEvent, OfferChangedIntegrationEventHandler>();
+            eventBus.SubscribeAsync<OrderStartedIntegrationEvent, OrderStartedIntegrationEventHandler>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

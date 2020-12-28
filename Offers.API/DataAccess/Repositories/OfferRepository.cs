@@ -21,7 +21,6 @@ namespace Offers.API.DataAccess.Repositories
         public async Task AddAsync(Offer offer)
         {
             await _appDbContext.Offers.AddAsync(offer);
-            await _appDbContext.SaveChangesAsync();
         }
 
         public async Task<Offer> GetByIdAsync(Guid offerId)

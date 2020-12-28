@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using RawRabbit.Configuration;
 using RawRabbit.vNext;
 
-namespace Common.ServiceBus
+namespace Common.EventBus
 {
     public static class Extensions
     {
@@ -15,9 +15,11 @@ namespace Common.ServiceBus
             var rabbitMqConfig = new RawRabbitConfiguration();
             configuration.GetSection("EventBus:RabbitMq").Bind(rabbitMqConfig);
             var busClient = BusClientFactory.CreateDefault(rabbitMqConfig);
-            var eventBus = new RabbitMqEventBus(busClient, serviceProvider);
             
+            var eventBus = new RabbitMqEventBus(busClient);
             services.AddSingleton<IEventBus>(eventBus);
+            serviceProvider = services.BuildServiceProvider();
+            eventBus.SetServiceProvider(serviceProvider);
 
             return services;
         }

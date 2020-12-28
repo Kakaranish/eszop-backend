@@ -68,7 +68,7 @@ namespace Carts.API.Application.Commands.AddToCart
                 offerDto.Name, request.Quantity, offerDto.Price);
             cart.AddCartItem(cartItem);
             
-            _cartRepository.UpdateAsync(cart);
+            _cartRepository.Update(cart);
             await _cartRepository.UnitOfWork.SaveChangesAndDispatchDomainEventsAsync(cancellationToken);
 
             return await Unit.Task;

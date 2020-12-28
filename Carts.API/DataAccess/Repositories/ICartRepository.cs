@@ -12,6 +12,7 @@ namespace Carts.API.DataAccess.Repositories
         Task<Cart> GetByIdAsync(Guid id);
         Task<Cart> GetOrCreateByUserIdAsync(Guid userId);
         Task AddAsync(Cart cart);
-        void UpdateAsync(Cart cart);
+        void Update(Cart cart);
+        void Delete(Cart cart);
     }
 }

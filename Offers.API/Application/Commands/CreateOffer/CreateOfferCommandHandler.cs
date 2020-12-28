@@ -35,6 +35,7 @@ namespace Offers.API.Application.Commands.CreateOffer
             );
 
             await _offerRepository.AddAsync(offer);
+            await _offerRepository.UnitOfWork.SaveChangesAndDispatchDomainEventsAsync(cancellationToken);
 
             return await Task.FromResult(offer.Id);
         }

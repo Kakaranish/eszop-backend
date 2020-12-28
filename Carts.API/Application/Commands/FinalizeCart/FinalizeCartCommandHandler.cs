@@ -2,7 +2,6 @@
 using Common.Extensions;
 using Common.IntegrationEvents;
 using Common.IntegrationEvents.Dto;
-using Common.ServiceBus;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
@@ -10,6 +9,7 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Common.EventBus;
 
 namespace Carts.API.Application.Commands.FinalizeCart
 {

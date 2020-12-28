@@ -1,7 +1,7 @@
 ﻿using Common.IntegrationEvents.Dto;
-using Common.ServiceBus;
 using System;
 using System.Collections.Generic;
+using Common.EventBus;
 
 namespace Common.IntegrationEvents
 {

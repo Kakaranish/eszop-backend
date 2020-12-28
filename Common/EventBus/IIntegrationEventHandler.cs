@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Common.ServiceBus
+namespace Common.EventBus
 {
     public abstract class IntegrationEventHandler<TEvent> where TEvent : IntegrationEvent
     {

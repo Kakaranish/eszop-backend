@@ -1,5 +1,5 @@
 ﻿using System;
-using Common.ServiceBus;
+using Common.EventBus;
 using Common.Types;
 
 namespace Common.IntegrationEvents

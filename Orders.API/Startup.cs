@@ -1,8 +1,8 @@
 using Common.Authentication;
+using Common.EventBus;
 using Common.Extensions;
 using Common.HealthCheck;
 using Common.IntegrationEvents;
-using Common.ServiceBus;
 using Common.Types.ErrorHandling;
 using FluentValidation;
 using MediatR;
@@ -15,6 +15,7 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
 using Orders.API.Application.IntegrationEventHandlers;
 using Orders.API.DataAccess;
+using Orders.API.DataAccess.Repositories;
 
 namespace Orders.API
 {
@@ -55,6 +56,8 @@ namespace Orders.API
                 .ForEach(item => services.AddScoped(item.InterfaceType, item.ValidatorType));
             services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
+            services.AddScoped<IOrderRepository, OrderRepository>();
+            
             services.AddRabbitMqEventBus();
             AddSubscriptions(services);
         }

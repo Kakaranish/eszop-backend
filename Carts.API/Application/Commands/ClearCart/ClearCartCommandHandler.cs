@@ -26,7 +26,7 @@ namespace Carts.API.Application.Commands.ClearCart
             var cart = await _cartRepository.GetOrCreateByUserIdAsync(userId);
             cart.ClearCartItems();
             
-            _cartRepository.UpdateAsync(cart);
+            _cartRepository.Update(cart);
             await _cartRepository.UnitOfWork.SaveChangesAndDispatchDomainEventsAsync(cancellationToken);
 
             return await Unit.Task;

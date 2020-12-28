@@ -1,8 +1,8 @@
 ﻿using System;
 using Common.IntegrationEvents;
-using Common.ServiceBus;
 using System.Threading.Tasks;
 using Carts.API.DataAccess.Repositories;
+using Common.EventBus;
 using Microsoft.Extensions.Logging;
 
 namespace Carts.API.Application.IntegrationEventsHandlers
@@ -16,8 +16,8 @@ namespace Carts.API.Application.IntegrationEventsHandlers
             ICartItemRepository cartItemRepository)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _cartItemRepository = cartItemRepository 
-                                  ?? throw new ArgumentNullException(nameof(cartItemRepository));
+            _cartItemRepository = cartItemRepository ?? 
+                                  throw new ArgumentNullException(nameof(cartItemRepository));
         }
 
         public override async Task Handle(OfferChangedIntegrationEvent @event)

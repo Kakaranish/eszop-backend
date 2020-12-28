@@ -1,6 +1,6 @@
 using Common.Authentication;
+using Common.EventBus;
 using Common.Extensions;
-using Common.ServiceBus;
 using Common.Types.ErrorHandling;
 using FluentValidation;
 using MediatR;

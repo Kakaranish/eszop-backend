@@ -1,18 +1,22 @@
-﻿using RawRabbit;
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
+using RawRabbit;
 
-namespace Common.ServiceBus
+namespace Common.EventBus
 {
     public class RabbitMqEventBus : IEventBus
     {
         private readonly IBusClient _busClient;
-        private readonly IServiceProvider _serviceProvider;
+        private IServiceProvider _serviceProvider;
 
-        public RabbitMqEventBus(IBusClient busClient, IServiceProvider serviceProvider)
+        public RabbitMqEventBus(IBusClient busClient)
         {
             _busClient = busClient ?? throw new ArgumentNullException(nameof(busClient));
+        }
+        
+        public void SetServiceProvider(IServiceProvider serviceProvider)
+        {
             _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
         }
 

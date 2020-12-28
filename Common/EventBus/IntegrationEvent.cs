@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Common.ServiceBus
+namespace Common.EventBus
 {
     public abstract class IntegrationEvent
     {
