@@ -13,6 +13,11 @@ Authorization: Bearer {{accessToken}}
 
 ###
 
+POST {{url}}/api/cart/clear HTTP/1.1
+Authorization: Bearer {{accessToken}}
+
+###
+
 POST {{url}}/api/cart/add HTTP/1.1
 Authorization: Bearer {{accessToken}}
 Content-Type: application/json

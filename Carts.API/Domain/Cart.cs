@@ -32,6 +32,11 @@ namespace Carts.API.Domain
             
             CartItems.Add(cartItem);
         }
+        
+        public void ClearCartItems()
+        {
+            CartItems?.Clear();
+        }
 
         private static void ValidateUserId(Guid userId)
         {
