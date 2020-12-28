@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Carts.API.Migrations
 {
-    public partial class added_init_types : Migration
+    public partial class init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -27,12 +27,9 @@ namespace Carts.API.Migrations
                     CartId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     OfferId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     SellerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    SellerEmail = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     OfferName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    OfferPhotoUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Quantity = table.Column<int>(type: "int", nullable: false),
-                    PricePerItem = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
-                    TotalPrice = table.Column<decimal>(type: "decimal(18,4)", nullable: false)
+                    PricePerItem = table.Column<decimal>(type: "decimal(18,4)", nullable: false)
                 },
                 constraints: table =>
                 {

@@ -6,6 +6,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
+using Carts.API.Application.Commands.AddToCart;
 using Carts.API.Application.Commands.FinalizeCart;
 
 namespace Carts.API.Controllers
@@ -26,6 +27,14 @@ namespace Carts.API.Controllers
         public async Task<Cart> GetCart()
         {
             return await _mediator.Send(new GetOrCreateCartQuery());
+        }
+
+        [HttpPost("add")]
+        [JwtAuthorize]
+        public async Task<IActionResult> AddToCart(AddToCartCommand request)
+        {
+            await _mediator.Send(request);
+            return Ok();
         }
 
         [HttpPost("finalize")]

@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Common.Types;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Common.Extensions
 {
@@ -16,6 +18,16 @@ namespace Common.Extensions
                 });
             });
 
+            return services;
+        }
+
+        public static IServiceCollection ConfigureUrls(this IServiceCollection services)
+        {
+            using var servicesProvider = services.BuildServiceProvider();
+            var configuration = servicesProvider.GetRequiredService<IConfiguration>();
+
+            services.Configure<UrlsConfig>(configuration.GetSection("Urls"));
+            
             return services;
         }
     }

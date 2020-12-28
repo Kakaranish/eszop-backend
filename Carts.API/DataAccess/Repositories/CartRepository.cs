@@ -43,5 +43,11 @@ namespace Carts.API.DataAccess.Repositories
             await _appDbContext.Carts.AddAsync(cart);
             await _appDbContext.SaveChangesAsync();
         }
+
+        public async Task UpdateAsync(Cart cart)
+        {
+            _appDbContext.Update(cart);
+            await _appDbContext.SaveChangesAsync();
+        }
     }
 }

@@ -1,6 +1,7 @@
 using Common.Authentication;
 using Common.Extensions;
 using Common.ServiceBus;
+using Common.Types.ErrorHandling;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
@@ -30,6 +31,8 @@ namespace Offers.API
             services.AddLocalhostCorsPolicy();
 
             services.AddJwtAuthentication();
+            services.ConfigureUrls();
+
             services.AddMediatR(typeof(Startup).Assembly);
             AssemblyScanner.FindValidatorsInAssembly(typeof(Startup).Assembly)
                 .ForEach(item => services.AddScoped(item.InterfaceType, item.ValidatorType));

@@ -20,10 +20,17 @@ namespace Carts.API.Domain
             ValidateUserId(userId);
             UserId = userId;
             
-            CartItems = new List<CartItem>();
-            
             CreatedAt = DateTime.UtcNow;
             UpdatedAt = CreatedAt;
+        }
+
+        public void AddCartItem(CartItem cartItem)
+        {
+            CartItems ??= new List<CartItem>();
+            
+            // TODO: Validate if not duplicated
+            
+            CartItems.Add(cartItem);
         }
 
         private static void ValidateUserId(Guid userId)

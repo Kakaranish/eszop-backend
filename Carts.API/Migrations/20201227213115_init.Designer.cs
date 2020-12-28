@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Carts.API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20201222165011_added_init_types")]
-    partial class added_init_types
+    [Migration("20201227213115_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -50,23 +50,14 @@ namespace Carts.API.Migrations
                     b.Property<string>("OfferName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("OfferPhotoUrl")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<decimal>("PricePerItem")
                         .HasColumnType("decimal(18,4)");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
-                    b.Property<string>("SellerEmail")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<Guid>("SellerId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<decimal>("TotalPrice")
-                        .HasColumnType("decimal(18,4)");
 
                     b.HasKey("Id");
 

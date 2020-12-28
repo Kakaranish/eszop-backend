@@ -7,6 +7,8 @@ using Common.Extensions;
 using Common.HealthCheck;
 using Common.IntegrationEvents;
 using Common.ServiceBus;
+using Common.Types.ErrorHandling;
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -31,6 +33,9 @@ namespace Carts.API
             services.AddControllers();
             services.AddHttpContextAccessor();
             services.AddLocalhostCorsPolicy();
+            
+            services.ConfigureUrls();
+            services.AddHttpClient();
 
             services.AddJwtAuthentication();
             services.AddMediatR(typeof(Startup).Assembly);
@@ -43,6 +48,10 @@ namespace Carts.API
                     instance: new SqlConnectionHealthCheck(connectionString),
                     failureStatus: HealthStatus.Unhealthy);
 
+
+            AssemblyScanner.FindValidatorsInAssembly(typeof(Startup).Assembly)
+                .ForEach(item => services.AddScoped(item.InterfaceType, item.ValidatorType));
+            services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
             services.AddRabbitMqEventBus();
             AddSubscriptions(services);

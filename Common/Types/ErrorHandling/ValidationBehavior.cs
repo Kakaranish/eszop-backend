@@ -1,15 +1,13 @@
-﻿using Common.Types.ErrorHandling;
-using FluentValidation;
-using MediatR;
-using Microsoft.Extensions.Logging;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using ValidationException = Common.Types.ErrorHandling.ValidationException;
+using FluentValidation;
+using MediatR;
+using Microsoft.Extensions.Logging;
 
-namespace Offers.API
+namespace Common.Types.ErrorHandling
 {
     public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
         where TRequest : IRequest<TResponse>

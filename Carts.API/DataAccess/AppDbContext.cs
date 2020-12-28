@@ -28,9 +28,6 @@ namespace Carts.API.DataAccess
             model.Entity<CartItem>()
                 .Property(x => x.PricePerItem)
                 .HasColumnType("decimal(18,4)");
-            model.Entity<CartItem>()
-                .Property(x => x.TotalPrice)
-                .HasColumnType("decimal(18,4)");
 
             model.Entity<Domain.Cart>()
                 .HasKey(x => x.Id);
