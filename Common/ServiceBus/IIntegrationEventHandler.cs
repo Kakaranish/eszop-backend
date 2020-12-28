@@ -6,6 +6,6 @@ namespace Common.ServiceBus
     {
         protected IntegrationEventHandler() { }
 
-        public abstract Task Handle(TEvent integrationEvent);
+        public abstract Task Handle(TEvent @event);
     }
 }

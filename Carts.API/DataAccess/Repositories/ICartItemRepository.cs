@@ -7,6 +7,6 @@ namespace Carts.API.DataAccess.Repositories
 {
     public interface ICartItemRepository : IDomainRepository<CartItem>
     {
-        public Task UpdateWithOfferChangedEvent(OfferChangedEvent @event);
+        public Task UpdateWithOfferChangedEvent(OfferChangedIntegrationEvent @event);
     }
 }

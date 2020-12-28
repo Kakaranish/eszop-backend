@@ -17,7 +17,7 @@ namespace Carts.API.DataAccess.Repositories
             _appDbContext = appDbContext ?? throw new ArgumentNullException(nameof(appDbContext));
         }
 
-        public async Task UpdateWithOfferChangedEvent(OfferChangedEvent @event)
+        public async Task UpdateWithOfferChangedEvent(OfferChangedIntegrationEvent @event)
         {
             await _appDbContext
                 .CartItems

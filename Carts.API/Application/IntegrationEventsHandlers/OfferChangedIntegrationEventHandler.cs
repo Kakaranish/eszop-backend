@@ -1,0 +1,31 @@
+﻿using System;
+using Common.IntegrationEvents;
+using Common.ServiceBus;
+using System.Threading.Tasks;
+using Carts.API.DataAccess.Repositories;
+using Microsoft.Extensions.Logging;
+
+namespace Carts.API.Application.IntegrationEventsHandlers
+{
+    public class OfferChangedIntegrationEventHandler : IntegrationEventHandler<OfferChangedIntegrationEvent>
+    {
+        private readonly ILogger<OfferChangedIntegrationEventHandler> _logger;
+        private readonly ICartItemRepository _cartItemRepository;
+
+        public OfferChangedIntegrationEventHandler(ILogger<OfferChangedIntegrationEventHandler> logger, 
+            ICartItemRepository cartItemRepository)
+        {
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _cartItemRepository = cartItemRepository 
+                                  ?? throw new ArgumentNullException(nameof(cartItemRepository));
+        }
+
+        public override async Task Handle(OfferChangedIntegrationEvent @event)
+        {
+            _logger.LogInformation($"Handling {nameof(OfferChangedIntegrationEvent)} event for offer {@event.Id}");
+
+            await _cartItemRepository.UpdateWithOfferChangedEvent(@event);
+            await _cartItemRepository.UnitOfWork.SaveChangesAndDispatchDomainEventsAsync();
+        }
+    }
+}

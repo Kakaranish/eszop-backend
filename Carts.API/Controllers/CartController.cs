@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
 using Carts.API.Application.Commands.AddToCart;
+using Carts.API.Application.Commands.ClearCart;
 using Carts.API.Application.Commands.FinalizeCart;
 
 namespace Carts.API.Controllers
@@ -34,6 +35,14 @@ namespace Carts.API.Controllers
         public async Task<IActionResult> AddToCart(AddToCartCommand request)
         {
             await _mediator.Send(request);
+            return Ok();
+        }
+
+        [HttpPost("clear")]
+        [JwtAuthorize]
+        public async Task<IActionResult> ClearCart()
+        {
+            await _mediator.Send(new ClearCartCommand());
             return Ok();
         }
 

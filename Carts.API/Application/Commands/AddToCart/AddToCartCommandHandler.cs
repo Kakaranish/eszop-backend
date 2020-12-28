@@ -1,4 +1,4 @@
-﻿using Carts.API.DataAccess.Repositories;
+using Carts.API.DataAccess.Repositories;
 using Carts.API.Domain;
 using Common.Extensions;
 using Common.Types;
@@ -37,7 +37,7 @@ namespace Carts.API.Application.Commands.AddToCart
 
         public async Task<Unit> Handle(AddToCartCommand request, CancellationToken cancellationToken)
         {
-            var uri = $"https://{_urlsConfig.Offers}/api/offers/{request.OfferId}";
+            var uri = $"{_urlsConfig.Offers}/api/offers/{request.OfferId}";
             var httpClient = _httpClientFactory.CreateClient();
             var response = await httpClient.GetAsync(uri, cancellationToken);
             var contentStr = await response.Content.ReadAsStringAsync(cancellationToken);
