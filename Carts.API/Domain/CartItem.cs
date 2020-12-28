@@ -24,5 +24,24 @@ namespace Carts.API.Domain
             Quantity = quantity;
             PricePerItem = pricePerItem;
         }
+
+        public void SetPricePerItem(decimal pricePerItem)
+        {
+            if (pricePerItem == PricePerItem) return;
+            ValidatePricePerItem(pricePerItem);
+
+            PricePerItem = pricePerItem;
+        }
+
+        public void SetOfferName(string offerName)
+        {
+            // TODO: Add validation
+            OfferName = offerName;
+        }
+
+        public void ValidatePricePerItem(decimal pricePerItem)
+        {
+            if (pricePerItem <= 0) throw new DomainException($"{nameof(pricePerItem)} must be >= 0");
+        }
     }
 }

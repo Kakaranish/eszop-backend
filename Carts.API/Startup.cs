@@ -1,4 +1,3 @@
-using System.Collections;
 using Carts.API.Application.IntegrationEventsHandlers;
 using Carts.API.DataAccess;
 using Carts.API.DataAccess.Repositories;
@@ -16,6 +15,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using System.Collections;
+using Microsoft.Extensions.Logging;
 
 namespace Carts.API
 {
@@ -33,7 +34,7 @@ namespace Carts.API
             services.AddControllers();
             services.AddHttpContextAccessor();
             services.AddLocalhostCorsPolicy();
-            
+
             services.ConfigureUrls();
             services.AddHttpClient();
 
@@ -41,7 +42,12 @@ namespace Carts.API
             services.AddMediatR(typeof(Startup).Assembly);
 
             var connectionString = Configuration.GetConnectionString("SqlServer");
-            services.AddDbContext<AppDbContext>(builder => builder.UseSqlServer(connectionString));
+            services.AddDbContext<AppDbContext>(builder => 
+                builder
+                    .UseSqlServer(connectionString)
+                    .UseLazyLoadingProxies()
+                    .UseLoggerFactory(LoggerFactory.Create(loggingBuilder => loggingBuilder.AddDebug())) // DEBUG PURPOSES
+            );
             services.AddHealthChecks()
                 .AddCheck(
                     name: "SqlServerCheck",
@@ -52,6 +58,8 @@ namespace Carts.API
             AssemblyScanner.FindValidatorsInAssembly(typeof(Startup).Assembly)
                 .ForEach(item => services.AddScoped(item.InterfaceType, item.ValidatorType));
             services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+
+            services.AddScoped<ICartItemRepository, CartItemRepository>();
 
             services.AddRabbitMqEventBus();
             AddSubscriptions(services);
@@ -80,7 +88,7 @@ namespace Carts.API
                 app.UseDeveloperExceptionPage();
                 app.UseCors("LocalhostCorsPolicy");
             }
-            
+
             app.UseExceptionHandler("/error");
 
             app.UseHttpsRedirection();

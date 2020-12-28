@@ -12,7 +12,7 @@ namespace Offers.API.DataAccess
     public class AppDbContext : DbContext, IUnitOfWork
     {
         private readonly IMediator _mediator;
-        
+
         public DbSet<Offer> Offers { get; private set; }
 
         public AppDbContext(DbContextOptions options, IMediator mediator) : base(options)
