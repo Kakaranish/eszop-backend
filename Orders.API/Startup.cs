@@ -2,7 +2,6 @@ using Common.Authentication;
 using Common.EventBus;
 using Common.Extensions;
 using Common.HealthCheck;
-using Common.IntegrationEvents;
 using Common.Types.ErrorHandling;
 using FluentValidation;
 using MediatR;
@@ -13,7 +12,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
-using Orders.API.Application.IntegrationEventHandlers;
 using Orders.API.DataAccess;
 using Orders.API.DataAccess.Repositories;
 
@@ -51,13 +49,13 @@ namespace Orders.API
                     name: "SqlServerCheck",
                     instance: new SqlConnectionHealthCheck(connectionString),
                     failureStatus: HealthStatus.Unhealthy);
-            
+
             AssemblyScanner.FindValidatorsInAssembly(typeof(Startup).Assembly)
                 .ForEach(item => services.AddScoped(item.InterfaceType, item.ValidatorType));
             services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
             services.AddScoped<IOrderRepository, OrderRepository>();
-            
+
             services.AddRabbitMqEventBus();
             AddSubscriptions(services);
         }
@@ -67,7 +65,7 @@ namespace Orders.API
             using var serviceProvider = services.BuildServiceProvider();
             var eventBus = serviceProvider.GetRequiredService<IEventBus>();
 
-            eventBus.SubscribeAsync<CartFinalizedIntegrationEvent, CartFinalizedIntegrationEventHandler>();
+            // PLACEHOLDER FOR SUBS
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
