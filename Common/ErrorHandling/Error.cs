@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace Common.Types.ErrorHandling
+namespace Common.ErrorHandling
 {
     public class Error
     {

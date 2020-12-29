@@ -1,10 +1,10 @@
 using Common.Authentication;
-using Common.Types.ErrorHandling.CustomFluentValidation;
 using FluentValidation.AspNetCore;
 using Identity.API.DataAccess.Repositories;
 using Identity.API.Services;
 using Microsoft.Extensions.DependencyInjection;
 using System.Linq;
+using Common.ErrorHandling.CustomFluentValidation;
 
 namespace Identity.API.Extensions
 {

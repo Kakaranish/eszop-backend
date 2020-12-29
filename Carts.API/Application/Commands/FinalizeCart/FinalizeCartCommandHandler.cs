@@ -1,36 +1,43 @@
 ﻿using Carts.API.DataAccess.Repositories;
+using Common.Dto;
 using Common.Extensions;
-using Common.IntegrationEvents;
-using Common.IntegrationEvents.Dto;
+using Common.Types;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using System;
-using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Common.EventBus;
+using Carts.API.Domain;
 
 namespace Carts.API.Application.Commands.FinalizeCart
 {
-    public class FinalizeCartCommandHandler : IRequestHandler<FinalizeCartCommand>
+    public class FinalizeCartCommandHandler : IRequestHandler<FinalizeCartCommand, Guid>
     {
         private readonly ILogger<FinalizeCartCommandHandler> _logger;
         private readonly ICartRepository _cartRepository;
-        private readonly IEventBus _eventBus;
+        private readonly IHttpClientFactory _httpClientFactory;
         private readonly HttpContext _httpContext;
+        private readonly UrlsConfig _urlsConfig;
 
         public FinalizeCartCommandHandler(ILogger<FinalizeCartCommandHandler> logger,
-            IHttpContextAccessor httpContextAccessor, ICartRepository cartRepository, IEventBus eventBus)
+            IHttpContextAccessor httpContextAccessor, ICartRepository cartRepository,
+            IHttpClientFactory httpClientFactory, IOptions<UrlsConfig> options)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _httpContext = httpContextAccessor.HttpContext ??
                            throw new ArgumentNullException(nameof(httpContextAccessor.HttpContext));
             _cartRepository = cartRepository ?? throw new ArgumentNullException(nameof(cartRepository));
-            _eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
+            _httpClientFactory = httpClientFactory ?? throw new ArgumentNullException(nameof(httpClientFactory));
+            _urlsConfig = options?.Value ?? throw new ArgumentNullException(nameof(options.Value));
         }
 
-        public async Task<Unit> Handle(FinalizeCartCommand request, CancellationToken cancellationToken)
+        public async Task<Guid> Handle(FinalizeCartCommand request, CancellationToken cancellationToken)
         {
             var userId = _httpContext.User.Claims.ToTokenPayload().UserClaims.Id;
             var cart = await _cartRepository.GetOrCreateByUserIdAsync(userId);
@@ -38,24 +45,23 @@ namespace Carts.API.Application.Commands.FinalizeCart
             {
                 var msg = $"Cart {cart.Id} cannot be finalized because it's empty";
                 _logger.LogError(msg);
-                throw new CartDomainException(msg);
+                throw new CartsDomainException(msg);
             }
 
-            var @event = new CartFinalizedIntegrationEvent
-            {
-                UserId = userId,
-                CartItems = cart.CartItems.Select(item =>
-                    new CartItemDto
-                    {
-                        OfferId = item.OfferId,
-                        PricePerItem = item.PricePerItem,
-                        Quantity = item.Quantity,
-                        OfferName = item.OfferName
-                    }).ToList()
-            };
-            await _eventBus.PublishAsync(@event);
+            var httpClient = _httpClientFactory.CreateClient();
+            var accessToken = _httpContext.Request.Headers["Authorization"].ToString().Split(' ')[1];
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+            
+            var uri = $"{_urlsConfig.Orders}/api/order/create";
+            var cartDto = cart.ToDto();
+            var content = new StringContent(JsonConvert.SerializeObject(cartDto), Encoding.UTF8, "application/json");
 
-            return await Unit.Task;
+            var response = await httpClient.PostAsync(uri, content, cancellationToken);
+
+            var responseContent = await response.Content.ReadAsStringAsync(cancellationToken);
+            var orderCreatedDto = JsonConvert.DeserializeObject<OrderCreatedDto>(responseContent);
+
+            return orderCreatedDto.OrderId;
         }
     }
 }

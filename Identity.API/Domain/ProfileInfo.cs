@@ -1,7 +1,6 @@
-﻿using System;
-using Common.Types;
-using Common.Types.Domain;
+﻿using Common.Types.Domain;
 using FluentValidation;
+using System;
 
 namespace Identity.API.Domain
 {
@@ -18,7 +17,7 @@ namespace Identity.API.Domain
             ValidateLastName(lastName);
             ValidateDateOfBirth(dateOfBirth);
             ValidatePhoneNumber(phoneNumber);
-            
+
             FirstName = firstName;
             LastName = lastName;
             DateOfBirth = dateOfBirth;
@@ -32,11 +31,11 @@ namespace Identity.API.Domain
                 .NotNull()
                 .NotEmpty()
                 .MinimumLength(3);
-            
+
             var result = validator.Validate(firstName);
-            if (!result.IsValid) throw new DomainException($"'{nameof(firstName)}' must have at least 3 characters");
+            if (!result.IsValid) throw new IdentityDomainException($"'{nameof(firstName)}' must have at least 3 characters");
         }
-        
+
         private static void ValidateLastName(string lastName)
         {
             var validator = new InlineValidator<string>();
@@ -46,18 +45,18 @@ namespace Identity.API.Domain
                 .MinimumLength(3);
 
             var result = validator.Validate(lastName);
-            if (!result.IsValid) throw new DomainException($"'{nameof(lastName)}' must have at least 3 characters");
+            if (!result.IsValid) throw new IdentityDomainException($"'{nameof(lastName)}' must have at least 3 characters");
         }
 
         private static void ValidateDateOfBirth(DateTime dateOfBirth)
         {
-            var minDate = new DateTime(1930,1,1);
+            var minDate = new DateTime(1930, 1, 1);
             var validator = new InlineValidator<DateTime>();
             validator.RuleFor(x => x)
                 .Must(x => x > minDate);
 
             var result = validator.Validate(dateOfBirth);
-            if (!result.IsValid) throw new DomainException($"Min '{nameof(dateOfBirth)}' is {minDate:yyyy-MM-dd}");
+            if (!result.IsValid) throw new IdentityDomainException($"Min '{nameof(dateOfBirth)}' is {minDate:yyyy-MM-dd}");
         }
 
         private static void ValidatePhoneNumber(string phoneNumber)
@@ -68,7 +67,7 @@ namespace Identity.API.Domain
                 .Matches(@"(?<!\w)(\(?(\+|00)?48\)?)?[ -]?\d{3}[ -]?\d{3}[ -]?\d{3}(?!\w)");
 
             var result = validator.Validate(phoneNumber);
-            if (!result.IsValid) throw new DomainException($"'{nameof(phoneNumber)}' is invalid polish phone number");
+            if (!result.IsValid) throw new IdentityDomainException($"'{nameof(phoneNumber)}' is invalid polish phone number");
         }
     }
 }

@@ -1,15 +1,15 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-using Carts.API.DataAccess.Repositories;
-using Carts.API.Domain;
+﻿using Carts.API.DataAccess.Repositories;
+using Common.Dto;
 using Common.Extensions;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Carts.API.Application.Queries.GetOrCreateCart
 {
-    public class GetOrCreateCartQueryHandler : IRequestHandler<GetOrCreateCartQuery, Cart>
+    public class GetOrCreateCartQueryHandler : IRequestHandler<GetOrCreateCartQuery, CartDto>
     {
         private readonly ICartRepository _cartRepository;
         private readonly HttpContext _httpContext;
@@ -21,12 +21,13 @@ namespace Carts.API.Application.Queries.GetOrCreateCart
             _cartRepository = cartRepository ?? throw new ArgumentNullException(nameof(cartRepository));
         }
 
-        public async Task<Cart> Handle(GetOrCreateCartQuery request, CancellationToken cancellationToken)
+        public async Task<CartDto> Handle(GetOrCreateCartQuery request, CancellationToken cancellationToken)
         {
             var tokenPayload = _httpContext.User.Claims.ToTokenPayload();
             var userId = tokenPayload.UserClaims.Id;
+            var cart = await _cartRepository.GetOrCreateByUserIdAsync(userId);
 
-            return await _cartRepository.GetOrCreateByUserIdAsync(userId);
+            return cart.ToDto();
         }
     }
 }

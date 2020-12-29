@@ -1,7 +1,7 @@
 using Common.Authentication;
+using Common.ErrorHandling;
 using Common.EventBus;
 using Common.Extensions;
-using Common.Types.ErrorHandling;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Builder;

@@ -1,9 +1,9 @@
-﻿using Common.Types.ErrorHandling.ActionResults;
-using Microsoft.AspNetCore.Mvc.Filters;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
+using Common.ErrorHandling.ActionResults;
+using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace Common.Types.ErrorHandling.CustomFluentValidation
+namespace Common.ErrorHandling.CustomFluentValidation
 {
     public class CustomFluentValidationFailureActionFilter : IAsyncActionFilter
     {

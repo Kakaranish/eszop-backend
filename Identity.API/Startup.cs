@@ -1,8 +1,8 @@
 using Common.Authentication;
 using Common.Extensions;
 using Common.HealthCheck;
-using Common.Types.Domain;
 using Identity.API.DataAccess;
+using Identity.API.Domain;
 using Identity.API.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
@@ -69,7 +69,7 @@ namespace Identity.API
                 var exceptionHandlerPathFeature = context.Features.Get<IExceptionHandlerPathFeature>();
                 var exception = exceptionHandlerPathFeature.Error;
 
-                if (exception is DomainException)
+                if (exception is IdentityDomainException)
                 {
                     await context.Response.WriteAsJsonAsync(new
                     {

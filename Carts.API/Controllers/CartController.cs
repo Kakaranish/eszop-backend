@@ -1,4 +1,7 @@
-﻿using Carts.API.Application.Queries.GetOrCreateCart;
+﻿using Carts.API.Application.Commands.AddToCart;
+using Carts.API.Application.Commands.ClearCart;
+using Carts.API.Application.Commands.FinalizeCart;
+using Carts.API.Application.Queries.GetOrCreateCart;
 using Carts.API.Domain;
 using Common.Authentication;
 using Common.Types;
@@ -6,9 +9,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
-using Carts.API.Application.Commands.AddToCart;
-using Carts.API.Application.Commands.ClearCart;
-using Carts.API.Application.Commands.FinalizeCart;
+using Common.Dto;
 
 namespace Carts.API.Controllers
 {
@@ -25,7 +26,7 @@ namespace Carts.API.Controllers
 
         [HttpGet("")]
         [JwtAuthorize]
-        public async Task<Cart> GetCart()
+        public async Task<CartDto> GetCart()
         {
             return await _mediator.Send(new GetOrCreateCartQuery());
         }
@@ -50,8 +51,8 @@ namespace Carts.API.Controllers
         [JwtAuthorize]
         public async Task<IActionResult> FinalizeCart()
         {
-            await _mediator.Send(new FinalizeCartCommand());
-            return Ok();
+            var orderId = await _mediator.Send(new FinalizeCartCommand());
+            return Ok(new { OrderId = orderId });
         }
     }
 }

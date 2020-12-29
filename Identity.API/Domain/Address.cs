@@ -1,5 +1,4 @@
-﻿using Common.Types;
-using FluentValidation;
+﻿using FluentValidation;
 
 namespace Identity.API.Domain
 {
@@ -32,7 +31,7 @@ namespace Identity.API.Domain
                 .Matches(cityRegex);
 
             var result = validator.Validate(city);
-            if (!result.IsValid) throw new DomainException($"'{nameof(city)}' is invalid city");
+            if (!result.IsValid) throw new IdentityDomainException($"'{nameof(city)}' is invalid city");
         }
 
         public void ValidateStreet(string street)
@@ -44,7 +43,7 @@ namespace Identity.API.Domain
                 .Matches(streetRegex);
 
             var result = validator.Validate(streetRegex);
-            if (!result.IsValid) throw new DomainException($"'{nameof(street)}' is invalid street");
+            if (!result.IsValid) throw new IdentityDomainException($"'{nameof(street)}' is invalid street");
         }
 
         public void ValidateZipCode(string zipCode)
@@ -56,7 +55,7 @@ namespace Identity.API.Domain
                 .Matches(zipCodeRegex);
 
             var result = validator.Validate(zipCode);
-            if (!result.IsValid) throw new DomainException($"'{nameof(zipCode)}' is invalid zip code");
+            if (!result.IsValid) throw new IdentityDomainException($"'{nameof(zipCode)}' is invalid zip code");
         }
 
         public void ValidateHouseNumber(string houseNumber)
@@ -67,7 +66,7 @@ namespace Identity.API.Domain
                 .NotEmpty();
 
             var result = validator.Validate(houseNumber);
-            if (!result.IsValid) throw new DomainException($"'{nameof(houseNumber)}' is invalid house number");
+            if (!result.IsValid) throw new IdentityDomainException($"'{nameof(houseNumber)}' is invalid house number");
         }
     }
 }

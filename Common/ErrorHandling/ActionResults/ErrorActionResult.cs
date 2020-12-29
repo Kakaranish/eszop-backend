@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
-namespace Common.Types.ErrorHandling.ActionResults
+namespace Common.ErrorHandling.ActionResults
 {
     public class ErrorActionResult : IActionResult
     {

@@ -45,7 +45,7 @@ namespace Carts.API.Application.Commands.AddToCart
 
             if (request.Quantity > offerDto.AvailableStock)
             {
-                throw new CartDomainException($"Quantity out of range. AvailableStock for offer {offerDto.Id} is {offerDto.AvailableStock}");
+                throw new CartsDomainException($"Quantity out of range. AvailableStock for offer {offerDto.Id} is {offerDto.AvailableStock}");
             }
 
             var userId = _httpContext.User.Claims.ToTokenPayload().UserClaims.Id;
@@ -57,15 +57,15 @@ namespace Carts.API.Application.Commands.AddToCart
             var cart = await _cartRepository.GetOrCreateByUserIdAsync(userId);
             if (cart.CartItems?.Any(item => item.SellerId != offerDto.OwnerId) ?? false)
             {
-                throw new CartDomainException("Offer from other seller is already in cart");
+                throw new CartsDomainException("Offer from other seller is already in cart");
             }
             if (cart.CartItems?.Any(item => item.OfferId == offerDto.Id) ?? false)
             {
-                throw new CartDomainException($"Offer {offerDto.Id} is already in cart");
+                throw new CartsDomainException($"Offer {offerDto.Id} is already in cart");
             }
 
             var cartItem = new CartItem(cart.Id, Guid.Parse(request.OfferId), userId,
-                offerDto.Name, request.Quantity, offerDto.Price);
+                offerDto.Name, offerDto.Price, request.Quantity, offerDto.AvailableStock);
             cart.AddCartItem(cartItem);
             
             _cartRepository.Update(cart);

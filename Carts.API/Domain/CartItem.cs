@@ -1,4 +1,4 @@
-﻿using Common.Types.Domain;
+using Common.Types.Domain;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -41,7 +41,7 @@ namespace Carts.API.Domain
 
         public void ValidatePricePerItem(decimal pricePerItem)
         {
-            if (pricePerItem <= 0) throw new DomainException($"{nameof(pricePerItem)} must be >= 0");
+            if (pricePerItem <= 0) throw new CartsDomainException($"{nameof(pricePerItem)} must be >= 0");
         }
     }
 }

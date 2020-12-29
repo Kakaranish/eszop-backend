@@ -2,11 +2,11 @@ using Carts.API.Application.IntegrationEventsHandlers;
 using Carts.API.DataAccess;
 using Carts.API.DataAccess.Repositories;
 using Common.Authentication;
+using Common.ErrorHandling;
 using Common.EventBus;
 using Common.Extensions;
 using Common.HealthCheck;
 using Common.IntegrationEvents;
-using Common.Types.ErrorHandling;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
@@ -71,7 +71,6 @@ namespace Carts.API
             var eventBus = serviceProvider.GetRequiredService<IEventBus>();
 
             eventBus.SubscribeAsync<OfferChangedIntegrationEvent, OfferChangedIntegrationEventHandler>();
-            eventBus.SubscribeAsync<OrderStartedIntegrationEvent, OrderStartedIntegrationEventHandler>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
-namespace Common.Types.ErrorHandling.ActionResults
+namespace Common.ErrorHandling.ActionResults
 {
     public class ValidationFailureActionResult : IActionResult
     {

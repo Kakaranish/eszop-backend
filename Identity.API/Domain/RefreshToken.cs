@@ -34,7 +34,7 @@ namespace Identity.API.Domain
         {
             if (IsRevoked)
             {
-                throw new DomainException($"Refresh token with id '{Id}' is already revoked");
+                throw new IdentityDomainException($"Refresh token with id '{Id}' is already revoked");
             }
 
             RevokedAt = DateTime.UtcNow;

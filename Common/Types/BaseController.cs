@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using Common.Types.ErrorHandling;
-using Common.Types.ErrorHandling.ActionResults;
+using Common.ErrorHandling;
+using Common.ErrorHandling.ActionResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Common.Types

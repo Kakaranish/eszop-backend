@@ -1,6 +1,7 @@
 ﻿using System;
+using Carts.API.Domain;
+using Common.ErrorHandling;
 using Common.Types;
-using Common.Types.ErrorHandling;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -25,7 +26,7 @@ namespace Carts.API.Controllers
 
             if (exception is ValidationException validationException)
                 return ValidationFailureResponse(validationException.PropertiesErrors);
-            if (exception is CartDomainException cartDomainException)
+            if (exception is CartsDomainException cartDomainException)
                 return ErrorResponse(cartDomainException.Message);
 
             _logger.LogError(exception.ToString());

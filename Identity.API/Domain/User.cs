@@ -1,7 +1,6 @@
-﻿using Common.Types;
+﻿using Common.Types.Domain;
 using FluentValidation;
 using System;
-using Common.Types.Domain;
 
 namespace Identity.API.Domain
 {
@@ -22,9 +21,9 @@ namespace Identity.API.Domain
             ValidateEmail(email);
             Email = email;
 
-            HashedPassword = hashedPassword ?? throw new DomainException($"'{nameof(hashedPassword)}' cannot be null");
+            HashedPassword = hashedPassword ?? throw new IdentityDomainException($"'{nameof(hashedPassword)}' cannot be null");
 
-            Role = role ?? throw new DomainException($"'{nameof(hashedPassword)}' cannot be null");
+            Role = role ?? throw new IdentityDomainException($"'{nameof(hashedPassword)}' cannot be null");
 
             CreatedAt = DateTime.UtcNow;
             UpdatedAt = DateTime.UtcNow;
@@ -43,7 +42,7 @@ namespace Identity.API.Domain
                 .EmailAddress();
 
             var result = validator.Validate(email);
-            if (!result.IsValid) throw new DomainException($"'{nameof(email)}' is invalid email");
+            if (!result.IsValid) throw new IdentityDomainException($"'{nameof(email)}' is invalid email");
         }
     }
 }

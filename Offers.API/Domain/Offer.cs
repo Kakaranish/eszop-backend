@@ -1,4 +1,4 @@
-﻿using Common.Types.Domain;
+using Common.Types.Domain;
 using FluentValidation;
 using System;
 using Common.Types;
@@ -94,7 +94,7 @@ namespace Offers.API.Domain
 
         private static void ValidateOwnerId(Guid ownerId)
         {
-            if (ownerId == Guid.Empty) throw new DomainException($"'{nameof(ownerId)}' is invalid id");
+            if (ownerId == Guid.Empty) throw new OffersDomainException($"'{nameof(ownerId)}' is invalid id");
         }
 
         private static void ValidateName(string name)
@@ -106,7 +106,7 @@ namespace Offers.API.Domain
                 .MinimumLength(5);
 
             var result = validator.Validate(name);
-            if (!result.IsValid) throw new DomainException($"'{nameof(name)}' is invalid name");
+            if (!result.IsValid) throw new OffersDomainException($"'{nameof(name)}' is invalid name");
         }
 
         private static void ValidateDescription(string description)
@@ -118,17 +118,17 @@ namespace Offers.API.Domain
                 .MinimumLength(5);
 
             var result = validator.Validate(description);
-            if (!result.IsValid) throw new DomainException($"'{nameof(description)}' is invalid description");
+            if (!result.IsValid) throw new OffersDomainException($"'{nameof(description)}' is invalid description");
         }
 
         private static void ValidatePrice(decimal price)
         {
-            if (price <= 0) throw new DomainException($"'{nameof(price)}' is invalid price");
+            if (price <= 0) throw new OffersDomainException($"'{nameof(price)}' is invalid price");
         }
 
         private static void ValidateTotalStock(int totalStock)
         {
-            if (totalStock < 1) throw new DomainException($"'{nameof(totalStock)}' must be >= 1");
+            if (totalStock < 1) throw new OffersDomainException($"'{nameof(totalStock)}' must be >= 1");
         }
 
         #endregion

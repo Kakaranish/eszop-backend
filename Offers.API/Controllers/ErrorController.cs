@@ -1,5 +1,5 @@
-﻿using Common.Types;
-using Common.Types.ErrorHandling;
+﻿using Common.ErrorHandling;
+using Common.Types;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 

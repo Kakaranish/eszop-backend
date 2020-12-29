@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Common.Types;
+using Common.Types.Domain;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using Common.Types;
-using Common.Types.Domain;
 
 namespace Carts.API.Domain
 {
@@ -19,7 +19,7 @@ namespace Carts.API.Domain
         {
             ValidateUserId(userId);
             UserId = userId;
-            
+
             CreatedAt = DateTime.UtcNow;
             UpdatedAt = CreatedAt;
         }
@@ -27,12 +27,12 @@ namespace Carts.API.Domain
         public void AddCartItem(CartItem cartItem)
         {
             CartItems ??= new List<CartItem>();
-            
+
             // TODO: Validate if not duplicated
-            
+
             CartItems.Add(cartItem);
         }
-        
+
         public void ClearCartItems()
         {
             CartItems?.Clear();
@@ -40,7 +40,7 @@ namespace Carts.API.Domain
 
         private static void ValidateUserId(Guid userId)
         {
-            if (userId == Guid.Empty) throw new DomainException($"'{nameof(userId)}' is invalid id");
+            if (userId == Guid.Empty) throw new CartsDomainException($"'{nameof(userId)}' is invalid id");
         }
     }
 }
