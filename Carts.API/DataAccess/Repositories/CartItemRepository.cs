@@ -35,6 +35,11 @@ namespace Carts.API.DataAccess.Repositories
                 });
         }
 
+        public void Update(CartItem cartItem)
+        {
+            _appDbContext.Update(cartItem);
+        }
+
         public void Remove(CartItem cartItem)
         {
             _appDbContext.Remove(cartItem);

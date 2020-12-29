@@ -28,5 +28,6 @@ Content-Type:  application/json
 {
     "OfferId": "{{offerId}}",
     "Name": "Some name {{$datetime iso8601}}",
-    "Description": "Some offer {{$datetime iso8601}}"
+    "Description": "Some offer {{$datetime iso8601}}",
+    "Price": 52
 }

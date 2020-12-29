@@ -7,23 +7,23 @@ using Carts.API.Domain;
 using Common.Extensions;
 using Microsoft.AspNetCore.Http;
 
-namespace Carts.API.Application.Commands.RemoveFromCart
+namespace Carts.API.Application.Commands.UpdateCartItemQuantity
 {
-    public class RemoveFromCartCommandHandler : IRequestHandler<RemoveFromCartCommand>
+    public class UpdateCartItemQuantityCommandHandler : IRequestHandler<UpdateCartItemQuantityCommand>
     {
         private readonly ICartItemRepository _cartItemRepository;
         private readonly HttpContext _httpContext;
 
-        public RemoveFromCartCommandHandler(ICartItemRepository cartItemRepository, IHttpContextAccessor httpContextAccessor)
+        public UpdateCartItemQuantityCommandHandler(ICartItemRepository cartItemRepository, IHttpContextAccessor httpContextAccessor)
         {
             _cartItemRepository = cartItemRepository ?? throw new ArgumentNullException(nameof(cartItemRepository));
             _httpContext = httpContextAccessor.HttpContext ??
                            throw new ArgumentNullException(nameof(httpContextAccessor.HttpContext));
         }
 
-        public async Task<Unit> Handle(RemoveFromCartCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(UpdateCartItemQuantityCommand request, CancellationToken cancellationToken)
         {
-            var userId = _httpContext.User.Claims.ToTokenPayload().UserClaims.Id;
+            var userId =_httpContext.User.Claims.ToTokenPayload().UserClaims.Id;
             var cartItemId = Guid.Parse(request.CartItemId);
             var cartItem = await _cartItemRepository.GetByIdAsync(cartItemId);
 
@@ -32,7 +32,10 @@ namespace Carts.API.Application.Commands.RemoveFromCart
                 throw new CartsDomainException($"Cart item {cartItemId} not found");
             }
 
-            _cartItemRepository.Remove(cartItem);
+            if (cartItem.Quantity == request.Quantity) return await Unit.Task;
+            
+            cartItem.SetQuantity(request.Quantity);
+            _cartItemRepository.Update(cartItem);
             await _cartItemRepository.UnitOfWork.SaveChangesAndDispatchDomainEventsAsync(cancellationToken);
 
             return await Unit.Task;

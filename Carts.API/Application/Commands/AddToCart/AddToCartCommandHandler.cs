@@ -72,7 +72,6 @@ namespace Carts.API.Application.Commands.AddToCart
             public string Name { get; init; }
             public decimal Price { get; init; }
             public int AvailableStock { get; init; }
-            public int TotalStock { get; init; }
         }
     }
 }

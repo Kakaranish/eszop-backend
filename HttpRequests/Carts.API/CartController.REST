@@ -1,9 +1,39 @@
 @url = https://localhost:7001
-@accessToken = 
+@offerId = 
 
 ###
 
 GET {{url}}/api/cart HTTP/1.1
+Authorization: Bearer {{accessToken}}
+
+###
+
+POST {{url}}/api/cart/item HTTP/1.1
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+    "OfferId": "{{offerId}}",
+    "Quantity": 5
+}
+
+###
+
+@cartItemId = 
+
+###
+PUT {{url}}/api/cart/item HTTP/1.1
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+    "CartItemId": "{{cartItemId}}",
+    "Quantity": 2222
+}
+
+###
+
+DELETE {{url}}/api/cart/item/{{cartItemId}} HTTP/1.1
 Authorization: Bearer {{accessToken}}
 
 ###
@@ -17,12 +47,3 @@ POST {{url}}/api/cart/clear HTTP/1.1
 Authorization: Bearer {{accessToken}}
 
 ###
-
-POST {{url}}/api/cart/add HTTP/1.1
-Authorization: Bearer {{accessToken}}
-Content-Type: application/json
-
-{
-    "OfferId": "{{offerId}}",
-    "Quantity": 5
-}

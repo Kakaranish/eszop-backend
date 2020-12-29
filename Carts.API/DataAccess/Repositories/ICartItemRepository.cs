@@ -10,6 +10,7 @@ namespace Carts.API.DataAccess.Repositories
     {
         Task<CartItem> GetByIdAsync(Guid cartItemId);
         Task UpdateWithOfferChangedEvent(OfferChangedIntegrationEvent @event);
+        void Update(CartItem cartItem);
         void Remove(CartItem cartItem);
     }
 }

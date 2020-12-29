@@ -2,6 +2,7 @@
 using Carts.API.Application.Commands.ClearCart;
 using Carts.API.Application.Commands.FinalizeCart;
 using Carts.API.Application.Commands.RemoveFromCart;
+using Carts.API.Application.Commands.UpdateCartItemQuantity;
 using Carts.API.Application.Queries.GetOrCreateCart;
 using Common.Authentication;
 using Common.Dto;
@@ -44,6 +45,13 @@ namespace Carts.API.Controllers
         public async Task<IActionResult> RemoveFromCart(string cartItemId)
         {
             var request = new RemoveFromCartCommand { CartItemId = cartItemId };
+            await _mediator.Send(request);
+            return Ok();
+        }
+
+        [HttpPut("item")]
+        public async Task<IActionResult> UpdateCartItemQuantity(UpdateCartItemQuantityCommand request)
+        {
             await _mediator.Send(request);
             return Ok();
         }

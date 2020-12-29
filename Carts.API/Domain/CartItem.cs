@@ -1,4 +1,4 @@
-using Common.Types.Domain;
+﻿using Common.Types.Domain;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -10,19 +10,22 @@ namespace Carts.API.Domain
         public Guid OfferId { get; private set; }
         public Guid SellerId { get; private set; }
         public string OfferName { get; private set; }
-        public int Quantity { get; private set; }
         public decimal PricePerItem { get; private set; }
-
+        public int Quantity { get; private set; }
+        public int AvailableStock { get; private set; }
         [NotMapped] public decimal TotalPrice => PricePerItem * Quantity;
 
-        public CartItem(Guid cartId, Guid offerId, Guid sellerId, string offerName, int quantity, decimal pricePerItem)
+        public CartItem(Guid cartId, Guid offerId, Guid sellerId, string offerName, decimal pricePerItem, int quantity, int availableStock)
         {
+            // TODO: Validation
+            
             CartId = cartId;
             OfferId = offerId;
             SellerId = sellerId;
             OfferName = offerName;
-            Quantity = quantity;
             PricePerItem = pricePerItem;
+            Quantity = quantity;
+            AvailableStock = availableStock;
         }
 
         public void SetPricePerItem(decimal pricePerItem)
@@ -33,6 +36,20 @@ namespace Carts.API.Domain
             PricePerItem = pricePerItem;
         }
 
+        public void SetQuantity(int quantity)
+        {
+            if (quantity <= 0)
+            {
+                throw new CartsDomainException($"{nameof(quantity)} must be > 0");
+            }
+            if(quantity > AvailableStock)
+            {
+                throw new CartsDomainException($"{nameof(quantity)} is greater than {nameof(AvailableStock)}");
+            }
+
+            Quantity = quantity;
+        }
+        
         public void SetOfferName(string offerName)
         {
             // TODO: Add validation

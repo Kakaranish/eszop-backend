@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using Offers.API.DataAccess.Repositories;
 using System;
 using System.Threading;
@@ -37,7 +37,7 @@ namespace Offers.API.Application.Commands.UpdateOffer
             {
                 var msg = $"Offer {request.OfferId} not found";
                 _logger.LogError(msg);
-                throw new OfferDomainException(msg);
+                throw new OffersDomainException(msg);
             }
 
             var @event = new OfferChangedEvent(offer.Id)
