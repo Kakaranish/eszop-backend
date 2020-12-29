@@ -11,5 +11,6 @@ namespace Offers.API.DataAccess.Repositories
         Task AddAsync(Offer product);
         Task<Offer> GetByIdAsync(Guid offerId);
         Task<IList<Offer>> GetAllAsync();
+        void Update(Offer offer);
     }
 }

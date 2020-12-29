@@ -60,6 +60,9 @@ namespace Carts.API.Application.Commands.FinalizeCart
 
             var responseContent = await response.Content.ReadAsStringAsync(cancellationToken);
             var orderCreatedDto = JsonConvert.DeserializeObject<OrderCreatedDto>(responseContent);
+            
+            _cartRepository.Remove(cart);
+            await _cartRepository.UnitOfWork.SaveChangesAndDispatchDomainEventsAsync(cancellationToken);
 
             return orderCreatedDto.OrderId;
         }

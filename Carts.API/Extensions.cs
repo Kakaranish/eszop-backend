@@ -22,6 +22,7 @@ namespace Carts.API
 
             return new CartDto
             {
+                Id = cart.Id,
                 UserId = cart.UserId,
                 CartItems = cartItemDtos
             };

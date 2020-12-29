@@ -32,5 +32,10 @@ namespace Offers.API.DataAccess.Repositories
         {
             return await _appDbContext.Offers.ToListAsync();
         }
+
+        public void Update(Offer offer)
+        {
+            _appDbContext.Update(offer);
+        }
     }
 }

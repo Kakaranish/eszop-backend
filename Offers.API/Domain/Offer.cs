@@ -1,8 +1,8 @@
+﻿using Common.Types;
 using Common.Types.Domain;
 using FluentValidation;
 using System;
-using Common.Types;
-using Offers.API.Application.DomainEvents.OutOfStock;
+using Offers.API.Application.DomainEvents.AvailableStockChanged;
 
 namespace Offers.API.Domain
 {
@@ -25,7 +25,7 @@ namespace Offers.API.Domain
             SetDescription(description);
             SetPrice(price);
             SetTotalStock(totalStock);
-            
+
             CreatedAt = DateTime.UtcNow;
             EndsAt = CreatedAt.AddDays(14);
         }
@@ -34,7 +34,7 @@ namespace Offers.API.Domain
         {
             if (OwnerId == ownerId) return;
             ValidateOwnerId(ownerId);
-            
+
             OwnerId = ownerId;
             UpdatedAt = DateTime.UtcNow;
         }
@@ -43,7 +43,7 @@ namespace Offers.API.Domain
         {
             if (Name == name) return;
             ValidateName(name);
-            
+
             Name = name;
             UpdatedAt = DateTime.UtcNow;
         }
@@ -52,23 +52,23 @@ namespace Offers.API.Domain
         {
             if (Description == description) return;
             ValidateDescription(description);
-            
+
             Description = description;
             UpdatedAt = DateTime.UtcNow;
         }
 
         public void SetPrice(decimal price)
         {
-            if(Price == price) return;
+            if (Price == price) return;
             ValidatePrice(price);
-            
+
             Price = price;
             UpdatedAt = DateTime.UtcNow;
         }
-        
+
         public void SetTotalStock(int totalStock)
         {
-            if(TotalStock == totalStock) return;
+            if (TotalStock == totalStock) return;
             ValidateTotalStock(totalStock);
 
             TotalStock = totalStock;
@@ -78,16 +78,16 @@ namespace Offers.API.Domain
 
         public void DecreaseAvailableStock(int toDecrease)
         {
-            if(AvailableStock < toDecrease)
+            ValidateDecreaseAvailableStock(toDecrease);
+            
+            var domainEvent = new AvailableStockChangedDomainEvent
             {
-                throw new DomainException($"'{nameof(toDecrease)}' cannot be less than AvailableStock");
-            }
+                OfferId = Id,
+                AvailableStock = new ChangeState<int?>(AvailableStock, AvailableStock - toDecrease)
+            };
+            AddDomainEvent(domainEvent);
 
             AvailableStock -= toDecrease;
-            if (AvailableStock != 0) return;
-
-            var domainEvent = new OfferOutOfStockDomainEvent();
-            AddDomainEvent(domainEvent);
         }
 
         #region Validation
@@ -129,6 +129,18 @@ namespace Offers.API.Domain
         private static void ValidateTotalStock(int totalStock)
         {
             if (totalStock < 1) throw new OffersDomainException($"'{nameof(totalStock)}' must be >= 1");
+        }
+
+        private void ValidateDecreaseAvailableStock(int toDecrease)
+        {
+            if (toDecrease <= 0)
+            {
+                throw new OffersDomainException($"{nameof(toDecrease)} must be > 0");
+            }
+            if (AvailableStock < toDecrease)
+            {
+                throw new OffersDomainException($"{nameof(toDecrease)} cannot be greater than AvailableStock");
+            }
         }
 
         #endregion

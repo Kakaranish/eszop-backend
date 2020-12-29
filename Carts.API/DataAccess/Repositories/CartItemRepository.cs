@@ -30,8 +30,9 @@ namespace Carts.API.DataAccess.Repositories
                 .Where(cartItem => cartItem.OfferId == @event.OfferId)
                 .ForEachAsync(cartItem =>
                 {
-                    if (@event.Price.Changed) cartItem.SetPricePerItem((decimal)@event.Price?.NewValue.GetValueOrDefault());
-                    if (@event.Name.Changed) cartItem.SetOfferName(@event.Name.NewValue);
+                    if (@event.Price?.Changed ?? false) cartItem.SetPricePerItem((decimal)@event.Price?.NewValue.GetValueOrDefault());
+                    if (@event.AvailableStock?.Changed ?? false) cartItem.SetQuantity((int)@event.AvailableStock?.NewValue.GetValueOrDefault());
+                    if (@event.Name?.Changed ?? false) cartItem.SetOfferName(@event.Name.NewValue);
                 });
         }
 
