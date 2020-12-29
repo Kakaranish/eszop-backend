@@ -55,15 +55,6 @@ namespace Carts.API.Application.Commands.AddToCart
             }
 
             var cart = await _cartRepository.GetOrCreateByUserIdAsync(userId);
-            if (cart.CartItems?.Any(item => item.SellerId != offerDto.OwnerId) ?? false)
-            {
-                throw new CartsDomainException("Offer from other seller is already in cart");
-            }
-            if (cart.CartItems?.Any(item => item.OfferId == offerDto.Id) ?? false)
-            {
-                throw new CartsDomainException($"Offer {offerDto.Id} is already in cart");
-            }
-
             var cartItem = new CartItem(cart.Id, Guid.Parse(request.OfferId), userId,
                 offerDto.Name, offerDto.Price, request.Quantity, offerDto.AvailableStock);
             cart.AddCartItem(cartItem);

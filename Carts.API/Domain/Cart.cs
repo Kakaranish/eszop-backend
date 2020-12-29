@@ -3,6 +3,7 @@ using Common.Types.Domain;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 
 namespace Carts.API.Domain
 {
@@ -28,7 +29,14 @@ namespace Carts.API.Domain
         {
             CartItems ??= new List<CartItem>();
 
-            // TODO: Validate if not duplicated
+            if (CartItems.Any(item => item.SellerId != cartItem.SellerId))
+            {
+                throw new CartsDomainException("Offer from other seller is already in cart");
+            }
+            if (CartItems.Any(item => item.OfferId == cartItem.OfferId))
+            {
+                throw new CartsDomainException($"Offer {cartItem.OfferId} is already in cart");
+            }
 
             CartItems.Add(cartItem);
         }

@@ -49,7 +49,7 @@ namespace Carts.API.DataAccess.Repositories
             _appDbContext.Update(cart);
         }
 
-        public void Delete(Cart cart)
+        public void Remove(Cart cart)
         {
             _appDbContext.Remove(cart);
         }

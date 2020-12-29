@@ -11,6 +11,7 @@ namespace Carts.API
         {
             var cartItemDtos = cart.CartItems?.Select(item => new CartItemDto
             {
+                Id = item.Id,
                 CartId = item.CartId,
                 OfferId = item.OfferId,
                 SellerId = item.SellerId,

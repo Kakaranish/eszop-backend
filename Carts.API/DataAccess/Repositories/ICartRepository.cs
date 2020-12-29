@@ -13,6 +13,6 @@ namespace Carts.API.DataAccess.Repositories
         Task<Cart> GetOrCreateByUserIdAsync(Guid userId);
         Task AddAsync(Cart cart);
         void Update(Cart cart);
-        void Delete(Cart cart);
+        void Remove(Cart cart);
     }
 }

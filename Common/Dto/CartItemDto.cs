@@ -4,6 +4,7 @@ namespace Common.Dto
 {
     public class CartItemDto
     {
+        public Guid Id { get; set; }
         public Guid OfferId { get; init; }
         public Guid CartId { get; init; }
         public Guid SellerId { get; init; }

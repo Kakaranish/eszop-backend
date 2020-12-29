@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Carts.API.Domain;
 
 namespace Carts.API.DataAccess.Repositories
 {
@@ -17,6 +18,11 @@ namespace Carts.API.DataAccess.Repositories
             _appDbContext = appDbContext ?? throw new ArgumentNullException(nameof(appDbContext));
         }
 
+        public async Task<CartItem> GetByIdAsync(Guid cartItemId)
+        {
+            return await _appDbContext.CartItems.FirstOrDefaultAsync(x => x.Id == cartItemId);
+        }
+
         public async Task UpdateWithOfferChangedEvent(OfferChangedIntegrationEvent @event)
         {
             await _appDbContext
@@ -27,6 +33,11 @@ namespace Carts.API.DataAccess.Repositories
                     if (@event.Price.Changed) cartItem.SetPricePerItem((decimal)@event.Price?.NewValue.GetValueOrDefault());
                     if (@event.Name.Changed) cartItem.SetOfferName(@event.Name.NewValue);
                 });
+        }
+
+        public void Remove(CartItem cartItem)
+        {
+            _appDbContext.Remove(cartItem);
         }
     }
 }
