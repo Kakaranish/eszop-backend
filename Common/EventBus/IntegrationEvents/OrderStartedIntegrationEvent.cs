@@ -1,7 +1,6 @@
 ﻿using System;
-using Common.EventBus;
 
-namespace Common.IntegrationEvents
+namespace Common.EventBus.IntegrationEvents
 {
     public class OrderStartedIntegrationEvent : IntegrationEvent
     {

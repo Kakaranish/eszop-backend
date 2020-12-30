@@ -1,8 +1,8 @@
 ﻿using System;
 using Carts.API.Domain;
-using Common.IntegrationEvents;
-using Common.Types;
 using System.Threading.Tasks;
+using Common.DataAccess;
+using Common.EventBus.IntegrationEvents;
 
 namespace Carts.API.DataAccess.Repositories
 {

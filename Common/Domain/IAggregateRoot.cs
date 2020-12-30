@@ -1,4 +1,4 @@
-﻿namespace Common.Types.Domain
+﻿namespace Common.Domain
 {
     public interface IAggregateRoot
     {

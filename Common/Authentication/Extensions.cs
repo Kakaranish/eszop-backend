@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace Common.Authentication
 {
-    public static class SetupExtensions
+    public static class Extensions
     {
         public static IServiceCollection AddJwtAuthentication(this IServiceCollection services)
         {

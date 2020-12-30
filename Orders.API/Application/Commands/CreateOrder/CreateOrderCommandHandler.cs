@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Common.EventBus;
-using Common.IntegrationEvents;
+using Common.EventBus.IntegrationEvents;
 
 namespace Orders.API.Application.Commands.CreateOrder
 {

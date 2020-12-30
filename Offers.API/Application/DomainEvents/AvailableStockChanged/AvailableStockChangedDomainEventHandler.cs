@@ -1,9 +1,9 @@
 ﻿using Common.EventBus;
-using Common.IntegrationEvents;
 using MediatR;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Common.EventBus.IntegrationEvents;
 using Microsoft.Extensions.Logging;
 
 namespace Offers.API.Application.DomainEvents.AvailableStockChanged

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Common.Types;
+using Common.DataAccess;
 using Orders.API.Domain;
 
 namespace Orders.API.DataAccess.Repositories

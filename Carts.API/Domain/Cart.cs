@@ -1,9 +1,9 @@
 ﻿using Common.Types;
-using Common.Types.Domain;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using Common.Domain;
 
 namespace Carts.API.Domain
 {

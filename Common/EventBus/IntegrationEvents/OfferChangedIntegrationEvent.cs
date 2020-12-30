@@ -1,8 +1,7 @@
 ﻿using System;
-using Common.EventBus;
 using Common.Types;
 
-namespace Common.IntegrationEvents
+namespace Common.EventBus.IntegrationEvents
 {
     public class OfferChangedIntegrationEvent : IntegrationEvent
     {

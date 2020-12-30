@@ -1,8 +1,8 @@
 ﻿using System;
-using Common.IntegrationEvents;
 using System.Threading.Tasks;
 using Carts.API.DataAccess.Repositories;
 using Common.EventBus;
+using Common.EventBus.IntegrationEvents;
 using Microsoft.Extensions.Logging;
 
 namespace Carts.API.Application.IntegrationEventsHandlers

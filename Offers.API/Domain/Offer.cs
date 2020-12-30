@@ -1,7 +1,7 @@
 ﻿using Common.Types;
-using Common.Types.Domain;
 using FluentValidation;
 using System;
+using Common.Domain;
 using Offers.API.Application.DomainEvents.AvailableStockChanged;
 
 namespace Offers.API.Domain

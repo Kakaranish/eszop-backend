@@ -1,10 +1,10 @@
-﻿using Common.IntegrationEvents;
-using Common.Types;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Carts.API.Domain;
+using Common.DataAccess;
+using Common.EventBus.IntegrationEvents;
 
 namespace Carts.API.DataAccess.Repositories
 {

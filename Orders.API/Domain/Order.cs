@@ -1,5 +1,5 @@
-﻿using Common.Types.Domain;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Common.Domain;
 
 namespace Orders.API.Domain
 {

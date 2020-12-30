@@ -1,6 +1,6 @@
-﻿using Common.Types.Domain;
-using FluentValidation;
+﻿using FluentValidation;
 using System;
+using Common.Domain;
 
 namespace Identity.API.Domain
 {

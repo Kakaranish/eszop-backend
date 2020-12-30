@@ -1,6 +1,6 @@
 ﻿using System;
+using Common.Domain;
 using Common.Types;
-using Common.Types.Domain;
 
 namespace Offers.API.Application.DomainEvents.AvailableStockChanged
 {

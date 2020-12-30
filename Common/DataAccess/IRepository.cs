@@ -1,6 +1,6 @@
-﻿using Common.Types.Domain;
+﻿using Common.Domain;
 
-namespace Common.Types
+namespace Common.DataAccess
 {
     public interface IRepository<T> where T : IAggregateRoot
     {

@@ -1,11 +1,11 @@
 ﻿using Common.Extensions;
-using Common.Types;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Offers.API.Domain;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Common.DataAccess;
 
 namespace Offers.API.DataAccess
 {

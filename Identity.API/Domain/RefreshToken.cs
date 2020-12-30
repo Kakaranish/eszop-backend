@@ -1,6 +1,5 @@
 ﻿using System;
-using Common.Types;
-using Common.Types.Domain;
+using Common.Domain;
 
 namespace Identity.API.Domain
 {

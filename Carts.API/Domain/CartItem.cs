@@ -1,6 +1,6 @@
-﻿using Common.Types.Domain;
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using Common.Domain;
 
 namespace Carts.API.Domain
 {

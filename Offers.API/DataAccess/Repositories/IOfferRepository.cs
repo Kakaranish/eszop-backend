@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Common.Types;
+using Common.DataAccess;
 using Offers.API.Domain;
 
 namespace Offers.API.DataAccess.Repositories

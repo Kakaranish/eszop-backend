@@ -1,9 +1,9 @@
-﻿using Common.Types;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Offers.API.Domain;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Common.DataAccess;
 
 namespace Offers.API.DataAccess.Repositories
 {

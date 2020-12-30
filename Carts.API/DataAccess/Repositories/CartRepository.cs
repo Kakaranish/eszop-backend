@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Common.Types;
+using Common.DataAccess;
 
 namespace Carts.API.DataAccess.Repositories
 {

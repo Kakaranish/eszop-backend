@@ -1,9 +1,9 @@
-﻿using Common.ErrorHandling.ActionResults;
-using Common.Types;
+﻿using System;
+using System.Diagnostics;
+using Common.ErrorHandling.ActionResults;
+using Common.EventBus;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Diagnostics;
 
 namespace Common.ErrorHandling
 {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Carts.API.Domain;
-using Common.Types;
+using Common.DataAccess;
 
 namespace Carts.API.DataAccess.Repositories
 {

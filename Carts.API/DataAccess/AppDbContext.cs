@@ -2,8 +2,8 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Carts.API.Domain;
+using Common.DataAccess;
 using Common.Extensions;
-using Common.Types;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 

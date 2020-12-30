@@ -1,7 +1,7 @@
-﻿using Common.Types;
-using Identity.API.Domain;
+﻿using Identity.API.Domain;
 using System;
 using System.Threading.Tasks;
+using Common.DataAccess;
 
 namespace Identity.API.DataAccess.Repositories
 {

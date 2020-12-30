@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace Common.Types.Domain
+namespace Common.Domain
 {
     public interface IDomainEvent : INotification
     {
