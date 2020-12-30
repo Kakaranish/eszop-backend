@@ -2,6 +2,7 @@
 using FluentValidation;
 using System;
 using Common.Domain;
+using Common.Validators;
 using Offers.API.Application.DomainEvents.AvailableStockChanged;
 
 namespace Offers.API.Domain
@@ -94,17 +95,14 @@ namespace Offers.API.Domain
 
         private static void ValidateOwnerId(Guid ownerId)
         {
-            if (ownerId == Guid.Empty) throw new OffersDomainException($"'{nameof(ownerId)}' is invalid id");
+            var validator = new IdValidator();
+            var result = validator.Validate(ownerId);
+            if (!result.IsValid) throw new OffersDomainException($"'{nameof(ownerId)}' is invalid id");
         }
 
         private static void ValidateName(string name)
         {
-            var validator = new InlineValidator<string>();
-            validator.RuleFor(x => x)
-                .NotNull()
-                .NotEmpty()
-                .MinimumLength(5);
-
+            var validator = new OfferNameValidator();
             var result = validator.Validate(name);
             if (!result.IsValid) throw new OffersDomainException($"'{nameof(name)}' is invalid name");
         }
@@ -123,12 +121,14 @@ namespace Offers.API.Domain
 
         private static void ValidatePrice(decimal price)
         {
-            if (price <= 0) throw new OffersDomainException($"'{nameof(price)}' is invalid price");
+            var validator = new PriceValidator();
+            var result = validator.Validate(price);
+            if (!result.IsValid) throw new OffersDomainException($"'{nameof(price)}' is invalid price");
         }
 
         private static void ValidateTotalStock(int totalStock)
         {
-            if (totalStock < 1) throw new OffersDomainException($"'{nameof(totalStock)}' must be >= 1");
+            if (totalStock <= 0) throw new OffersDomainException($"'{nameof(totalStock)}' must be > 0");
         }
 
         private void ValidateDecreaseAvailableStock(int toDecrease)

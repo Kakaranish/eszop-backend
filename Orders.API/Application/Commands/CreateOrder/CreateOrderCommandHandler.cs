@@ -1,12 +1,12 @@
-﻿using MediatR;
+﻿using Common.EventBus;
+using Common.EventBus.IntegrationEvents;
+using MediatR;
 using Orders.API.DataAccess.Repositories;
 using Orders.API.Domain;
 using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Common.EventBus;
-using Common.EventBus.IntegrationEvents;
 
 namespace Orders.API.Application.Commands.CreateOrder
 {
@@ -23,16 +23,10 @@ namespace Orders.API.Application.Commands.CreateOrder
 
         public async Task<Guid> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
         {
-            var order = new Order
-            {
-                OrderItems = request.CartItems.Select(item => new OrderItem
-                {
-                    OfferId = item.OfferId,
-                    OfferName = item.OfferName,
-                    PricePerItem = item.PricePerItem,
-                    Quantity = item.Quantity
-                }).ToList()
-            };
+            var order = new Order();
+            var orderItems = request.CartItems.Select(item => new OrderItem(
+                item.OfferId, item.OfferName, item.Quantity, item.PricePerItem)).ToList();
+            order.AddOrderItems(orderItems);
 
             await _orderRepository.AddAsync(order);
             await _orderRepository.UnitOfWork.SaveChangesAndDispatchDomainEventsAsync(cancellationToken);
@@ -46,7 +40,7 @@ namespace Orders.API.Application.Commands.CreateOrder
                 };
                 await _eventBus.PublishAsync(@event);
             }
-            
+
             return order.Id;
         }
     }
