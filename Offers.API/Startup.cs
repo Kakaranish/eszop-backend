@@ -15,6 +15,7 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Offers.API.Application.IntegrationEventHandlers;
 using Offers.API.DataAccess;
 using Offers.API.DataAccess.Repositories;
+using Offers.API.Domain;
 
 namespace Offers.API
 {
@@ -53,16 +54,11 @@ namespace Offers.API
 
             services.AddScoped<IOfferRepository, OfferRepository>();
 
-            services.AddRabbitMqEventBus();
-            AddSubscriptions(services);
-        }
+            services.AddExceptionHandling<OffersDomainException>();
 
-        public void AddSubscriptions(IServiceCollection services)
-        {
-            using var serviceProvider = services.BuildServiceProvider();
-            var eventBus = serviceProvider.GetRequiredService<IEventBus>();
-
-            eventBus.SubscribeAsync<OrderStartedIntegrationEvent, OrderStartedIntegrationEventHandler>();
+            services
+                .AddRabbitMqEventBus()
+                .Subscribe<OrderStartedIntegrationEvent, OrderStartedIntegrationEventHandler>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

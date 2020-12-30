@@ -1,6 +1,7 @@
 using Carts.API.Application.IntegrationEventsHandlers;
 using Carts.API.DataAccess;
 using Carts.API.DataAccess.Repositories;
+using Carts.API.Domain;
 using Common.Authentication;
 using Common.ErrorHandling;
 using Common.EventBus;
@@ -61,16 +62,11 @@ namespace Carts.API
             services.AddScoped<ICartRepository, CartRepository>();
             services.AddScoped<ICartItemRepository, CartItemRepository>();
 
-            services.AddRabbitMqEventBus();
-            AddSubscriptions(services);
-        }
-
-        public void AddSubscriptions(IServiceCollection services)
-        {
-            using var serviceProvider = services.BuildServiceProvider();
-            var eventBus = serviceProvider.GetRequiredService<IEventBus>();
-
-            eventBus.SubscribeAsync<OfferChangedIntegrationEvent, OfferChangedIntegrationEventHandler>();
+            services.AddExceptionHandling<CartsDomainException>();
+            
+            services
+                .AddRabbitMqEventBus()
+                .Subscribe<OfferChangedIntegrationEvent, OfferChangedIntegrationEventHandler>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

@@ -44,7 +44,7 @@ namespace Carts.API.Domain
             }
             if(quantity > AvailableStock)
             {
-                throw new CartsDomainException($"{nameof(quantity)} is greater than {nameof(AvailableStock)}");
+                throw new CartsDomainException($"Max {nameof(quantity)} of offer {OfferId} is {AvailableStock}");
             }
 
             Quantity = quantity;

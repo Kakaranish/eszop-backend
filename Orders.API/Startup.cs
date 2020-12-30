@@ -1,3 +1,4 @@
+using System;
 using Common.Authentication;
 using Common.ErrorHandling;
 using Common.EventBus;
@@ -14,6 +15,7 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
 using Orders.API.DataAccess;
 using Orders.API.DataAccess.Repositories;
+using Orders.API.Domain;
 
 namespace Orders.API
 {
@@ -56,16 +58,9 @@ namespace Orders.API
 
             services.AddScoped<IOrderRepository, OrderRepository>();
 
+            services.AddExceptionHandling<OrdersDomainException>();
+
             services.AddRabbitMqEventBus();
-            AddSubscriptions(services);
-        }
-
-        public void AddSubscriptions(IServiceCollection services)
-        {
-            using var serviceProvider = services.BuildServiceProvider();
-            var eventBus = serviceProvider.GetRequiredService<IEventBus>();
-
-            // PLACEHOLDER FOR SUBS
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

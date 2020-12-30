@@ -1,18 +1,18 @@
-﻿using Carts.API.Domain;
-using Common.ErrorHandling;
+﻿using Common.ErrorHandling;
 using Common.Types;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Orders.API.Domain;
 using System;
 
-namespace Carts.API.Controllers
+namespace Orders.API.Controllers
 {
     [ApiExplorerSettings(IgnoreApi = true)]
     public class ErrorController : BaseController
     {
-        private readonly ExceptionHandler<CartsDomainException> _exceptionHandler;
+        private readonly ExceptionHandler<OrdersDomainException> _exceptionHandler;
 
-        public ErrorController(ExceptionHandler<CartsDomainException> exceptionHandler)
+        public ErrorController(ExceptionHandler<OrdersDomainException> exceptionHandler)
         {
             _exceptionHandler = exceptionHandler ?? throw new ArgumentNullException(nameof(exceptionHandler));
         }

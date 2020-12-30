@@ -7,7 +7,7 @@ namespace Common.EventBus
 {
     public static class Extensions
     {
-        public static IServiceCollection AddRabbitMqEventBus(this IServiceCollection services)
+        public static RabbitMqEventBusBuilder AddRabbitMqEventBus(this IServiceCollection services)
         {
             var serviceProvider = services.BuildServiceProvider();
             var configuration = serviceProvider.GetRequiredService<IConfiguration>();
@@ -15,13 +15,13 @@ namespace Common.EventBus
             var rabbitMqConfig = new RawRabbitConfiguration();
             configuration.GetSection("EventBus:RabbitMq").Bind(rabbitMqConfig);
             var busClient = BusClientFactory.CreateDefault(rabbitMqConfig);
-            
+
             var eventBus = new RabbitMqEventBus(busClient);
             services.AddSingleton<IEventBus>(eventBus);
             serviceProvider = services.BuildServiceProvider();
             eventBus.SetServiceProvider(serviceProvider);
 
-            return services;
+            return new RabbitMqEventBusBuilder(eventBus);
         }
     }
 }

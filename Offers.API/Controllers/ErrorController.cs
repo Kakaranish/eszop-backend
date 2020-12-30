@@ -1,20 +1,20 @@
-﻿using Common.ErrorHandling;
+﻿using System;
+using Common.ErrorHandling;
 using Common.Types;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using System;
+using Offers.API.Domain;
 
 namespace Offers.API.Controllers
 {
     [ApiExplorerSettings(IgnoreApi = true)]
     public class ErrorController : BaseController
     {
-        private readonly ILogger<ErrorController> _logger;
+        private readonly ExceptionHandler<OffersDomainException> _exceptionHandler;
 
-        public ErrorController(ILogger<ErrorController> logger)
+        public ErrorController(ExceptionHandler<OffersDomainException> exceptionHandler)
         {
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _exceptionHandler = exceptionHandler ?? throw new ArgumentNullException(nameof(exceptionHandler));
         }
 
         [Route("error")]
@@ -23,16 +23,7 @@ namespace Offers.API.Controllers
             var context = HttpContext.Features.Get<IExceptionHandlerFeature>();
             var exception = context.Error;
 
-            if (exception is ValidationException validationException)
-            {
-                return ValidationFailureResponse(validationException.PropertiesErrors);
-            }
-            if (exception is IntegrationEventException integrationEventException)
-            {
-                _logger.LogCritical(integrationEventException.Message);
-            }
-
-            return ErrorResponse("Internal error");
+            return _exceptionHandler.HandleException(exception);
         }
     }
 }

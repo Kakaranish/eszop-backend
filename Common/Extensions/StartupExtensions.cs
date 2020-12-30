@@ -1,8 +1,11 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using Common.ErrorHandling;
 using Common.Types;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace Common.Extensions
 {
@@ -41,6 +44,17 @@ namespace Common.Extensions
         public static bool IsCustomDevelopment(this IWebHostEnvironment env)
         {
             return DevelopmentEnvironments.Contains(env.EnvironmentName);
+        }
+
+        public static IServiceCollection AddExceptionHandling<TDomainException>(this IServiceCollection services) where TDomainException : Exception
+        {
+            var serviceProvider = services.BuildServiceProvider();
+            var loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();
+            var exceptionHandler = new ExceptionHandler<TDomainException>(loggerFactory);
+
+            services.AddSingleton(exceptionHandler);
+
+            return services;
         }
     }
 }
