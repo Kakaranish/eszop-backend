@@ -8,14 +8,13 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System;
-using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Carts.API.Application.Commands.AddToCart
 {
-    public class AddToCartCommandHandler : IRequestHandler<AddToCartCommand>
+    public class AddToCartCommandHandler : IRequestHandler<AddToCartCommand, Guid>
     {
         private readonly ILogger<AddToCartCommandHandler> _logger;
         private readonly IHttpClientFactory _httpClientFactory;
@@ -35,7 +34,7 @@ namespace Carts.API.Application.Commands.AddToCart
             _cartRepository = cartRepository ?? throw new ArgumentNullException(nameof(cartRepository));
         }
 
-        public async Task<Unit> Handle(AddToCartCommand request, CancellationToken cancellationToken)
+        public async Task<Guid> Handle(AddToCartCommand request, CancellationToken cancellationToken)
         {
             var uri = $"{_urlsConfig.Offers}/api/offers/{request.OfferId}";
             var httpClient = _httpClientFactory.CreateClient();
@@ -62,13 +61,14 @@ namespace Carts.API.Application.Commands.AddToCart
             _cartRepository.Update(cart);
             await _cartRepository.UnitOfWork.SaveChangesAndDispatchDomainEventsAsync(cancellationToken);
 
-            return await Unit.Task;
+            _logger.LogInformation($"Added {request.OfferId} offer to cart {cart.Id} as cart item {cartItem.Id}");
+            
+            return cartItem.Id;
         }
 
         private class OfferDto
         {
             public Guid Id { get; init; }
-            public Guid OwnerId { get; init; }
             public string Name { get; init; }
             public decimal Price { get; init; }
             public int AvailableStock { get; init; }

@@ -6,16 +6,20 @@ using Carts.API.DataAccess.Repositories;
 using Carts.API.Domain;
 using Common.Extensions;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 
 namespace Carts.API.Application.Commands.RemoveFromCart
 {
     public class RemoveFromCartCommandHandler : IRequestHandler<RemoveFromCartCommand>
     {
+        private readonly ILogger<RemoveFromCartCommandHandler> _logger;
         private readonly ICartItemRepository _cartItemRepository;
         private readonly HttpContext _httpContext;
 
-        public RemoveFromCartCommandHandler(ICartItemRepository cartItemRepository, IHttpContextAccessor httpContextAccessor)
+        public RemoveFromCartCommandHandler(ILogger<RemoveFromCartCommandHandler> logger, 
+            ICartItemRepository cartItemRepository, IHttpContextAccessor httpContextAccessor)
         {
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _cartItemRepository = cartItemRepository ?? throw new ArgumentNullException(nameof(cartItemRepository));
             _httpContext = httpContextAccessor.HttpContext ??
                            throw new ArgumentNullException(nameof(httpContextAccessor.HttpContext));
@@ -35,6 +39,8 @@ namespace Carts.API.Application.Commands.RemoveFromCart
             _cartItemRepository.Remove(cartItem);
             await _cartItemRepository.UnitOfWork.SaveChangesAndDispatchDomainEventsAsync(cancellationToken);
 
+            _logger.LogInformation($"Removed cart item {cartItem.Id} from cart {cartItem.CartId}");
+            
             return await Unit.Task;
         }
     }

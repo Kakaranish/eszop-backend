@@ -5,16 +5,20 @@ using System.Threading;
 using System.Threading.Tasks;
 using Carts.API.DataAccess.Repositories;
 using Common.Extensions;
+using Microsoft.Extensions.Logging;
 
 namespace Carts.API.Application.Commands.ClearCart
 {
     public class ClearCartCommandHandler : IRequestHandler<ClearCartCommand>
     {
+        private readonly ILogger<ClearCartCommandHandler> _logger;
         private readonly ICartRepository _cartRepository;
         private readonly HttpContext _httpContext;
 
-        public ClearCartCommandHandler(IHttpContextAccessor httpContextAccessor, ICartRepository cartRepository)
+        public ClearCartCommandHandler(ILogger<ClearCartCommandHandler> logger, 
+            IHttpContextAccessor httpContextAccessor, ICartRepository cartRepository)
         {
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _httpContext = httpContextAccessor.HttpContext ??
                            throw new ArgumentNullException(nameof(httpContextAccessor.HttpContext));
             _cartRepository = cartRepository ?? throw new ArgumentNullException(nameof(cartRepository));
@@ -29,6 +33,8 @@ namespace Carts.API.Application.Commands.ClearCart
             _cartRepository.Update(cart);
             await _cartRepository.UnitOfWork.SaveChangesAndDispatchDomainEventsAsync(cancellationToken);
 
+            _logger.LogInformation($"Cart {cart.Id} cleared");
+            
             return await Unit.Task;
         }
     }

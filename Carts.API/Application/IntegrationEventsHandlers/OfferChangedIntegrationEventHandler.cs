@@ -22,10 +22,10 @@ namespace Carts.API.Application.IntegrationEventsHandlers
 
         public override async Task Handle(OfferChangedIntegrationEvent @event)
         {
-            _logger.LogInformation($"Handling {nameof(OfferChangedIntegrationEvent)} event for offer {@event.Id}");
-
             await _cartItemRepository.UpdateWithOfferChangedEvent(@event);
             await _cartItemRepository.UnitOfWork.SaveChangesAndDispatchDomainEventsAsync();
+
+            _logger.LogInformation($"Handled {nameof(OfferChangedIntegrationEvent)} event for offer {@event.OfferId}");
         }
     }
 }

@@ -36,8 +36,8 @@ namespace Carts.API.Controllers
         [JwtAuthorize]
         public async Task<IActionResult> AddToCart(AddToCartCommand request)
         {
-            await _mediator.Send(request);
-            return Ok();
+            var cartItemId = await _mediator.Send(request);
+            return Ok(new { CartItemId = cartItemId });
         }
 
         [HttpDelete("item/{cartItemId}")]

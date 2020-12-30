@@ -1,10 +1,11 @@
-﻿using Common.Extensions;
+﻿using System;
+using Common.Extensions;
 using FluentValidation;
 using MediatR;
 
 namespace Carts.API.Application.Commands.AddToCart
 {
-    public class AddToCartCommand : IRequest
+    public class AddToCartCommand : IRequest<Guid>
     {
         public string OfferId { get; init; }
         public int Quantity { get; init; }

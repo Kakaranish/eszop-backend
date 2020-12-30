@@ -5,7 +5,7 @@ namespace Common.IntegrationEvents
 {
     public class OrderStartedIntegrationEvent : IntegrationEvent
     {
-        public Guid OfferId { get; set; }
-        public int Quantity { get; set; }
+        public Guid OfferId { get; init; }
+        public int Quantity { get; init; }
     }
 }

@@ -53,16 +53,17 @@ namespace Carts.API.Application.Commands.FinalizeCart
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
             
             var uri = $"{_urlsConfig.Orders}/api/order/create";
-            var cartDto = cart.ToDto();
-            var content = new StringContent(JsonConvert.SerializeObject(cartDto), Encoding.UTF8, "application/json");
-
+            var content = new StringContent(JsonConvert.SerializeObject(cart.ToDto()), Encoding.UTF8, "application/json");
             var response = await httpClient.PostAsync(uri, content, cancellationToken);
-
             var responseContent = await response.Content.ReadAsStringAsync(cancellationToken);
             var orderCreatedDto = JsonConvert.DeserializeObject<OrderCreatedDto>(responseContent);
             
+            _logger.LogInformation($"Order {orderCreatedDto.OrderId} created from cart {cart.Id}");
+            
             _cartRepository.Remove(cart);
             await _cartRepository.UnitOfWork.SaveChangesAndDispatchDomainEventsAsync(cancellationToken);
+            
+            _logger.LogInformation($"Removed cart {cart.Id}");
 
             return orderCreatedDto.OrderId;
         }

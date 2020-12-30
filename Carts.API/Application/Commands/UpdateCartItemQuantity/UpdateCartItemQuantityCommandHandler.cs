@@ -6,16 +6,20 @@ using Carts.API.DataAccess.Repositories;
 using Carts.API.Domain;
 using Common.Extensions;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 
 namespace Carts.API.Application.Commands.UpdateCartItemQuantity
 {
     public class UpdateCartItemQuantityCommandHandler : IRequestHandler<UpdateCartItemQuantityCommand>
     {
+        private readonly ILogger<UpdateCartItemQuantityCommandHandler> _logger;
         private readonly ICartItemRepository _cartItemRepository;
         private readonly HttpContext _httpContext;
 
-        public UpdateCartItemQuantityCommandHandler(ICartItemRepository cartItemRepository, IHttpContextAccessor httpContextAccessor)
+        public UpdateCartItemQuantityCommandHandler(ILogger<UpdateCartItemQuantityCommandHandler> logger, 
+            ICartItemRepository cartItemRepository, IHttpContextAccessor httpContextAccessor)
         {
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _cartItemRepository = cartItemRepository ?? throw new ArgumentNullException(nameof(cartItemRepository));
             _httpContext = httpContextAccessor.HttpContext ??
                            throw new ArgumentNullException(nameof(httpContextAccessor.HttpContext));
@@ -38,6 +42,8 @@ namespace Carts.API.Application.Commands.UpdateCartItemQuantity
             _cartItemRepository.Update(cartItem);
             await _cartItemRepository.UnitOfWork.SaveChangesAndDispatchDomainEventsAsync(cancellationToken);
 
+            _logger.LogInformation($"Offer's {cartItem.OfferId} quantity in cart {cartItem.CartId} for cart item {cartItem.Id} changed to {cartItem.Quantity}");
+            
             return await Unit.Task;
         }
     }
