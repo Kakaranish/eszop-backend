@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using Common.Domain;
+using Common.Validators;
 
 namespace Carts.API.Domain
 {
@@ -48,7 +49,9 @@ namespace Carts.API.Domain
 
         private static void ValidateUserId(Guid userId)
         {
-            if (userId == Guid.Empty) throw new CartsDomainException($"'{nameof(userId)}' is invalid id");
+            var idValidator = new IdValidator();
+            var result = idValidator.Validate(userId);
+            if (!result.IsValid) throw new CartsDomainException($"'{nameof(userId)}' is invalid id");
         }
     }
 }
