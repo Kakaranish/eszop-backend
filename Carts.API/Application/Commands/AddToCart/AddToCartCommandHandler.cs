@@ -50,7 +50,7 @@ namespace Carts.API.Application.Commands.AddToCart
             var userId = _httpContext.User.Claims.ToTokenPayload().UserClaims.Id;
             if (userId == offerDto.OwnerId)
             {
-                throw new CartDomainException("Buying from himself/herself is illegal");
+                throw new CartsDomainException("Buying from himself/herself is illegal");
             }
 
             var cart = await _cartRepository.GetOrCreateByUserIdAsync(userId);
@@ -69,6 +69,7 @@ namespace Carts.API.Application.Commands.AddToCart
         private class OfferDto
         {
             public Guid Id { get; init; }
+            public Guid OwnerId { get; init; }
             public string Name { get; init; }
             public decimal Price { get; init; }
             public int AvailableStock { get; init; }
