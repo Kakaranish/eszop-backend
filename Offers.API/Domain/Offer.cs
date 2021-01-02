@@ -18,14 +18,20 @@ namespace Offers.API.Domain
         public decimal Price { get; private set; }
         public int AvailableStock { get; private set; }
         public int TotalStock { get; private set; }
+        public Category Category { get; private set; }
 
-        public Offer(Guid ownerId, string name, string description, decimal price, int totalStock)
+        private Offer()
+        {
+        }
+
+        public Offer(Guid ownerId, string name, string description, decimal price, int totalStock, Category category)
         {
             SetOwnerId(ownerId);
             SetName(name);
             SetDescription(description);
             SetPrice(price);
             SetTotalStock(totalStock);
+            SetCategory(category);
 
             CreatedAt = DateTime.UtcNow;
             EndsAt = CreatedAt.AddDays(14);
@@ -74,6 +80,15 @@ namespace Offers.API.Domain
 
             TotalStock = totalStock;
             AvailableStock = totalStock;
+            UpdatedAt = DateTime.UtcNow;
+        }
+
+        public void SetCategory(Category category)
+        {
+            if (category == null) throw new OffersDomainException($"'{nameof(category)}' cannot be null");
+            if (category == Category) return;
+
+            Category = category;
             UpdatedAt = DateTime.UtcNow;
         }
 

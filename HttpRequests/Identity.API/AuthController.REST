@@ -1,16 +1,6 @@
 @url = https://localhost:6001
 
-### Invalid sign up 
-POST {{url}}/api/auth/sign-up HTTP/1.1
-Content-Type: application/json
-
-{
-    "email": "user@",
-    "password": "test",
-    "firstName": ""
-}
-
-### Valid sign up
+### Sign up
 
 POST {{url}}/api/auth/sign-up HTTP/1.1
 Content-Type: application/json
@@ -22,7 +12,7 @@ Content-Type: application/json
     "lastName": "SomeLastName"
 }
 
-### Valid sign in
+### Sign in
 
 POST {{url}}/api/auth/sign-in HTTP/1.1
 Content-Type: application/json
@@ -30,4 +20,14 @@ Content-Type: application/json
 {
     "email": "user@mail.com",
     "password": "Test123"
+}
+
+### Admin sign-in
+
+POST {{url}}/api/auth/sign-in HTTP/1.1
+Content-Type: application/json
+
+{
+    "email": "admin@mail.com",
+    "password": "Test1234"
 }

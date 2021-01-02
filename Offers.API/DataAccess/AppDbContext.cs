@@ -14,6 +14,7 @@ namespace Offers.API.DataAccess
         private readonly IMediator _mediator;
 
         public DbSet<Offer> Offers { get; private set; }
+        public DbSet<Category> Categories { get; private set; }
 
         public AppDbContext(DbContextOptions options, IMediator mediator) : base(options)
         {
@@ -24,10 +25,15 @@ namespace Offers.API.DataAccess
         {
             modelBuilder.Entity<Offer>()
                 .HasKey(x => x.Id);
-
+            modelBuilder.Entity<Offer>()
+                .HasOne(x => x.Category)
+                .WithMany(x => x.Offers);
             modelBuilder.Entity<Offer>()
                 .Property(x => x.Price)
                 .HasColumnType("decimal(18,4)");
+
+            modelBuilder.Entity<Category>()
+                .HasKey(x => x.Id);
         }
 
         public async Task<bool> SaveChangesAndDispatchDomainEventsAsync(CancellationToken cancellationToken = default)

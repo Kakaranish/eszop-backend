@@ -1,6 +1,5 @@
 @url = https://localhost:5001
-@accessToken = 
-@offerId = 
+@categoryId =
 
 ###
 
@@ -16,7 +15,8 @@ Content-Type:  application/json
     "Name": "Offer {{$datetime iso8601}}",
     "Description": "Some offer {{$datetime iso8601}}",
     "Price": {{$randomInt 1 100}},
-    "TotalStock": {{$randomInt 5 20}}
+    "TotalStock": {{$randomInt 5 20}},
+    "CategoryId": "{{categoryId}}"
 }
 
 ###

@@ -42,6 +42,11 @@ namespace Common.Authentication
                     options.SaveToken = true;
                 });
 
+            services.AddAuthorization(options => options.AddPolicy("Admin", builder =>
+            {
+                builder.RequireClaim("Role", "admin");
+            }));
+
             services.AddSingleton<IAccessTokenDecoder, AccessTokenDecoder>();
 
             return services;

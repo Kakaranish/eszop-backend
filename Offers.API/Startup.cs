@@ -53,6 +53,7 @@ namespace Offers.API
             services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
             services.AddScoped<IOfferRepository, OfferRepository>();
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
 
             services.AddExceptionHandling<OffersDomainException>();
 

@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using MediatR;
 using System;
+using Common.Extensions;
 
 namespace Offers.API.Application.Commands.CreateOffer
 {
@@ -10,6 +11,7 @@ namespace Offers.API.Application.Commands.CreateOffer
         public string Description { get; init; }
         public decimal Price { get; init; }
         public int TotalStock { get; init; }
+        public string CategoryId { get; init; }
     }
 
     public class CreateOfferCommandValidator : AbstractValidator<CreateOfferCommand>
@@ -31,6 +33,9 @@ namespace Offers.API.Application.Commands.CreateOffer
 
             RuleFor(x => x.TotalStock)
                 .GreaterThanOrEqualTo(1);
+
+            RuleFor(x => x.CategoryId)
+                .IsGuid();
         }
     }
 }

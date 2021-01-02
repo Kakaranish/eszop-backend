@@ -1,0 +1,16 @@
+@url = https://localhost:5001
+@accessToken = 
+
+### Get all
+
+GET {{url}}/api/category HTTP/1.1
+
+###
+
+POST {{url}}/api/category HTTP/1.1
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+    "Name": "TestCategory"
+}
