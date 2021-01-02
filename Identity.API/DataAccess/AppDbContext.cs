@@ -1,16 +1,19 @@
-﻿using Identity.API.Domain;
+﻿using System;
+using Identity.API.Domain;
 using Microsoft.EntityFrameworkCore;
 
 namespace Identity.API.DataAccess
 {
     public class AppDbContext : DbContext
     {
+        private readonly IServiceProvider _serviceProvider;
         public DbSet<User> Users { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
 
 
-        public AppDbContext(DbContextOptions options) : base(options)
+        public AppDbContext(DbContextOptions options, IServiceProvider serviceProvider) : base(options)
         {
+            _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -22,9 +25,11 @@ namespace Identity.API.DataAccess
             modelBuilder.Entity<User>()
                 .Property(x => x.Role)
                 .HasConversion(x => x.Name, x => Role.Parse(x));
-
+            
             modelBuilder.Entity<RefreshToken>()
                 .HasKey(x => x.Id);
+
+            modelBuilder.Seed(_serviceProvider);
         }
     }
 }

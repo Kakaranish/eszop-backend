@@ -7,7 +7,7 @@ namespace Identity.API.Extensions
     {
         public static UserClaims ExtractUserClaims(this User user)
         {
-            return new UserClaims
+            return new()
             {
                 Id = user.Id,
                 Email = user.Email,
