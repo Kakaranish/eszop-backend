@@ -13,8 +13,8 @@ namespace Orders.API.DataAccess
     {
         private readonly IMediator _mediator;
 
-        public DbSet<Order> Orders { get; set; }
-        public DbSet<OrderItem> OrderItems { get; set; }
+        public DbSet<Order> Orders { get; private set; }
+        public DbSet<OrderItem> OrderItems { get; private set; }
 
         public AppDbContext(DbContextOptions options, IMediator mediator) : base(options)
         {

@@ -13,8 +13,8 @@ namespace Carts.API.DataAccess
     {
         private readonly IMediator _mediator;
         
-        public DbSet<Cart> Carts{ get; set; }
-        public DbSet<CartItem> CartItems { get; set; }
+        public DbSet<Cart> Carts{ get; private set; }
+        public DbSet<CartItem> CartItems { get; private set; }
 
         public AppDbContext(DbContextOptions options, IMediator mediator) : base(options)
         {

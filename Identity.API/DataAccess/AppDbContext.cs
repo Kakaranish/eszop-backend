@@ -7,8 +7,9 @@ namespace Identity.API.DataAccess
     public class AppDbContext : DbContext
     {
         private readonly IServiceProvider _serviceProvider;
-        public DbSet<User> Users { get; set; }
-        public DbSet<RefreshToken> RefreshTokens { get; set; }
+
+        public DbSet<User> Users { get; private set; }
+        public DbSet<RefreshToken> RefreshTokens { get; private set; }
 
 
         public AppDbContext(DbContextOptions options, IServiceProvider serviceProvider) : base(options)
