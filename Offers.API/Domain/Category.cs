@@ -2,8 +2,6 @@
 using Common.Types;
 using FluentValidation;
 using System;
-using System.Collections.Generic;
-using System.Text.Json.Serialization;
 
 namespace Offers.API.Domain
 {
@@ -12,7 +10,6 @@ namespace Offers.API.Domain
         public DateTime CreatedAt { get; private set; }
         public DateTime UpdatedAt { get; private set; }
         public string Name { get; private set; }
-        [JsonIgnore] public virtual IList<Offer> Offers { get; set; }
 
         public Category(string name)
         {

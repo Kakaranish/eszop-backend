@@ -26,9 +26,6 @@ namespace Offers.API.DataAccess
             modelBuilder.Entity<Offer>()
                 .HasKey(x => x.Id);
             modelBuilder.Entity<Offer>()
-                .HasOne(x => x.Category)
-                .WithMany(x => x.Offers);
-            modelBuilder.Entity<Offer>()
                 .Property(x => x.Price)
                 .HasColumnType("decimal(18,4)");
 
