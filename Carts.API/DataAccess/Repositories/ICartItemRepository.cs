@@ -12,5 +12,6 @@ namespace Carts.API.DataAccess.Repositories
         Task UpdateWithOfferChangedEvent(OfferChangedIntegrationEvent @event);
         void Update(CartItem cartItem);
         void Remove(CartItem cartItem);
+        void RemoveWithOfferId(Guid offerId);
     }
 }

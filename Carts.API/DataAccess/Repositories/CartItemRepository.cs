@@ -45,5 +45,11 @@ namespace Carts.API.DataAccess.Repositories
         {
             _appDbContext.Remove(cartItem);
         }
+
+        public void RemoveWithOfferId(Guid offerId)
+        {
+            var cartItemsToRemove = _appDbContext.CartItems.Where(x => x.OfferId == offerId);
+            _appDbContext.CartItems.RemoveRange(cartItemsToRemove);
+        }
     }
 }

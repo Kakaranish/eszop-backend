@@ -3,6 +3,7 @@ using Common.Types;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Offers.API.Application.Commands.CreateOffer;
+using Offers.API.Application.Commands.EndOffer;
 using Offers.API.Application.Commands.UpdateOffer;
 using Offers.API.Application.Queries.GetOffer;
 using Offers.API.Domain;
@@ -40,6 +41,14 @@ namespace Offers.API.Controllers
         [HttpPut("")]
         [JwtAuthorize]
         public async Task<IActionResult> Update(UpdateOfferCommand command)
+        {
+            await _mediator.Send(command);
+            return Ok();
+        }
+
+        [HttpPost("end")]
+        [JwtAuthorize]
+        public async Task<IActionResult> End(EndOfferCommand command)
         {
             await _mediator.Send(command);
             return Ok();

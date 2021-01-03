@@ -31,3 +31,13 @@ Content-Type:  application/json
     "Description": "Some offer {{$datetime iso8601}}",
     "Price": 52
 }
+
+###
+
+POST {{url}}/api/offers/end HTTP/1.1
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+    "OfferId": "{{offerId}}"
+}

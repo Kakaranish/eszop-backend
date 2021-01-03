@@ -1,9 +1,10 @@
-﻿using Common.Types;
-using FluentValidation;
-using System;
-using Common.Domain;
+﻿using Common.Domain;
+using Common.Types;
 using Common.Validators;
+using FluentValidation;
 using Offers.API.Application.DomainEvents.AvailableStockChanged;
+using Offers.API.Application.DomainEvents.UserEndedOffer;
+using System;
 
 namespace Offers.API.Domain
 {
@@ -12,6 +13,7 @@ namespace Offers.API.Domain
         public Guid OwnerId { get; private set; }
         public DateTime CreatedAt { get; private set; }
         public DateTime UpdatedAt { get; private set; }
+        public DateTime? UserEndedAt { get; private set; }
         public DateTime EndsAt { get; private set; }
         public string Name { get; private set; }
         public string Description { get; private set; }
@@ -39,6 +41,8 @@ namespace Offers.API.Domain
 
         private void SetOwnerId(Guid ownerId)
         {
+            ValidateEditable();
+
             if (OwnerId == ownerId) return;
             ValidateOwnerId(ownerId);
 
@@ -48,6 +52,8 @@ namespace Offers.API.Domain
 
         public void SetName(string name)
         {
+            ValidateEditable();
+
             if (Name == name) return;
             ValidateName(name);
 
@@ -57,6 +63,8 @@ namespace Offers.API.Domain
 
         public void SetDescription(string description)
         {
+            ValidateEditable();
+
             if (Description == description) return;
             ValidateDescription(description);
 
@@ -66,6 +74,8 @@ namespace Offers.API.Domain
 
         public void SetPrice(decimal price)
         {
+            ValidateEditable();
+
             if (Price == price) return;
             ValidatePrice(price);
 
@@ -75,6 +85,8 @@ namespace Offers.API.Domain
 
         public void SetTotalStock(int totalStock)
         {
+            ValidateEditable();
+
             if (TotalStock == totalStock) return;
             ValidateTotalStock(totalStock);
 
@@ -85,7 +97,9 @@ namespace Offers.API.Domain
 
         public void SetCategory(Category category)
         {
-            if (category == null) throw new OffersDomainException($"'{nameof(category)}' cannot be null");
+            ValidateEditable();
+
+            ValidateCategory(category);
             if (category == Category) return;
 
             Category = category;
@@ -94,8 +108,9 @@ namespace Offers.API.Domain
 
         public void DecreaseAvailableStock(int toDecrease)
         {
+            ValidateEditable();
             ValidateDecreaseAvailableStock(toDecrease);
-            
+
             var domainEvent = new AvailableStockChangedDomainEvent
             {
                 OfferId = Id,
@@ -104,6 +119,16 @@ namespace Offers.API.Domain
             AddDomainEvent(domainEvent);
 
             AvailableStock -= toDecrease;
+        }
+
+        public void EndOffer()
+        {
+            ValidateEndOffer();
+            UserEndedAt = DateTime.UtcNow;
+            UpdatedAt = UserEndedAt.Value;
+
+            var domainEvent = new UserEndedOfferDomainEvent { OfferId = Id };
+            AddDomainEvent(domainEvent);
         }
 
         #region Validation
@@ -156,6 +181,21 @@ namespace Offers.API.Domain
             {
                 throw new OffersDomainException($"{nameof(toDecrease)} cannot be greater than AvailableStock");
             }
+        }
+
+        private static void ValidateCategory(Category category)
+        {
+            if (category == null) throw new OffersDomainException($"'{nameof(category)}' cannot be null");
+        }
+
+        private void ValidateEndOffer()
+        {
+            if (UserEndedAt != null) throw new OffersDomainException("Offer is already ended");
+        }
+
+        private void ValidateEditable()
+        {
+            if (UserEndedAt != null) throw new OffersDomainException("Offer is not editable");
         }
 
         #endregion

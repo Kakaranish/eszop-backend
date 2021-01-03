@@ -66,7 +66,8 @@ namespace Carts.API
             
             services
                 .AddRabbitMqEventBus()
-                .Subscribe<OfferChangedIntegrationEvent, OfferChangedIntegrationEventHandler>();
+                .Subscribe<OfferChangedIntegrationEvent, OfferChangedIntegrationEventHandler>()
+                .Subscribe<UserEndedOfferIntegrationEvent, UserEndedOfferIntegrationEventHandler>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
