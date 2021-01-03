@@ -3,18 +3,19 @@ using Common.Types;
 using Common.Validators;
 using FluentValidation;
 using Offers.API.Application.DomainEvents.AvailableStockChanged;
-using Offers.API.Application.DomainEvents.UserEndedOffer;
+using Offers.API.Application.DomainEvents.OfferBecameUnavailable;
 using System;
 
 namespace Offers.API.Domain
 {
-    public class Offer : EntityBase, IAggregateRoot, ITimeStamped
+    public class Offer : EntityBase, IAggregateRoot, ITimeStamped, IRemovable
     {
         public Guid OwnerId { get; private set; }
         public DateTime CreatedAt { get; private set; }
         public DateTime UpdatedAt { get; private set; }
         public DateTime? UserEndedAt { get; private set; }
         public DateTime EndsAt { get; private set; }
+        public DateTime? RemovedAt { get; private set; }
         public string Name { get; private set; }
         public string Description { get; private set; }
         public decimal Price { get; private set; }
@@ -127,7 +128,18 @@ namespace Offers.API.Domain
             UserEndedAt = DateTime.UtcNow;
             UpdatedAt = UserEndedAt.Value;
 
-            var domainEvent = new UserEndedOfferDomainEvent { OfferId = Id };
+            var domainEvent = new OfferBecameUnavailableDomainEvent { OfferId = Id };
+            AddDomainEvent(domainEvent);
+        }
+
+        public void MarkAsRemoved()
+        {
+            ValidateMarkAsRemoved();
+
+            RemovedAt = DateTime.UtcNow;
+            UpdatedAt = RemovedAt.Value;
+
+            var domainEvent = new OfferBecameUnavailableDomainEvent { OfferId = Id };
             AddDomainEvent(domainEvent);
         }
 
@@ -195,7 +207,12 @@ namespace Offers.API.Domain
 
         private void ValidateEditable()
         {
-            if (UserEndedAt != null) throw new OffersDomainException("Offer is not editable");
+            if (UserEndedAt != null || RemovedAt != null) throw new OffersDomainException("Offer is not editable");
+        }
+
+        private void ValidateMarkAsRemoved()
+        {
+            if (RemovedAt != null) throw new OffersDomainException("Offer is already removed");
         }
 
         #endregion

@@ -6,16 +6,16 @@ using System.Threading.Tasks;
 
 namespace Carts.API.Application.IntegrationEventsHandlers
 {
-    public class UserEndedOfferIntegrationEventHandler : IntegrationEventHandler<UserEndedOfferIntegrationEvent>
+    public class OfferBecameUnavailableIntegrationEventHandler : IntegrationEventHandler<OfferBecameUnavailableIntegrationEvent>
     {
         private readonly ICartItemRepository _cartItemRepository;
 
-        public UserEndedOfferIntegrationEventHandler(ICartItemRepository cartItemRepository)
+        public OfferBecameUnavailableIntegrationEventHandler(ICartItemRepository cartItemRepository)
         {
             _cartItemRepository = cartItemRepository ?? throw new ArgumentNullException(nameof(cartItemRepository));
         }
 
-        public override async Task Handle(UserEndedOfferIntegrationEvent @event)
+        public override async Task Handle(OfferBecameUnavailableIntegrationEvent @event)
         {
             _cartItemRepository.RemoveWithOfferId(@event.OfferId);
             await _cartItemRepository.UnitOfWork.SaveChangesAndDispatchDomainEventsAsync();

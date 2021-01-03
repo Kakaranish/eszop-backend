@@ -1,9 +1,8 @@
 ﻿using Carts.API.Domain;
+using Common.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using Common.DataAccess;
 
 namespace Carts.API.DataAccess.Repositories
 {
@@ -18,21 +17,18 @@ namespace Carts.API.DataAccess.Repositories
             _appDbContext = appDbContext ?? throw new ArgumentNullException(nameof(appDbContext));
         }
 
-        public async Task<IList<Cart>> GetAllAsync()
-        {
-            return await _appDbContext.Carts.ToListAsync();
-        }
-
         public async Task<Cart> GetByIdAsync(Guid id)
         {
-            return await _appDbContext.Carts.FirstOrDefaultAsync(x => x.Id == id);
+            return await _appDbContext.Carts.Include(x => x.CartItems)
+                .FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<Cart> GetOrCreateByUserIdAsync(Guid userId)
         {
-            var cart = await _appDbContext.Carts.FirstOrDefaultAsync(x => x.UserId == userId);
+            var cart = await _appDbContext.Carts.Include(x => x.CartItems)
+                .FirstOrDefaultAsync(x => x.UserId == userId);
             if (cart is not null) return cart;
-            
+
             cart = new Cart(userId);
             await AddAsync(cart);
             return cart;

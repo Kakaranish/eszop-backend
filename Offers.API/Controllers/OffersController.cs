@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Offers.API.Application.Commands.CreateOffer;
 using Offers.API.Application.Commands.EndOffer;
+using Offers.API.Application.Commands.RemoveOffer;
 using Offers.API.Application.Commands.UpdateOffer;
 using Offers.API.Application.Queries.GetAllOffers;
 using Offers.API.Application.Queries.GetFilteredOffers;
@@ -65,6 +66,14 @@ namespace Offers.API.Controllers
         [HttpPost("end")]
         [JwtAuthorize]
         public async Task<IActionResult> End(EndOfferCommand command)
+        {
+            await _mediator.Send(command);
+            return Ok();
+        }
+
+        [HttpDelete]
+        [JwtAuthorize]
+        public async Task<IActionResult> Remove(RemoveOfferCommand command)
         {
             await _mediator.Send(command);
             return Ok();
