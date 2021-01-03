@@ -8,10 +8,12 @@ namespace Orders.API.Domain
 {
     public class Order : EntityBase, IAggregateRoot, ITimeStamped
     {
+        private List<OrderItem> _orderItems;
+        
         public DateTime CreatedAt { get; private set; }
         public DateTime UpdatedAt { get; private set; }
-        public virtual IList<OrderItem> OrderItems { get; private set; }
-
+        public virtual IReadOnlyCollection<OrderItem> OrderItems => _orderItems ?? new List<OrderItem>();
+        
         public Order()
         {
             CreatedAt = DateTime.UtcNow;
@@ -22,11 +24,11 @@ namespace Orders.API.Domain
         {
             ValidateOrderItems(orderItems);
 
-            OrderItems ??= new List<OrderItem>();
+            _orderItems ??= new List<OrderItem>();
 
             foreach (var orderItem in orderItems)
             {
-                OrderItems.Add(orderItem);
+                _orderItems.Add(orderItem);
             }
         }
         
