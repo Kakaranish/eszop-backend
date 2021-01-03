@@ -4,9 +4,9 @@ namespace Offers.API.DataAccess
 {
     public class OfferFilter
     {
-        public decimal? PriceFrom { get; set; }
-        public decimal? PriceTo { get; set; }
-        public Guid? Category { get; set; }
+        public decimal? PriceFrom { get; }
+        public decimal? PriceTo { get; }
+        public Guid? Category { get; }
 
         public OfferFilter(decimal? priceFrom = default, decimal? priceTo = default, Guid? category = default)
         {
