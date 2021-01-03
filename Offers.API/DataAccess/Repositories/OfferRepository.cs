@@ -1,9 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Common.DataAccess;
+using Common.Extensions;
+using Common.Types;
+using Microsoft.EntityFrameworkCore;
 using Offers.API.Domain;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
-using Common.DataAccess;
 
 namespace Offers.API.DataAccess.Repositories
 {
@@ -28,6 +31,18 @@ namespace Offers.API.DataAccess.Repositories
         {
             return await _appDbContext.Offers.Include(x => x.Category)
                 .FirstOrDefaultAsync(x => x.Id == offerId);
+        }
+
+        public async Task<Pagination<Offer>> GetFiltered(OfferFilter filter, PageDetails pageDetails)
+        {
+            var offers = _appDbContext.Offers.AsQueryable();
+
+            offers = offers.OrderByDescending(x => x.CreatedAt);
+            if (filter.PriceFrom != null) offers = offers.Where(x => x.Price >= filter.PriceFrom);
+            if (filter.PriceTo != null) offers = offers.Where(x => x.Price <= filter.PriceTo);
+            if (filter.Category != null) offers = offers.Where(x => x.Category.Id == filter.Category);
+
+            return await offers.PaginateAsync(pageDetails);
         }
 
         public async Task AddAsync(Offer offer)

@@ -6,6 +6,7 @@ using Offers.API.Application.Commands.CreateOffer;
 using Offers.API.Application.Commands.EndOffer;
 using Offers.API.Application.Commands.UpdateOffer;
 using Offers.API.Application.Queries.GetAllOffers;
+using Offers.API.Application.Queries.GetFilteredOffers;
 using Offers.API.Application.Queries.GetOffer;
 using Offers.API.Domain;
 using System;
@@ -29,6 +30,12 @@ namespace Offers.API.Controllers
         public async Task<IList<Offer>> GetAll()
         {
             var query = new GetAllOffersQuery();
+            return await _mediator.Send(query);
+        }
+
+        [HttpGet("filtered")]
+        public async Task<Pagination<Offer>> GetFiltered([FromQuery] GetFilteredOffersQuery query)
+        {
             return await _mediator.Send(query);
         }
 
