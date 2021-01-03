@@ -8,9 +8,9 @@ namespace Offers.API.DataAccess.Repositories
 {
     public interface IOfferRepository : IDomainRepository<Offer>
     {
-        Task AddAsync(Offer product);
-        Task<Offer> GetByIdAsync(Guid offerId);
         Task<IList<Offer>> GetAllAsync();
+        Task<Offer> GetByIdAsync(Guid offerId);
+        Task AddAsync(Offer product);
         void Update(Offer offer);
     }
 }

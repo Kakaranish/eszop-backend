@@ -5,9 +5,11 @@ using Microsoft.AspNetCore.Mvc;
 using Offers.API.Application.Commands.CreateOffer;
 using Offers.API.Application.Commands.EndOffer;
 using Offers.API.Application.Commands.UpdateOffer;
+using Offers.API.Application.Queries.GetAllOffers;
 using Offers.API.Application.Queries.GetOffer;
 using Offers.API.Domain;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Offers.API.Controllers
@@ -21,6 +23,13 @@ namespace Offers.API.Controllers
         public OffersController(IMediator mediator)
         {
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+        }
+
+        [HttpGet("")]
+        public async Task<IList<Offer>> GetAll()
+        {
+            var query = new GetAllOffersQuery();
+            return await _mediator.Send(query);
         }
 
         [HttpGet("{offerId}")]

@@ -1,5 +1,7 @@
 @url = https://localhost:5001
-@categoryId =
+###
+
+GET {{url}}/api/offers HTTP/1.1
 
 ###
 

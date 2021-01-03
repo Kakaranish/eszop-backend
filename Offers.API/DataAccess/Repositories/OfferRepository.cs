@@ -18,19 +18,21 @@ namespace Offers.API.DataAccess.Repositories
             _appDbContext = appDbContext ?? throw new ArgumentNullException(nameof(appDbContext));
         }
 
-        public async Task AddAsync(Offer offer)
+        public async Task<IList<Offer>> GetAllAsync()
         {
-            await _appDbContext.Offers.AddAsync(offer);
+            return await _appDbContext.Offers.Include(x => x.Category)
+                .ToListAsync();
         }
 
         public async Task<Offer> GetByIdAsync(Guid offerId)
         {
-            return await _appDbContext.Offers.FirstOrDefaultAsync(x => x.Id == offerId);
+            return await _appDbContext.Offers.Include(x => x.Category)
+                .FirstOrDefaultAsync(x => x.Id == offerId);
         }
 
-        public async Task<IList<Offer>> GetAllAsync()
+        public async Task AddAsync(Offer offer)
         {
-            return await _appDbContext.Offers.ToListAsync();
+            await _appDbContext.Offers.AddAsync(offer);
         }
 
         public void Update(Offer offer)
