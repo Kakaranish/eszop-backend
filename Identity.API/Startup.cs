@@ -5,9 +5,7 @@ using Identity.API.DataAccess;
 using Identity.API.Domain;
 using Identity.API.Extensions;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -26,21 +24,18 @@ namespace Identity.API
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddControllers();
             services.AddHttpContextAccessor();
-
             services.AddLocalhostCorsPolicy();
 
-            services.Configure<JwtConfig>(Configuration.GetSection("JwtConfig"));
             services.AddJwtAuthentication();
+            services.Configure<JwtConfig>(Configuration.GetSection("JwtConfig"));
 
             var sqlServerConnectionString = Configuration.GetConnectionString("SqlServer");
             services.AddDbContext<AppDbContext>(builder => builder.UseSqlServer(sqlServerConnectionString));
 
             var redisConnectionString = Configuration.GetConnectionString("Redis");
-            services.AddDistributedRedisCache(options =>
-            {
-                options.Configuration = redisConnectionString;
-            });
+            services.AddDistributedRedisCache(options => options.Configuration = redisConnectionString);
 
             services.AddHealthChecks()
                 .AddCheck(
@@ -51,6 +46,8 @@ namespace Identity.API
                     name: "RedisCheck",
                     instance: new RedisConnectionHealthCheck(redisConnectionString),
                     failureStatus: HealthStatus.Unhealthy);
+
+            services.AddExceptionHandling<IdentityDomainException>();
 
             services.AddFluentValidation();
             services.AddInternalServices();
@@ -64,19 +61,9 @@ namespace Identity.API
                 app.UseCors("LocalhostCorsPolicy");
             }
 
-            app.UseExceptionHandler(a => a.Run(async context =>
-            {
-                var exceptionHandlerPathFeature = context.Features.Get<IExceptionHandlerPathFeature>();
-                var exception = exceptionHandlerPathFeature.Error;
+            app.UseExceptionHandler("/error");
 
-                if (exception is IdentityDomainException)
-                {
-                    await context.Response.WriteAsJsonAsync(new
-                    {
-                        Error = exception.Message
-                    });
-                }
-            }));
+            app.UseHttpsRedirection();
 
             app.UseRouting();
 

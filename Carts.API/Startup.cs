@@ -54,7 +54,6 @@ namespace Carts.API
                     instance: new SqlConnectionHealthCheck(connectionString),
                     failureStatus: HealthStatus.Unhealthy);
 
-
             AssemblyScanner.FindValidatorsInAssembly(typeof(Startup).Assembly)
                 .ForEach(item => services.AddScoped(item.InterfaceType, item.ValidatorType));
             services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
