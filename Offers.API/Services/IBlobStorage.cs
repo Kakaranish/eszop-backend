@@ -1,12 +1,13 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
+using Offers.API.Services.Dto;
 
 namespace Offers.API.Services
 {
     public interface IBlobStorage
     {
         string ContainerName { get; }
-        Task UploadAsync(Stream content, string blobName);
+        Task<UploadedFileDto> UploadAsync(Stream content, string blobName);
         Task<Stream> DownloadAsync(string blobName);
     }
 }

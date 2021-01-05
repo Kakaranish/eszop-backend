@@ -42,6 +42,7 @@ namespace Offers.API
 
             services.Configure<AzureStorageConfig>(Configuration.GetSection("AzureStorage"));
             services.AddSingleton<IBlobStorage, AzureBlobStorage>();
+            services.AddSingleton<IImageUploader, ImageUploader>();
 
             var connectionString = Configuration.GetConnectionString("SqlServer");
             services.AddDbContext<AppDbContext>(builder =>

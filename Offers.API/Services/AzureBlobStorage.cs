@@ -1,6 +1,7 @@
 ﻿using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using Microsoft.Extensions.Options;
+using Offers.API.Services.Dto;
 using System;
 using System.IO;
 using System.Threading.Tasks;
@@ -21,12 +22,18 @@ namespace Offers.API.Services
 
         public string ContainerName => _azureConfig.ContainerName;
 
-        public async Task UploadAsync(Stream content, string blobName)
+        public async Task<UploadedFileDto> UploadAsync(Stream content, string blobName)
         {
             await EnsureContainerExistsAsync();
 
             var blobClient = _containerClient.GetBlobClient(blobName);
             await blobClient.UploadAsync(content);
+
+            return new UploadedFileDto
+            {
+                ContainerName = ContainerName,
+                Filename = blobName
+            };
         }
 
         public async Task<Stream> DownloadAsync(string blobName)
