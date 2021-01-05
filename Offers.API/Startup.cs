@@ -16,6 +16,7 @@ using Offers.API.Application.IntegrationEventHandlers;
 using Offers.API.DataAccess;
 using Offers.API.DataAccess.Repositories;
 using Offers.API.Domain;
+using Offers.API.Services;
 
 namespace Offers.API
 {
@@ -38,6 +39,9 @@ namespace Offers.API
 
             services.AddJwtAuthentication();
             services.AddMediatR(typeof(Startup).Assembly);
+
+            services.Configure<AzureStorageConfig>(Configuration.GetSection("AzureStorage"));
+            services.AddSingleton<IBlobStorage, AzureBlobStorage>();
 
             var connectionString = Configuration.GetConnectionString("SqlServer");
             services.AddDbContext<AppDbContext>(builder =>
