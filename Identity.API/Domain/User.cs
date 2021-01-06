@@ -1,8 +1,8 @@
 ﻿using Common.Domain;
 using Common.Types;
-using FluentValidation;
 using System;
 using System.Collections.Generic;
+using Identity.API.Domain.CommonValidators;
 
 namespace Identity.API.Domain
 {
@@ -19,6 +19,7 @@ namespace Identity.API.Domain
         public virtual IReadOnlyCollection<DeliveryAddress> DeliveryAddresses =>
             _deliveryAddresses ?? new List<DeliveryAddress>();
         public Guid? PrimaryDeliveryAddressId { get; private set; }
+        public virtual AboutSeller AboutSeller { get; private set; }
 
         protected User()
         {
@@ -55,19 +56,15 @@ namespace Identity.API.Domain
 
         private static void ValidateEmail(string email)
         {
-            var validator = new InlineValidator<string>();
-            validator.RuleFor(x => x)
-                .NotNull()
-                .EmailAddress();
-
+            var validator = new EmailValidator();
             var result = validator.Validate(email);
-            if (!result.IsValid) throw new IdentityDomainException($"'{nameof(email)}' is invalid email");
+            if (!result.IsValid) throw new IdentityDomainException(nameof(email));
         }
 
         private void ValidatePrimaryDeliveryAddress(DeliveryAddress deliveryAddress)
         {
-            if (deliveryAddress == null) throw new IdentityDomainException(nameof(deliveryAddress));
-            if (Id != deliveryAddress.UserId) throw new IdentityDomainException(nameof(deliveryAddress));
+            if (deliveryAddress == null || Id != deliveryAddress.UserId) 
+                throw new IdentityDomainException(nameof(deliveryAddress));
         }
 
         #endregion

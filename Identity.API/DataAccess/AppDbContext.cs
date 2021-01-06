@@ -12,7 +12,7 @@ namespace Identity.API.DataAccess
         public DbSet<RefreshToken> RefreshTokens { get; private set; }
         public DbSet<ProfileInfo> ProfileInfos { get; private set; }
         public DbSet<DeliveryAddress> DeliveryAddresses { get; private set; }
-
+        public DbSet<AboutSeller> AboutSellers { get; private set; }
 
         public AppDbContext(DbContextOptions options, IServiceProvider serviceProvider) : base(options)
         {
@@ -36,6 +36,9 @@ namespace Identity.API.DataAccess
                 .HasKey(x => x.Id);
 
             modelBuilder.Entity<DeliveryAddress>()
+                .HasKey(x => x.Id);
+
+            modelBuilder.Entity<AboutSeller>()
                 .HasKey(x => x.Id);
 
             modelBuilder.Seed(_serviceProvider);
