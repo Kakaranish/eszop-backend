@@ -29,7 +29,7 @@ namespace Carts.API.DataAccess
                 .Property(x => x.PricePerItem)
                 .HasColumnType("decimal(18,4)");
 
-            model.Entity<Domain.Cart>()
+            model.Entity<Cart>()
                 .HasKey(x => x.Id);
         }
 

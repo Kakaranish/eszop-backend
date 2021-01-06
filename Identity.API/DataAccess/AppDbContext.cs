@@ -1,6 +1,6 @@
-﻿using System;
-using Identity.API.Domain;
+﻿using Identity.API.Domain;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace Identity.API.DataAccess
 {
@@ -10,6 +10,8 @@ namespace Identity.API.DataAccess
 
         public DbSet<User> Users { get; private set; }
         public DbSet<RefreshToken> RefreshTokens { get; private set; }
+        public DbSet<ProfileInfo> ProfileInfos { get; private set; }
+        public DbSet<DeliveryAddress> DeliveryAddresses { get; private set; }
 
 
         public AppDbContext(DbContextOptions options, IServiceProvider serviceProvider) : base(options)
@@ -26,8 +28,14 @@ namespace Identity.API.DataAccess
             modelBuilder.Entity<User>()
                 .Property(x => x.Role)
                 .HasConversion(x => x.Name, x => Role.Parse(x));
-            
+
             modelBuilder.Entity<RefreshToken>()
+                .HasKey(x => x.Id);
+
+            modelBuilder.Entity<ProfileInfo>()
+                .HasKey(x => x.Id);
+
+            modelBuilder.Entity<DeliveryAddress>()
                 .HasKey(x => x.Id);
 
             modelBuilder.Seed(_serviceProvider);

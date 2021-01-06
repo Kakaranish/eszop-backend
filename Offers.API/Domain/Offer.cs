@@ -23,7 +23,7 @@ namespace Offers.API.Domain
         public int TotalStock { get; private set; }
         public Category Category { get; private set; }
 
-        private Offer()
+        protected Offer()
         {
         }
 

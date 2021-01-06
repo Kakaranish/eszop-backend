@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Logging;
 
 namespace Identity.API
 {
@@ -32,7 +33,12 @@ namespace Identity.API
             services.Configure<JwtConfig>(Configuration.GetSection("JwtConfig"));
 
             var sqlServerConnectionString = Configuration.GetConnectionString("SqlServer");
-            services.AddDbContext<AppDbContext>(builder => builder.UseSqlServer(sqlServerConnectionString));
+            services.AddDbContext<AppDbContext>(builder => 
+                builder
+                    .UseSqlServer(sqlServerConnectionString)
+                    .UseLazyLoadingProxies()
+                    .UseLoggerFactory(LoggerFactory.Create(loggingBuilder => loggingBuilder.AddDebug()))
+            );
 
             var redisConnectionString = Configuration.GetConnectionString("Redis");
             services.AddDistributedRedisCache(options => options.Configuration = redisConnectionString);

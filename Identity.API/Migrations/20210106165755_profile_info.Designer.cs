@@ -4,60 +4,22 @@ using Identity.API.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Identity.API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210106165755_profile_info")]
+    partial class profile_info
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .UseIdentityColumns()
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.1");
-
-            modelBuilder.Entity("Identity.API.Domain.DeliveryAddress", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("City")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Country")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FirstName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("HouseNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LastName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Street")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("ZipCode")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("DeliveryAddresses");
-                });
 
             modelBuilder.Entity("Identity.API.Domain.ProfileInfo", b =>
                 {
@@ -126,9 +88,6 @@ namespace Identity.API.Migrations
                     b.Property<string>("HashedPassword")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("PrimaryDeliveryAddressId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("Role")
                         .HasColumnType("nvarchar(max)");
 
@@ -142,22 +101,13 @@ namespace Identity.API.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("22b975b1-aecd-4150-8a01-f05a40aced85"),
-                            CreatedAt = new DateTime(2021, 1, 6, 17, 45, 45, 313, DateTimeKind.Utc).AddTicks(1257),
+                            Id = new Guid("0b7e7262-e06a-436d-9049-6b7655d8e91d"),
+                            CreatedAt = new DateTime(2021, 1, 6, 16, 57, 55, 124, DateTimeKind.Utc).AddTicks(8285),
                             Email = "admin@mail.com",
-                            HashedPassword = "oxM890aSm0FACmqDX7f5e08IDSdOhHp8l71c8D5LEts=|3XparpdfIFVW9Z29sCqqHg==|10000",
+                            HashedPassword = "90aFcZq9I2zPmRXnQzWrItNtyzwmd7QPCRMQLmsfX1o=|LVdpW3tdc4GMZETuVTr4ug==|10000",
                             Role = "admin",
-                            UpdatedAt = new DateTime(2021, 1, 6, 17, 45, 45, 313, DateTimeKind.Utc).AddTicks(1591)
+                            UpdatedAt = new DateTime(2021, 1, 6, 16, 57, 55, 124, DateTimeKind.Utc).AddTicks(8638)
                         });
-                });
-
-            modelBuilder.Entity("Identity.API.Domain.DeliveryAddress", b =>
-                {
-                    b.HasOne("Identity.API.Domain.User", null)
-                        .WithMany("DeliveryAddresses")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Identity.API.Domain.ProfileInfo", b =>
@@ -171,8 +121,6 @@ namespace Identity.API.Migrations
 
             modelBuilder.Entity("Identity.API.Domain.User", b =>
                 {
-                    b.Navigation("DeliveryAddresses");
-
                     b.Navigation("ProfileInfo");
                 });
 #pragma warning restore 612, 618

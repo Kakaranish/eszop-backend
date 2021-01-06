@@ -1,7 +1,9 @@
 ﻿using FluentValidation;
 using MediatR;
 using System;
+using System.Collections.Generic;
 using Common.Extensions;
+using Microsoft.AspNetCore.Http;
 
 namespace Offers.API.Application.Commands.CreateOffer
 {
@@ -12,6 +14,7 @@ namespace Offers.API.Application.Commands.CreateOffer
         public decimal Price { get; init; }
         public int TotalStock { get; init; }
         public string CategoryId { get; init; }
+        public IList<IFormFile> Images { get; init; }
     }
 
     public class CreateOfferCommandValidator : AbstractValidator<CreateOfferCommand>
