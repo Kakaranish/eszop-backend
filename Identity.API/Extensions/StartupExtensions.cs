@@ -1,10 +1,7 @@
 using Common.Authentication;
-using FluentValidation.AspNetCore;
 using Identity.API.DataAccess.Repositories;
 using Identity.API.Services;
 using Microsoft.Extensions.DependencyInjection;
-using System.Linq;
-using Common.ErrorHandling.CustomFluentValidation;
 
 namespace Identity.API.Extensions
 {
@@ -23,26 +20,6 @@ namespace Identity.API.Extensions
 
             services.AddSingleton<IAccessTokenDecoder, AccessTokenDecoder>();
             services.AddSingleton<IRefreshTokenDecoder, RefreshTokenDecoder>();
-
-            return services;
-        }
-
-        public static IServiceCollection AddFluentValidation(this IServiceCollection services)
-        {
-            services.AddControllers(options =>
-                {
-                    options.Filters.Add<CustomFluentValidationFailureActionFilter>();
-                })
-                .ConfigureApiBehaviorOptions(options =>
-                {
-                    options.SuppressModelStateInvalidFilter = true;
-                })
-                .AddFluentValidation(configuration =>
-                {
-                    var typesToExclude = new[] { typeof(PasswordValidator) };
-                    configuration.RegisterValidatorsFromAssemblyContaining<Startup>(result =>
-                        !typesToExclude.Contains(result.ValidatorType));
-                });
 
             return services;
         }

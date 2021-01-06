@@ -1,17 +1,18 @@
 ﻿using FluentValidation;
 using Identity.API.Services;
+using MediatR;
 
-namespace Identity.API.Dto
+namespace Identity.API.Application.Commands.ChangePassword
 {
-    public class ChangePasswordDto
+    public class ChangePasswordCommand : IRequest
     {
-        public string OldPassword { get; set; }
-        public string NewPassword { get; set; }
+        public string OldPassword { get; init; }
+        public string NewPassword { get; init; }
     }
 
-    public class ChangePasswordDtoValidator : AbstractValidator<ChangePasswordDto>
+    public class ChangePasswordCommandValidator : AbstractValidator<ChangePasswordCommand>
     {
-        public ChangePasswordDtoValidator(PasswordValidatorBase passwordValidator)
+        public ChangePasswordCommandValidator(PasswordValidatorBase passwordValidator)
         {
             RuleFor(x => x.OldPassword)
                 .NotEmpty()
