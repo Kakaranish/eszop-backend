@@ -16,6 +16,7 @@ using Offers.API.Application.IntegrationEventHandlers;
 using Offers.API.DataAccess;
 using Offers.API.DataAccess.Repositories;
 using Offers.API.Domain;
+using Offers.API.Extensions;
 using Offers.API.Services;
 
 namespace Offers.API
@@ -41,7 +42,7 @@ namespace Offers.API
             services.AddMediatR(typeof(Startup).Assembly);
 
             services.Configure<AzureStorageConfig>(Configuration.GetSection("AzureStorage"));
-            services.AddSingleton<IBlobStorage, AzureBlobStorage>();
+            services.AddBlobStorage();
             services.AddSingleton<IImageUploader, ImageUploader>();
 
             var connectionString = Configuration.GetConnectionString("SqlServer");
