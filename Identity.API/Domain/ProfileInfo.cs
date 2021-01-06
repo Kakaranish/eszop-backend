@@ -59,21 +59,21 @@ namespace Identity.API.Domain
         {
             var validator = new IdValidator();
             var result = validator.Validate(userId);
-            if (!result.IsValid) throw new IdentityDomainException($"'{nameof(userId)}' cannot be empty guid");
+            if (!result.IsValid) throw new IdentityDomainException(nameof(userId));
         }
 
         private static void ValidateFirstName(string firstName)
         {
             var validator = new FirstNameValidator();
             var result = validator.Validate(firstName);
-            if (!result.IsValid) throw new IdentityDomainException($"'{nameof(firstName)}' must have at least 3 characters");
+            if (!result.IsValid) throw new IdentityDomainException(nameof(firstName));
         }
 
         private static void ValidateLastName(string lastName)
         {
             var validator = new LastNameValidator();
             var result = validator.Validate(lastName);
-            if (!result.IsValid) throw new IdentityDomainException($"'{nameof(lastName)}' must have at least 3 characters");
+            if (!result.IsValid) throw new IdentityDomainException(nameof(lastName));
         }
 
         private static void ValidateDateOfBirth(DateTime dateOfBirth)
@@ -84,14 +84,14 @@ namespace Identity.API.Domain
                 .Must(x => x > minDate);
 
             var result = validator.Validate(dateOfBirth);
-            if (!result.IsValid) throw new IdentityDomainException($"Min '{nameof(dateOfBirth)}' is {minDate:yyyy-MM-dd}");
+            if (!result.IsValid) throw new IdentityDomainException(nameof(dateOfBirth));
         }
 
         private static void ValidatePhoneNumber(string phoneNumber)
         {
             var validator = new PhoneNumberValidator();
             var result = validator.Validate(phoneNumber);
-            if (!result.IsValid) throw new IdentityDomainException($"'{nameof(phoneNumber)}' is invalid polish phone number");
+            if (!result.IsValid) throw new IdentityDomainException(nameof(phoneNumber));
         }
 
         #endregion

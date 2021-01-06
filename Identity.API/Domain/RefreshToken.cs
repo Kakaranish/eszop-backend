@@ -1,5 +1,6 @@
 ﻿using System;
 using Common.Domain;
+using Common.Validators;
 
 namespace Identity.API.Domain
 {
@@ -18,25 +19,47 @@ namespace Identity.API.Domain
 
         public RefreshToken(Guid userId, string token)
         {
-            UserId = userId != Guid.Empty
-                ? userId
-                : throw new ArgumentException(nameof(userId));
-
-            Token = !string.IsNullOrWhiteSpace(token)
-                ? token
-                : throw new ArgumentNullException(nameof(token));
-
+            SetUserId(userId);
+            SetToken(token);
             CreatedAt = DateTime.UtcNow;
+        }
+
+        private void SetUserId(Guid userId)
+        {
+            ValidateUserId(userId);
+            UserId = userId;
+        }
+
+        private void SetToken(string token)
+        {
+            ValidateToken(token);
+            Token = token;
         }
 
         public void Revoke()
         {
             if (IsRevoked)
             {
-                throw new IdentityDomainException($"Refresh token with id '{Id}' is already revoked");
+                throw new IdentityDomainException($"Token {Id} is already revoked");
             }
 
             RevokedAt = DateTime.UtcNow;
         }
+
+        #region Validation
+
+        private static void ValidateUserId(Guid userId)
+        {
+            var validator = new IdValidator();
+            var result = validator.Validate(userId);
+            if (!result.IsValid) throw new IdentityDomainException($"'{nameof(userId)}' cannot be empty guid");
+        }
+
+        private static void ValidateToken(string token)
+        {
+            if (string.IsNullOrWhiteSpace(token)) throw new IdentityDomainException(nameof(token));
+        }
+
+        #endregion
     }
 }

@@ -1,9 +1,12 @@
 using Common.Authentication;
+using Common.ErrorHandling;
 using Common.Extensions;
 using Common.HealthCheck;
+using FluentValidation;
 using Identity.API.DataAccess;
 using Identity.API.Domain;
 using Identity.API.Extensions;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -31,6 +34,7 @@ namespace Identity.API
 
             services.AddJwtAuthentication();
             services.Configure<JwtConfig>(Configuration.GetSection("JwtConfig"));
+            services.AddMediatR(typeof(Startup).Assembly);
 
             var sqlServerConnectionString = Configuration.GetConnectionString("SqlServer");
             services.AddDbContext<AppDbContext>(builder => 
@@ -39,7 +43,6 @@ namespace Identity.API
                     .UseLazyLoadingProxies()
                     .UseLoggerFactory(LoggerFactory.Create(loggingBuilder => loggingBuilder.AddDebug()))
             );
-
             var redisConnectionString = Configuration.GetConnectionString("Redis");
             services.AddDistributedRedisCache(options => options.Configuration = redisConnectionString);
 
@@ -53,9 +56,13 @@ namespace Identity.API
                     instance: new RedisConnectionHealthCheck(redisConnectionString),
                     failureStatus: HealthStatus.Unhealthy);
 
+            AssemblyScanner.FindValidatorsInAssembly(typeof(Startup).Assembly)
+                .ForEach(item => services.AddScoped(item.InterfaceType, item.ValidatorType));
+            services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+
             services.AddExceptionHandling<IdentityDomainException>();
 
-            services.AddFluentValidation();
+            // services.AddFluentValidation();
             services.AddInternalServices();
         }
 

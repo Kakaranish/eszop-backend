@@ -1,12 +1,11 @@
-﻿using Identity.API.DataAccess.Repositories;
-using Identity.API.Domain;
-using Identity.API.Dto;
-using Identity.API.Extensions;
-using Identity.API.Services;
+﻿using Common.Types;
+using Identity.API.Application.Commands.SignIn;
+using Identity.API.Application.Commands.SignUp;
+using Identity.API.Application.Dto;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
-using Common.Types;
 
 namespace Identity.API.Controllers
 {
@@ -14,61 +13,23 @@ namespace Identity.API.Controllers
     [Route("api/[controller]/")]
     public class AuthController : BaseController
     {
-        private readonly IUserRepository _userRepository;
-        private readonly IAccessTokenService _accessTokenService;
-        private readonly IRefreshTokenService _refreshTokenService;
-        private readonly IPasswordHasher _passwordHasher;
+        private readonly IMediator _mediator;
 
-        public AuthController(IUserRepository userRepository, IAccessTokenService accessTokenService,
-            IRefreshTokenService refreshTokenService, IPasswordHasher passwordHasher)
+        public AuthController(IMediator mediator)
         {
-            _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
-            _accessTokenService = accessTokenService ?? throw new ArgumentNullException(nameof(accessTokenService));
-            _refreshTokenService = refreshTokenService ?? throw new ArgumentNullException(nameof(refreshTokenService));
-            _passwordHasher = passwordHasher ?? throw new ArgumentNullException(nameof(passwordHasher));
+            _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
         [HttpPost("sign-in")]
-        [ProducesResponseType(200, Type = typeof(TokenResponse))]
-        public async Task<IActionResult> SignIn(SignInDto signInDto)
+        public async Task<TokenResponse> SignIn(SignInCommand request)
         {
-            var user = await _userRepository.FindByEmailAsync(signInDto.Email);
-            if (user == null)
-            {
-                return Unauthorized();
-            }
-
-            var isPasswordValid = _passwordHasher.Verify(signInDto.Password, user.HashedPassword);
-            if (!isPasswordValid)
-            {
-                return Unauthorized();
-            }
-
-            var userClaims = user.ExtractUserClaims();
-            var accessToken = _accessTokenService.Create(userClaims);
-            var refreshToken = await _refreshTokenService.GetOrCreateAsync(user);
-
-            return Ok(new TokenResponse(accessToken, refreshToken.Token));
+            return await _mediator.Send(request);
         }
 
         [HttpPost("sign-up")]
-        public async Task<IActionResult> SignUp(SignUpDto signUpDto)
+        public async Task<TokenResponse> SignUp(SignUpCommand request)
         {
-            var otherUser = await _userRepository.FindByEmailAsync(signUpDto.Email);
-            if (otherUser is not null)
-            {
-                return ErrorResponse("Other user has the same email");
-            }
-
-            var password = _passwordHasher.Hash(signUpDto.Password);
-            var user = new User(signUpDto.Email, password, Role.User);
-            await _userRepository.AddUserAsync(user);
-
-            var userClaims = user.ExtractUserClaims();
-            var accessToken = _accessTokenService.Create(userClaims);
-            var refreshToken = await _refreshTokenService.GetOrCreateAsync(user);
-
-            return Ok(new TokenResponse(accessToken, refreshToken.Token));
+            return await _mediator.Send(request);
         }
     }
 }

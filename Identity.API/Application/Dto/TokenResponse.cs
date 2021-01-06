@@ -1,4 +1,4 @@
-﻿namespace Identity.API.Dto
+﻿namespace Identity.API.Application.Dto
 {
     public class TokenResponse
     {
