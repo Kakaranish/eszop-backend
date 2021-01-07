@@ -1,6 +1,7 @@
 ﻿using Common.Authentication;
 using Common.Types;
 using Identity.API.Application.Commands.LockUser;
+using Identity.API.Application.Commands.UnlockUser;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -22,6 +23,14 @@ namespace Identity.API.Controllers
         [JwtAuthorize("Admin")]
         [HttpPost("lock")]
         public async Task<IActionResult> LockUser(LockUserCommand request)
+        {
+            await _mediator.Send(request);
+            return Ok();
+        }
+
+        [JwtAuthorize("Admin")]
+        [HttpPost("unlock")]
+        public async Task<IActionResult> UnlockUser(UnlockUserCommand request)
         {
             await _mediator.Send(request);
             return Ok();

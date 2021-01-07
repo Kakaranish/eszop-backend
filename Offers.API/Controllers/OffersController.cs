@@ -49,7 +49,7 @@ namespace Offers.API.Controllers
 
         [HttpPost("")]
         [JwtAuthorize]
-        public async Task<IActionResult> Create(CreateOfferCommand command)
+        public async Task<IActionResult> Create([FromForm] CreateOfferCommand command)
         {
             var offerId = await _mediator.Send(command);
             return Ok(new { OfferId = offerId });

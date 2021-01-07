@@ -12,3 +12,13 @@ Content-Type: application/json
     "UserId": "{{userIdToBlock}}",
     "LockUntil": "2030-12-31T23:59"
 }
+
+### Unlock
+
+POST {{url}}/api/admin/unlock HTTP/1.1
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+    "UserId": "{{userIdToBlock}}"
+}
