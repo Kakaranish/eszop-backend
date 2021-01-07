@@ -5,11 +5,11 @@ using Common.DataAccess;
 
 namespace Identity.API.DataAccess.Repositories
 {
-    public interface IUserRepository : IRepository<User>
+    public interface IUserRepository : IDomainRepository<User>
     {
         Task<User> FindByIdAsync(Guid id);
         Task<User> FindByEmailAsync(string email);
-        Task AddUserAsync(User user);
-        Task UpdateAsync(User user);
+        void AddUser(User user);
+        void Update(User user);
     }
 }

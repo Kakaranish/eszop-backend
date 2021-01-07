@@ -2,12 +2,15 @@
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading.Tasks;
+using Common.DataAccess;
 
 namespace Identity.API.DataAccess.Repositories
 {
     public class UserRepository : IUserRepository
     {
         private readonly AppDbContext _appDbContext;
+
+        public IUnitOfWork UnitOfWork => _appDbContext;
 
         public UserRepository(AppDbContext dbContext)
         {
@@ -24,16 +27,14 @@ namespace Identity.API.DataAccess.Repositories
             return await _appDbContext.Users.FirstOrDefaultAsync(user => user.Email == email);
         }
 
-        public async Task AddUserAsync(User user)
+        public void AddUser(User user)
         {
-            await _appDbContext.Users.AddAsync(user);
-            await _appDbContext.SaveChangesAsync();
+            _appDbContext.Add(user);
         }
 
-        public async Task UpdateAsync(User user)
+        public void Update(User user)
         {
             _appDbContext.Update(user);
-            await _appDbContext.SaveChangesAsync();
         }
     }
 }

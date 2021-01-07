@@ -2,13 +2,16 @@
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading.Tasks;
+using Common.DataAccess;
 
 namespace Identity.API.DataAccess.Repositories
 {
     public class RefreshTokenRepository : IRefreshTokenRepository
     {
         private readonly AppDbContext _appDbContext;
-        
+
+        public IUnitOfWork UnitOfWork => _appDbContext;
+
         public RefreshTokenRepository(AppDbContext appDbContext)
         {
             _appDbContext = appDbContext ?? throw new ArgumentNullException(nameof(appDbContext));
@@ -31,16 +34,14 @@ namespace Identity.API.DataAccess.Repositories
                 token.UserId == user.Id && token.RevokedAt == null);
         }
 
-        public async Task AddAsync(RefreshToken refreshToken)
+        public void Add(RefreshToken refreshToken)
         {
-            await _appDbContext.RefreshTokens.AddAsync(refreshToken);
-            await _appDbContext.SaveChangesAsync();
+            _appDbContext.RefreshTokens.Add(refreshToken);
         }
 
-        public async Task UpdateAsync(RefreshToken refreshToken)
+        public void Update(RefreshToken refreshToken)
         {
             _appDbContext.Update(refreshToken);
-            await _appDbContext.SaveChangesAsync();
         }
     }
 }

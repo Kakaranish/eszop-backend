@@ -38,7 +38,8 @@ namespace Identity.API.Application.Commands.ResetPassword
 
             var password = _passwordHasher.Hash(request.NewPassword);
             user.SetPassword(password);
-            await _userRepository.UpdateAsync(user);
+            _userRepository.Update(user);
+            await _userRepository.UnitOfWork.SaveChangesAndDispatchDomainEventsAsync(cancellationToken);
 
             await _distributedCache.RemoveAsync(request.ResetToken, cancellationToken);
 

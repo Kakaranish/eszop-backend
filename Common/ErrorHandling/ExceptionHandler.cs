@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using Common.ErrorHandling.ActionResults;
 using Common.EventBus;
+using Common.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -22,6 +23,8 @@ namespace Common.ErrorHandling
                 return new ValidationFailureActionResult { PropertyErrorsList = validationException.PropertiesErrors };
             if (exception is TDomainException ordersDomainException)
                 return new ErrorActionResult(ordersDomainException.Message);
+            if (exception is UnauthorizedException) return new UnauthorizedResult();
+            if (exception is ForbiddenException) return new ForbidResult();
             if (exception is IntegrationEventException integrationEventException)
             {
                 var trace = new StackTrace(integrationEventException, true);

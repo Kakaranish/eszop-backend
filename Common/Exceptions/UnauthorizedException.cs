@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Identity.API.Domain
+namespace Common.Exceptions
 {
     public class UnauthorizedException : Exception
     {

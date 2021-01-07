@@ -41,7 +41,9 @@ namespace Identity.API.Application.Commands.ChangePassword
 
             var newPasswordHashed = _passwordHasher.Hash(request.NewPassword);
             user.SetPassword(newPasswordHashed);
-            await _userRepository.UpdateAsync(user);
+
+            _userRepository.Update(user);
+            await _userRepository.UnitOfWork.SaveChangesAndDispatchDomainEventsAsync(cancellationToken);
 
             return await Unit.Task;
         }

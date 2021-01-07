@@ -55,7 +55,7 @@ namespace Identity.API.Services
         public async Task<bool> VerifyAsync(string refreshTokenPayload)
         {
             if (refreshTokenPayload == null) return false;
-            
+
             var refreshToken = await _refreshTokenRepository.GetByPayloadAsync(refreshTokenPayload);
 
             return refreshToken != null && refreshToken.IsRevoked == false;
@@ -81,7 +81,9 @@ namespace Identity.API.Services
             }
 
             refreshToken.Revoke();
-            await _refreshTokenRepository.UpdateAsync(refreshToken);
+
+            _refreshTokenRepository.Update(refreshToken);
+            await _refreshTokenRepository.UnitOfWork.SaveChangesAndDispatchDomainEventsAsync();
 
             return true;
         }
@@ -115,7 +117,8 @@ namespace Identity.API.Services
             var refreshToken = new RefreshToken(user.Id, jwtTokenStr);
             refreshToken = refreshToken.Bind(x => x.Id, tokenId);
 
-            await _refreshTokenRepository.AddAsync(refreshToken);
+            _refreshTokenRepository.Add(refreshToken);
+            await _refreshTokenRepository.UnitOfWork.SaveChangesAndDispatchDomainEventsAsync();
 
             return refreshToken;
         }
