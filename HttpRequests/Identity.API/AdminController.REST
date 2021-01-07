@@ -1,0 +1,14 @@
+@url = https://localhost:6001
+@accessToken = 
+@userIdToBlock = 
+
+### Lock
+
+POST {{url}}/api/admin/lock HTTP/1.1
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+    "UserId": "{{userIdToBlock}}",
+    "LockUntil": "2030-12-31T23:59"
+}

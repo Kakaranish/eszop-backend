@@ -17,12 +17,12 @@ namespace Identity.API.DataAccess.Repositories
             _appDbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }
 
-        public async Task<User> FindByIdAsync(Guid id)
+        public async Task<User> GetByIdAsync(Guid id)
         {
             return await _appDbContext.Users.FirstOrDefaultAsync(user => user.Id == id);
         }
 
-        public async Task<User> FindByEmailAsync(string email)
+        public async Task<User> GetByEmailAsync(string email)
         {
             return await _appDbContext.Users.FirstOrDefaultAsync(user => user.Email == email);
         }

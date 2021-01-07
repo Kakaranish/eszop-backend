@@ -33,7 +33,7 @@ namespace Identity.API.Application.Commands.ChangePassword
             if (!Guid.TryParse(userIdStr, out var userId))
                 throw new IdentityDomainException("No UserId claim in access token");
 
-            var user = await _userRepository.FindByIdAsync(userId);
+            var user = await _userRepository.GetByIdAsync(userId);
             if (user == null) throw new IdentityDomainException($"No user with id '{userIdStr}'");
 
             var isOldPasswordValid = _passwordHasher.Verify(request.OldPassword, user.HashedPassword);

@@ -7,8 +7,8 @@ namespace Identity.API.DataAccess.Repositories
 {
     public interface IUserRepository : IDomainRepository<User>
     {
-        Task<User> FindByIdAsync(Guid id);
-        Task<User> FindByEmailAsync(string email);
+        Task<User> GetByIdAsync(Guid id);
+        Task<User> GetByEmailAsync(string email);
         void AddUser(User user);
         void Update(User user);
     }

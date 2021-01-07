@@ -1,5 +1,6 @@
 using Common.Authentication;
 using Common.ErrorHandling;
+using Common.EventBus;
 using Common.Extensions;
 using Common.HealthCheck;
 using FluentValidation;
@@ -32,12 +33,12 @@ namespace Identity.API
             services.AddHttpContextAccessor();
             services.AddLocalhostCorsPolicy();
 
-            services.AddJwtAuthentication();
             services.Configure<JwtConfig>(Configuration.GetSection("JwtConfig"));
+            services.AddJwtAuthentication();
             services.AddMediatR(typeof(Startup).Assembly);
 
             var sqlServerConnectionString = Configuration.GetConnectionString("SqlServer");
-            services.AddDbContext<AppDbContext>(builder => 
+            services.AddDbContext<AppDbContext>(builder =>
                 builder
                     .UseSqlServer(sqlServerConnectionString)
                     .UseLazyLoadingProxies()
@@ -45,7 +46,7 @@ namespace Identity.API
             );
             var redisConnectionString = Configuration.GetConnectionString("Redis");
             services.AddDistributedRedisCache(options => options.Configuration = redisConnectionString);
-
+                
             services.AddHealthChecks()
                 .AddCheck(
                     name: "SqlServerCheck",
@@ -62,8 +63,9 @@ namespace Identity.API
 
             services.AddExceptionHandling<IdentityDomainException>();
 
-            // services.AddFluentValidation();
             services.AddInternalServices();
+
+            services.AddRabbitMqEventBus();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

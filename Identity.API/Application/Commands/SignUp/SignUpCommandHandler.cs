@@ -28,7 +28,7 @@ namespace Identity.API.Application.Commands.SignUp
 
         public async Task<TokenResponse> Handle(SignUpCommand request, CancellationToken cancellationToken)
         {
-            var otherUser = await _userRepository.FindByEmailAsync(request.Email);
+            var otherUser = await _userRepository.GetByEmailAsync(request.Email);
             if (otherUser != null) throw new IdentityDomainException("Other user has the same email");
 
             var password = _passwordHasher.Hash(request.Password);

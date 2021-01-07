@@ -28,7 +28,7 @@ namespace Identity.API.Application.Commands.SignIn
 
         public async Task<TokenResponse> Handle(SignInCommand request, CancellationToken cancellationToken)
         {
-            var user = await _userRepository.FindByEmailAsync(request.Email);
+            var user = await _userRepository.GetByEmailAsync(request.Email);
             if (user == null) throw new UnauthorizedException();
 
             var isPasswordValid = _passwordHasher.Verify(request.Password, user.HashedPassword);

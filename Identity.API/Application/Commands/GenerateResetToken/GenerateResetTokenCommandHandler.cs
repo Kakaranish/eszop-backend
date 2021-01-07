@@ -24,7 +24,7 @@ namespace Identity.API.Application.Commands.GenerateResetToken
 
         public async Task<string> Handle(GenerateResetTokenCommand request, CancellationToken cancellationToken)
         {
-            var user = await _userRepository.FindByEmailAsync(request.Email);
+            var user = await _userRepository.GetByEmailAsync(request.Email);
             if (user == null) throw new IdentityDomainException("There is no user with such email");
 
             var resetToken = RandomStringGenerator.Generate(50);

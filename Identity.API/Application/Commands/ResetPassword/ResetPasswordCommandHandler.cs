@@ -33,7 +33,7 @@ namespace Identity.API.Application.Commands.ResetPassword
             if (!Guid.TryParse(userIdAsStr, out var userId))
                 throw new IdentityDomainException("Invalid userId in reset token");
 
-            var user = await _userRepository.FindByIdAsync(userId);
+            var user = await _userRepository.GetByIdAsync(userId);
             if (user == null) throw new IdentityDomainException("No such user");
 
             var password = _passwordHasher.Hash(request.NewPassword);
