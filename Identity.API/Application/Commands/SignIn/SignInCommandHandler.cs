@@ -1,6 +1,6 @@
-﻿using Identity.API.Application.Dto;
+﻿using Common.Exceptions;
+using Identity.API.Application.Dto;
 using Identity.API.DataAccess.Repositories;
-using Identity.API.Domain;
 using Identity.API.Extensions;
 using Identity.API.Services;
 using MediatR;
@@ -34,11 +34,22 @@ namespace Identity.API.Application.Commands.SignIn
             var isPasswordValid = _passwordHasher.Verify(request.Password, user.HashedPassword);
             if (!isPasswordValid) throw new UnauthorizedException();
 
+            if (user.IsLocked) throw new ForbiddenException();
+
             var userClaims = user.ExtractUserClaims();
             var accessToken = _accessTokenService.Create(userClaims);
             var refreshToken = await _refreshTokenService.GetOrCreateAsync(user);
 
-            return new TokenResponse(accessToken, refreshToken.Token);
+            user.SetLastLoginToNow();
+
+            _userRepository.Update(user);
+            await _userRepository.UnitOfWork.SaveChangesAndDispatchDomainEventsAsync(cancellationToken);
+
+            return new TokenResponse
+            {
+                AccessToken = accessToken,
+                RefreshToken = refreshToken.Token
+            };
         }
     }
 }

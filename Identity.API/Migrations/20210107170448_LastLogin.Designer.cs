@@ -4,14 +4,16 @@ using Identity.API.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Identity.API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210107170448_LastLogin")]
+    partial class LastLogin
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -161,9 +163,6 @@ namespace Identity.API.Migrations
                     b.Property<DateTime?>("LastLogin")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("LockedUntil")
-                        .HasColumnType("datetime2");
-
                     b.Property<Guid?>("PrimaryDeliveryAddressId")
                         .HasColumnType("uniqueidentifier");
 
@@ -180,12 +179,12 @@ namespace Identity.API.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("87744ea0-e89b-40cf-bc65-fb0da81531de"),
-                            CreatedAt = new DateTime(2021, 1, 7, 17, 42, 55, 794, DateTimeKind.Utc).AddTicks(9554),
+                            Id = new Guid("a1d30c61-7587-4eac-8d7e-e1cda4f1ef76"),
+                            CreatedAt = new DateTime(2021, 1, 7, 17, 4, 47, 978, DateTimeKind.Utc).AddTicks(4574),
                             Email = "admin@mail.com",
-                            HashedPassword = "oP31oHB3jdMNuQm0QtwNIE8yDePgHAWHekDWELQLs74=|j/daXjaP7fPXBWWIqghl5g==|10000",
+                            HashedPassword = "hjlu4aGlyTi7hc20P+H8Do+fw8wnCsWHK2393TF0n2A=|TR/x1DDivtEQd6Lj73bFUQ==|10000",
                             Role = "admin",
-                            UpdatedAt = new DateTime(2021, 1, 7, 17, 42, 55, 794, DateTimeKind.Utc).AddTicks(9927)
+                            UpdatedAt = new DateTime(2021, 1, 7, 17, 4, 47, 978, DateTimeKind.Utc).AddTicks(4937)
                         });
                 });
 

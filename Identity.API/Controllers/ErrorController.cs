@@ -23,7 +23,6 @@ namespace Identity.API.Controllers
             var context = HttpContext.Features.Get<IExceptionHandlerFeature>();
             var exception = context.Error;
 
-            if (exception is UnauthorizedException unauthorizedException) return Unauthorized();
             return _exceptionHandler.HandleException(exception);
         }
     }

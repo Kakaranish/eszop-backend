@@ -31,16 +31,22 @@ namespace Identity.API.Application.Commands.SignUp
             var otherUser = await _userRepository.FindByEmailAsync(request.Email);
             if (otherUser != null) throw new IdentityDomainException("Other user has the same email");
 
-
             var password = _passwordHasher.Hash(request.Password);
             var user = new User(request.Email, password, Role.User);
-            await _userRepository.AddUserAsync(user);
+            user.SetLastLoginToNow();
+            _userRepository.AddUser(user);
+            
+            await _userRepository.UnitOfWork.SaveChangesAndDispatchDomainEventsAsync(cancellationToken);
 
             var userClaims = user.ExtractUserClaims();
             var accessToken = _accessTokenService.Create(userClaims);
             var refreshToken = await _refreshTokenService.GetOrCreateAsync(user);
 
-            return new TokenResponse(accessToken, refreshToken.Token);
+            return new TokenResponse
+            {
+                AccessToken = accessToken,
+                RefreshToken = refreshToken.Token
+            };
         }
     }
 }

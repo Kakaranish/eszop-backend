@@ -1,8 +1,11 @@
 ﻿using Common.Domain;
 using Common.Types;
+using Identity.API.Domain.CommonValidators;
 using System;
 using System.Collections.Generic;
-using Identity.API.Domain.CommonValidators;
+using System.ComponentModel.DataAnnotations.Schema;
+using Identity.API.Application.DomainEvents.UserLocked;
+using Identity.API.Application.DomainEvents.UserUnlocked;
 
 namespace Identity.API.Domain
 {
@@ -12,6 +15,8 @@ namespace Identity.API.Domain
 
         public DateTime CreatedAt { get; private set; }
         public DateTime UpdatedAt { get; private set; }
+        public DateTime? LastLogin { get; private set; }
+        public DateTime? LockedUntil { get; private set; }
         public string Email { get; private set; }
         public HashedPassword HashedPassword { get; private set; }
         public Role Role { get; private set; }
@@ -20,6 +25,7 @@ namespace Identity.API.Domain
             _deliveryAddresses ?? new List<DeliveryAddress>();
         public Guid? PrimaryDeliveryAddressId { get; private set; }
         public virtual AboutSeller AboutSeller { get; private set; }
+        [NotMapped] public bool IsLocked => LockedUntil != null && LockedUntil > DateTime.UtcNow;
 
         protected User()
         {
@@ -52,6 +58,43 @@ namespace Identity.API.Domain
             UpdatedAt = DateTime.UtcNow;
         }
 
+        public void SetLastLoginToNow()
+        {
+            LastLogin = DateTime.UtcNow;
+        }
+
+        public void SetLockedUntil(DateTime lockedUntil)
+        {
+            if (lockedUntil < DateTime.UtcNow)
+                throw new IdentityDomainException($"'{nameof(lockedUntil)}' cannot be in past");
+
+            LockedUntil = lockedUntil;
+            UpdatedAt = DateTime.UtcNow;
+
+            var @event = new UserLockedDomainEvent
+            {
+                UserId = Id,
+                LockedAt = UpdatedAt,
+                LockedUntil = lockedUntil
+            };
+            AddDomainEvent(@event);
+        }
+
+        public void SetUnlocked()
+        {
+            if (!IsLocked) return;
+
+            LockedUntil = null;
+            UpdatedAt = DateTime.UtcNow;
+
+            var @event = new UserUnlockedDomainEvent
+            {
+                UserId = Id,
+                UnlockedAt = UpdatedAt
+            };
+            AddDomainEvent(@event);
+        }
+
         #region Validation
 
         private static void ValidateEmail(string email)
@@ -63,7 +106,7 @@ namespace Identity.API.Domain
 
         private void ValidatePrimaryDeliveryAddress(DeliveryAddress deliveryAddress)
         {
-            if (deliveryAddress == null || Id != deliveryAddress.UserId) 
+            if (deliveryAddress == null || Id != deliveryAddress.UserId)
                 throw new IdentityDomainException(nameof(deliveryAddress));
         }
 
