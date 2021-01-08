@@ -21,6 +21,8 @@ namespace Identity.API.Extensions
             services.AddSingleton<IAccessTokenDecoder, AccessTokenDecoder>();
             services.AddSingleton<IRefreshTokenDecoder, RefreshTokenDecoder>();
 
+            services.AddScoped<IProfileInfoRepository, ProfileInfoRepository>();
+
             return services;
         }
     }

@@ -23,20 +23,20 @@ namespace Offers.API.Application.Commands.UpdateOffer
             RuleFor(x => x.Name)
                 .NotEmpty()
                 .MinimumLength(5)
-                .When(x => x is not null);
+                .When(x => x.Name is not null);
 
             RuleFor(x => x.Description)
                 .NotEmpty()
                 .MinimumLength(5)
-                .When(x => x is not null);
+                .When(x => x.Name is not null);
 
             RuleFor(x => x.Price)
                 .GreaterThan(0)
-                .When(x => x is not null);
+                .When(x => x.Name is not null);
 
             RuleFor(x => x.AvailableStock)
                 .GreaterThanOrEqualTo(0)
-                .When(x => x is not null);
+                .When(x => x.Name is not null);
         }
     }
 }

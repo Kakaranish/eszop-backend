@@ -1,0 +1,47 @@
+@url = https://localhost:6001
+@accessToken = 
+
+### Invalid data #1
+
+PUT {{url}}/api/ProfileInfo HTTP/1.1
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+    "DateOfBirth": "20.01.2020"
+}
+
+### Invalid data #2
+
+PUT {{url}}/api/ProfileInfo HTTP/1.1
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+    "DateOfBirth": "1929-01-01"
+}
+
+### Invalid data #3
+
+PUT {{url}}/api/ProfileInfo HTTP/1.1
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+    "FirstName": "1s",
+    "LastName": "sA",
+    "PhoneNumber": "1"
+}
+
+### Valid data #1
+
+PUT {{url}}/api/ProfileInfo HTTP/1.1
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+    "FirstName": "Joe",
+    "LastName": "Doe",
+    "PhoneNumber": "123 456 789",
+    "DateOfBirth": "1990-10-12"
+}

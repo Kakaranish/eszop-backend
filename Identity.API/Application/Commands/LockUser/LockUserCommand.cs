@@ -24,7 +24,7 @@ namespace Identity.API.Application.Commands.LockUser
             RuleFor(x => x.LockUntil)
                 .Must(lockUntilStr =>
                 {
-                    if (!DateTime.TryParseExact(lockUntilStr, LockUser.LockUserCommand.LockUntilFormat,
+                    if (!DateTime.TryParseExact(lockUntilStr, LockUserCommand.LockUntilFormat,
                         CultureInfo.InvariantCulture, DateTimeStyles.None, out var lockUntil))
                     {
                         return false;
@@ -36,7 +36,7 @@ namespace Identity.API.Application.Commands.LockUser
 
                     return true;
                 })
-                .WithMessage($"Must be in {LockUserCommand.LockUntilFormat} format and cannot be in past");
+                .WithMessage($"Must have {LockUserCommand.LockUntilFormat} format and cannot be in past");
         }
     }
 }

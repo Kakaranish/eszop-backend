@@ -1,13 +1,13 @@
 ﻿using Common.Domain;
 using Common.Validators;
-using FluentValidation;
-using System;
 using Identity.API.Domain.CommonValidators;
+using System;
 
 namespace Identity.API.Domain
 {
     public class ProfileInfo : EntityBase, IAggregateRoot
     {
+        public virtual User User { get; private set; }
         public Guid UserId { get; private set; }
         public string FirstName { get; private set; }
         public string LastName { get; private set; }
@@ -23,7 +23,7 @@ namespace Identity.API.Domain
             SetPhoneNumber(phoneNumber);
         }
 
-        public void SetUserId(Guid userId)
+        private void SetUserId(Guid userId)
         {
             ValidateUserId(userId);
             UserId = userId;
@@ -32,24 +32,32 @@ namespace Identity.API.Domain
         public void SetFirstName(string firstName)
         {
             ValidateFirstName(firstName);
+            if (firstName == FirstName) return;
+            
             FirstName = firstName;
         }
 
         public void SetLastName(string lastName)
         {
             ValidateLastName(lastName);
+            if (lastName == LastName) return;
+
             LastName = lastName;
         }
 
         public void SetDateOfBirth(DateTime dateOfBirth)
         {
             ValidateDateOfBirth(dateOfBirth);
+            if (dateOfBirth == DateOfBirth) return;
+
             DateOfBirth = dateOfBirth;
         }
 
         public void SetPhoneNumber(string phoneNumber)
         {
             ValidatePhoneNumber(phoneNumber);
+            if (phoneNumber == PhoneNumber) return;
+
             PhoneNumber = phoneNumber;
         }
 
@@ -78,11 +86,7 @@ namespace Identity.API.Domain
 
         private static void ValidateDateOfBirth(DateTime dateOfBirth)
         {
-            var minDate = new DateTime(1930, 1, 1);
-            var validator = new InlineValidator<DateTime>();
-            validator.RuleFor(x => x)
-                .Must(x => x > minDate);
-
+            var validator = new DateOfBirthValidator();
             var result = validator.Validate(dateOfBirth);
             if (!result.IsValid) throw new IdentityDomainException(nameof(dateOfBirth));
         }
