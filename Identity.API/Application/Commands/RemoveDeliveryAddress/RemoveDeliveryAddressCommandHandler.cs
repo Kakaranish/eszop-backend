@@ -12,17 +12,15 @@ namespace Identity.API.Application.Commands.RemoveDeliveryAddress
     public class RemoveDeliveryAddressCommandHandler : IRequestHandler<RemoveDeliveryAddressCommand>
     {
         private readonly IDeliveryAddressRepository _deliveryAddressRepository;
-        private readonly IUserRepository _userRepository;
         private readonly HttpContext _httpContext;
 
         public RemoveDeliveryAddressCommandHandler(IHttpContextAccessor httpContextAccessor,
-            IDeliveryAddressRepository deliveryAddressRepository, IUserRepository userRepository)
+            IDeliveryAddressRepository deliveryAddressRepository)
         {
             _httpContext = httpContextAccessor.HttpContext ??
                            throw new ArgumentNullException(nameof(httpContextAccessor.HttpContext));
             _deliveryAddressRepository = deliveryAddressRepository ??
                                          throw new ArgumentNullException(nameof(deliveryAddressRepository));
-            _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
         }
 
         public async Task<Unit> Handle(RemoveDeliveryAddressCommand request, CancellationToken cancellationToken)
@@ -34,10 +32,10 @@ namespace Identity.API.Application.Commands.RemoveDeliveryAddress
             if (deliveryAddress == null || deliveryAddress.UserId != userId)
                 throw new IdentityDomainException($"There is no {deliveryAddressId} delivery address");
 
-            _deliveryAddressRepository.Remove(deliveryAddress);
+            if (deliveryAddress.User.PrimaryDeliveryAddressId == deliveryAddressId)
+                deliveryAddress.User.RemovePrimaryDeliveryAddress();
 
-            var user = await _userRepository.GetByIdAsync(userId);
-            if (user.PrimaryDeliveryAddressId == deliveryAddressId) user.RemovePrimaryDeliveryAddress();
+            _deliveryAddressRepository.Remove(deliveryAddress);
 
             await _deliveryAddressRepository.UnitOfWork.SaveChangesAndDispatchDomainEventsAsync(cancellationToken);
 
