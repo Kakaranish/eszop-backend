@@ -53,3 +53,13 @@ Content-Type: application/json
 {
     "DeliveryAddressId": "{{deliveryAddressId}}"
 }
+
+### Set primary delivery address
+
+POST {{url}}/api/address/set/primary HTTP/1.1
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+    "DeliveryAddressId": "{{deliveryAddressId}}"
+}

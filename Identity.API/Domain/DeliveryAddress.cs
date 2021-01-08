@@ -8,6 +8,7 @@ namespace Identity.API.Domain
     public class DeliveryAddress : EntityBase, IAggregateRoot
     {
         public Guid UserId { get; private set; }
+        public virtual User User { get; private set; }
         public string FirstName { get; private set; }
         public string LastName { get; private set; }
         public string PhoneNumber { get; private set; }

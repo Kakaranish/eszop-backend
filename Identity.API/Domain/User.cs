@@ -23,6 +23,7 @@ namespace Identity.API.Domain
         public virtual IReadOnlyCollection<DeliveryAddress> DeliveryAddresses =>
             _deliveryAddresses ?? new List<DeliveryAddress>();
         public Guid? PrimaryDeliveryAddressId { get; private set; }
+        public virtual DeliveryAddress PrimaryDeliveryAddress { get; set; }
         public virtual AboutSeller AboutSeller { get; private set; }
         [NotMapped] public bool IsLocked => LockedUntil != null && LockedUntil > DateTime.UtcNow;
 
@@ -53,7 +54,19 @@ namespace Identity.API.Domain
         {
             ValidatePrimaryDeliveryAddress(deliveryAddress);
 
+            PrimaryDeliveryAddress = deliveryAddress;
             PrimaryDeliveryAddressId = deliveryAddress.Id;
+
+            UpdatedAt = DateTime.UtcNow;
+        }
+
+        public void RemovePrimaryDeliveryAddress()
+        {
+            if (PrimaryDeliveryAddressId == null) return;
+
+            PrimaryDeliveryAddressId = null;
+            PrimaryDeliveryAddress = null;
+
             UpdatedAt = DateTime.UtcNow;
         }
 

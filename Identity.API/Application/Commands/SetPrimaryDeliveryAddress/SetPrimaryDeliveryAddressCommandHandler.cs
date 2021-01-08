@@ -7,15 +7,15 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Identity.API.Application.Commands.RemoveDeliveryAddress
+namespace Identity.API.Application.Commands.SetPrimaryDeliveryAddress
 {
-    public class RemoveDeliveryAddressCommandHandler : IRequestHandler<RemoveDeliveryAddressCommand>
+    public class SetPrimaryDeliveryAddressCommandHandler : IRequestHandler<SetPrimaryDeliveryAddressCommand>
     {
+        private readonly HttpContext _httpContext;
         private readonly IDeliveryAddressRepository _deliveryAddressRepository;
         private readonly IUserRepository _userRepository;
-        private readonly HttpContext _httpContext;
 
-        public RemoveDeliveryAddressCommandHandler(IHttpContextAccessor httpContextAccessor,
+        public SetPrimaryDeliveryAddressCommandHandler(IHttpContextAccessor httpContextAccessor,
             IDeliveryAddressRepository deliveryAddressRepository, IUserRepository userRepository)
         {
             _httpContext = httpContextAccessor.HttpContext ??
@@ -25,21 +25,21 @@ namespace Identity.API.Application.Commands.RemoveDeliveryAddress
             _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
         }
 
-        public async Task<Unit> Handle(RemoveDeliveryAddressCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(SetPrimaryDeliveryAddressCommand request, CancellationToken cancellationToken)
         {
             var userId = _httpContext.User.Claims.ToTokenPayload().UserClaims.Id;
             var deliveryAddressId = Guid.Parse(request.DeliveryAddressId);
             var deliveryAddress = await _deliveryAddressRepository.GetById(deliveryAddressId);
-
             if (deliveryAddress == null || deliveryAddress.UserId != userId)
                 throw new IdentityDomainException($"There is no {deliveryAddressId} delivery address");
 
-            _deliveryAddressRepository.Remove(deliveryAddress);
-
             var user = await _userRepository.GetByIdAsync(userId);
-            if (user.PrimaryDeliveryAddressId == deliveryAddressId) user.RemovePrimaryDeliveryAddress();
+            if (user.PrimaryDeliveryAddressId == deliveryAddressId) return await Unit.Task;
 
-            await _deliveryAddressRepository.UnitOfWork.SaveChangesAndDispatchDomainEventsAsync(cancellationToken);
+            user.SetPrimaryDeliveryAddress(deliveryAddress);
+
+            _userRepository.Update(user);
+            await _userRepository.UnitOfWork.SaveChangesAndDispatchDomainEventsAsync(cancellationToken);
 
             return await Unit.Task;
         }

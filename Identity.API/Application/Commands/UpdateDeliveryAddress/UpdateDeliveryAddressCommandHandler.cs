@@ -22,6 +22,7 @@ namespace Identity.API.Application.Commands.UpdateDeliveryAddress
             _deliveryAddressRepository = deliveryAddressRepository ??
                                          throw new ArgumentNullException(nameof(deliveryAddressRepository));
         }
+
         public async Task<Unit> Handle(UpdateDeliveryAddressCommand request, CancellationToken cancellationToken)
         {
             var userId = _httpContext.User.Claims.ToTokenPayload().UserClaims.Id;

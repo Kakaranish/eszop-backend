@@ -36,6 +36,10 @@ namespace Identity.API.DataAccess
             modelBuilder.Entity<User>()
                 .Property(x => x.Role)
                 .HasConversion(x => x.Name, x => Role.Parse(x));
+            modelBuilder.Entity<User>()
+                .HasOne(x => x.PrimaryDeliveryAddress)
+                .WithOne(x => x.User)
+                .HasForeignKey<User>(x => x.PrimaryDeliveryAddressId);
 
             modelBuilder.Entity<RefreshToken>()
                 .HasKey(x => x.Id);
