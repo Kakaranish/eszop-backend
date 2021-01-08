@@ -1,6 +1,6 @@
-﻿using System;
+﻿using FluentValidation.Results;
+using System;
 using System.Collections.Generic;
-using FluentValidation.Results;
 
 namespace Common.ErrorHandling
 {

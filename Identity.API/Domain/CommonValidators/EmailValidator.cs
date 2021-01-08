@@ -7,7 +7,7 @@ namespace Identity.API.Domain.CommonValidators
         public EmailValidator()
         {
             RuleFor(x => x)
-                .NotNull()
+                .NotEmpty()
                 .EmailAddress();
         }
     }

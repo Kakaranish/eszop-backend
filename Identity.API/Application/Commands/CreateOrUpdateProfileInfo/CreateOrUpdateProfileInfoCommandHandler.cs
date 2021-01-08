@@ -1,6 +1,7 @@
 ﻿using Common.Extensions;
 using Identity.API.DataAccess.Repositories;
 using Identity.API.Domain;
+using Identity.API.Domain.CommonValidators;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -30,7 +31,7 @@ namespace Identity.API.Application.Commands.CreateOrUpdateProfileInfo
             var profileInfoExits = profileInfo != null;
 
             var dateOfBirth = request.DateOfBirth != null
-                ? DateTime.ParseExact(request.DateOfBirth, CreateOrUpdateProfileInfoCommand.DateOfBirthFormat,
+                ? DateTime.ParseExact(request.DateOfBirth, DateOfBirthStrValidator.DateOfBirthFormat,
                     CultureInfo.InvariantCulture, DateTimeStyles.None)
                 : (DateTime?)null;
 

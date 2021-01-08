@@ -2,11 +2,11 @@
 
 namespace Identity.API.Domain.CommonValidators
 {
-    public class LastNameValidator : AbstractValidator<string>
+    public class CityValidator : AbstractValidator<string>
     {
-        public LastNameValidator()
+        public CityValidator()
         {
-            const string regex = @"^[a-zA-Z\p{L}\s,.'-]{3,}$";
+            const string regex = @"^[a-zA-Z\p{L}]+(?:[\s-][a-zA-Z\p{L}]+)*$";
 
             RuleFor(x => x)
                 .NotEmpty()

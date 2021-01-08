@@ -6,9 +6,12 @@ namespace Identity.API.Domain.CommonValidators
     {
         public PhoneNumberValidator()
         {
+            const string regex = @"^[0-9\+\-\s]{3,}$";
+
             RuleFor(x => x)
-                .NotNull()
-                .Matches(@"(?<!\w)(\(?(\+|00)?48\)?)?[ -]?\d{3}[ -]?\d{3}[ -]?\d{3}(?!\w)");
+                .NotEmpty()
+                .Matches(regex)
+                .WithMessage($"Must match regex {regex}");
         }
     }
 }

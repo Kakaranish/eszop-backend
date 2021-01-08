@@ -1,8 +1,7 @@
-﻿using System;
-using Common.Domain;
+﻿using Common.Domain;
 using Common.Validators;
-using FluentValidation;
 using Identity.API.Domain.CommonValidators;
+using System;
 
 namespace Identity.API.Domain
 {
@@ -11,25 +10,23 @@ namespace Identity.API.Domain
         public Guid UserId { get; private set; }
         public string FirstName { get; private set; }
         public string LastName { get; private set; }
+        public string PhoneNumber { get; private set; }
         public string Country { get; private set; }
         public string City { get; private set; }
         public string ZipCode { get; private set; }
         public string Street { get; private set; }
-        public string HouseNumber { get; private set; }
-        public string PhoneNumber { get; private set; }
 
-        public DeliveryAddress(Guid userId, string firstName, string lastName, string country, string city, 
-            string zipCode, string street, string houseNumber, string phoneNumber)
+        public DeliveryAddress(Guid userId, string firstName, string lastName, string phoneNumber, string country,
+            string city, string zipCode, string street)
         {
             SetUserId(userId);
             SetFirstName(firstName);
             SetLastName(lastName);
+            SetPhoneNumber(phoneNumber);
             SetCountry(country);
             SetCity(city);
             SetZipCode(zipCode);
             SetStreet(street);
-            SetHouseNumber(houseNumber);
-            SetPhoneNumber(phoneNumber);
         }
 
         public void SetUserId(Guid userId)
@@ -74,12 +71,6 @@ namespace Identity.API.Domain
             Street = street;
         }
 
-        public void SetHouseNumber(string houseNumber)
-        {
-            ValidateHouseNumber(houseNumber);
-            HouseNumber = houseNumber;
-        }
-
         public void SetPhoneNumber(string phoneNumber)
         {
             ValidatePhoneNumber(phoneNumber);
@@ -111,61 +102,30 @@ namespace Identity.API.Domain
 
         private static void ValidateCountry(string country)
         {
-            const string cityRegex = @"^[a-zA-Z]+(?:[\s-][a-zA-Z]+)*$";
-            var validator = new InlineValidator<string>();
-            validator.RuleFor(x => x)
-                .NotNull()
-                .Matches(cityRegex);
-
+            var validator = new CountryValidator();
             var result = validator.Validate(country);
             if (!result.IsValid) throw new IdentityDomainException(nameof(country));
         }
 
         private static void ValidateCity(string city)
         {
-            const string cityRegex = @"^[a-zA-Z]+(?:[\s-][a-zA-Z]+)*$";
-            var validator = new InlineValidator<string>();
-            validator.RuleFor(x => x)
-                .NotNull()
-                .Matches(cityRegex);
-
+            var validator = new CityValidator();
             var result = validator.Validate(city);
             if (!result.IsValid) throw new IdentityDomainException(nameof(city));
         }
 
         private static void ValidateZipCode(string zipCode)
         {
-            const string zipCodeRegex = @"^\d{2}-\d{3}$";
-            var validator = new InlineValidator<string>();
-            validator.RuleFor(x => x)
-                .NotNull()
-                .Matches(zipCodeRegex);
-
+            var validator = new ZipCodeValidator();
             var result = validator.Validate(zipCode);
             if (!result.IsValid) throw new IdentityDomainException(nameof(zipCode));
         }
 
         private static void ValidateStreet(string street)
         {
-            const string streetRegex = @"^[a-zA-Z]+(?:[\s-][a-zA-Z]+)*$";
-            var validator = new InlineValidator<string>();
-            validator.RuleFor(x => x)
-                .NotNull()
-                .Matches(streetRegex);
-
+            var validator = new StreetValidator();
             var result = validator.Validate(street);
             if (!result.IsValid) throw new IdentityDomainException(nameof(street));
-        }
-
-        private static void ValidateHouseNumber(string houseNumber)
-        {
-            var validator = new InlineValidator<string>();
-            validator.RuleFor(x => x)
-                .NotNull()
-                .NotEmpty();
-
-            var result = validator.Validate(houseNumber);
-            if (!result.IsValid) throw new IdentityDomainException(nameof(houseNumber));
         }
 
         private static void ValidatePhoneNumber(string phoneNumber)

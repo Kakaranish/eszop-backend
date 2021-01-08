@@ -1,0 +1,55 @@
+@url = https://localhost:6001
+@accessToken = 
+@deliveryAddressId = 
+
+### Create
+
+POST {{url}}/api/address HTTP/1.1
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+    "FirstName": "Jan",
+    "LastName": "Ryba-Okoń",
+    "PhoneNumber": "+48 123 456 789",
+    "Country": "Poland",
+    "City": "Poznań",
+    "ZipCode": "21-370",
+    "Street": "Jana Pawła II 37a/21"
+}
+
+### Invalid update
+
+PUT {{url}}/api/address HTTP/1.1
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+    "DeliveryAddressId": "{{deliveryAddressId}}",
+    "LastName": "Ryba-Oko12ńń",
+    "PhoneNumber": "+48 123456sa789",
+    "Street": "Jana Pawła II 37a/22"
+}
+
+### Update
+
+PUT {{url}}/api/address HTTP/1.1
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+    "DeliveryAddressId": "{{deliveryAddressId}}",
+    "LastName": "Ryba-Okońń",
+    "PhoneNumber": "+48 123456789",
+    "Street": "Jana Pawła II 37a/22"
+}
+
+### Remove
+
+DELETE {{url}}/api/address HTTP/1.1
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+    "DeliveryAddressId": "{{deliveryAddressId}}"
+}

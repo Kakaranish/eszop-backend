@@ -6,10 +6,12 @@ namespace Identity.API.Domain.CommonValidators
     {
         public FirstNameValidator()
         {
+            const string regex = @"^[a-zA-Z\p{L}\s,.'-]{3,}$";
+
             RuleFor(x => x)
-                .NotNull()
                 .NotEmpty()
-                .MinimumLength(3);
+                .Matches(regex)
+                .WithMessage($"Must match regex {regex}");
         }
     }
 }
