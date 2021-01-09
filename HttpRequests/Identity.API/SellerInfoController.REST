@@ -1,0 +1,6 @@
+@url = https://localhost:6001
+@sellerId = BA09CE67-B280-459B-9A48-08D8AE5B9007
+
+###
+
+GET {{url}}/api/seller/{{sellerId}} HTTP/1.1

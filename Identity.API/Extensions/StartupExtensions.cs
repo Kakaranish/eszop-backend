@@ -23,6 +23,7 @@ namespace Identity.API.Extensions
 
             services.AddScoped<IProfileInfoRepository, ProfileInfoRepository>();
             services.AddScoped<IDeliveryAddressRepository, DeliveryAddressRepository>();
+            services.AddScoped<ISellerInfoRepository, SellerInfoRepository>();
 
             return services;
         }
