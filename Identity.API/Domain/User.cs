@@ -24,7 +24,7 @@ namespace Identity.API.Domain
             _deliveryAddresses ?? new List<DeliveryAddress>();
         public Guid? PrimaryDeliveryAddressId { get; private set; }
         public virtual DeliveryAddress PrimaryDeliveryAddress { get; set; }
-        public virtual AboutSeller AboutSeller { get; private set; }
+        public virtual SellerInfo SellerInfo { get; private set; }
         [NotMapped] public bool IsLocked => LockedUntil != null && LockedUntil > DateTime.UtcNow;
 
         protected User()

@@ -1,61 +1,68 @@
 ﻿using Common.Domain;
 using Common.Types;
 using Common.Validators;
-using FluentValidation;
 using Identity.API.Domain.CommonValidators;
 using System;
 
 namespace Identity.API.Domain
 {
-    public class AboutSeller : EntityBase, IAggregateRoot, ITimeStamped
+    public class SellerInfo : EntityBase, IAggregateRoot, ITimeStamped
     {
         public DateTime CreatedAt { get; private set; }
         public DateTime UpdatedAt { get; private set; }
         public Guid UserId { get; private set; }
-        public string Email { get; private set; }
+        public string ContactEmail { get; private set; }
         public string PhoneNumber { get; private set; }
-        public string Description { get; private set; }
+        public string BankAccountNumber { get; private set; }
+        public string AdditionalInfo { get; private set; }
 
-        protected AboutSeller()
+        protected SellerInfo()
         {
         }
 
-        public AboutSeller(Guid userId, string email, string phoneNumber, string description)
+        public SellerInfo(Guid userId)
         {
             SetUserId(userId);
-            SetEmail(email);
-            SetPhoneNumber(phoneNumber);
-            SetDescription(description);
 
             CreatedAt = DateTime.UtcNow;
             UpdatedAt = CreatedAt;
         }
 
-        public void SetUserId(Guid userId)
+        private void SetUserId(Guid userId)
         {
             ValidateUserId(userId);
+
             UserId = userId;
             UpdatedAt = DateTime.UtcNow;
         }
 
-        public void SetEmail(string email)
+        public void SetContactEmail(string email)
         {
-            ValidateEmail(email);
-            Email = email;
+            ValidateContactEmail(email);
+
+            ContactEmail = email;
             UpdatedAt = DateTime.UtcNow;
         }
 
         public void SetPhoneNumber(string phoneNumber)
         {
             ValidatePhoneNumber(phoneNumber);
+
             PhoneNumber = phoneNumber;
             UpdatedAt = DateTime.UtcNow;
         }
 
-        public void SetDescription(string description)
+        public void SetAdditionalInfo(string additionalInfo)
         {
-            ValidateDescription(description);
-            Description = description;
+            AdditionalInfo = additionalInfo;
+            UpdatedAt = DateTime.UtcNow;
+        }
+
+        public void SetBankAccountNumber(string bankAccountNumber)
+        {
+            ValidateBankAccountNumber(bankAccountNumber);
+
+            BankAccountNumber = bankAccountNumber;
             UpdatedAt = DateTime.UtcNow;
         }
 
@@ -68,8 +75,10 @@ namespace Identity.API.Domain
             if (!result.IsValid) throw new IdentityDomainException(nameof(userId));
         }
 
-        private static void ValidateEmail(string email)
+        private static void ValidateContactEmail(string email)
         {
+            if (string.IsNullOrEmpty(email)) return;
+
             var validator = new EmailValidator();
             var result = validator.Validate(email);
             if (!result.IsValid) throw new IdentityDomainException(nameof(email));
@@ -77,21 +86,20 @@ namespace Identity.API.Domain
 
         private static void ValidatePhoneNumber(string phoneNumber)
         {
+            if (string.IsNullOrEmpty(phoneNumber)) return;
+
             var validator = new PhoneNumberValidator();
             var result = validator.Validate(phoneNumber);
             if (!result.IsValid) throw new IdentityDomainException(nameof(phoneNumber));
         }
 
-        private static void ValidateDescription(string description)
+        private static void ValidateBankAccountNumber(string bankAccountNumber)
         {
-            var validator = new InlineValidator<string>();
-            validator.RuleFor(x => x)
-                .NotNull()
-                .NotEmpty()
-                .MinimumLength(5);
+            if (string.IsNullOrEmpty(bankAccountNumber)) return;
 
-            var result = validator.Validate(description);
-            if (!result.IsValid) throw new IdentityDomainException(nameof(description));
+            var validator = new BankAccountNumberValidator();
+            var result = validator.Validate(bankAccountNumber);
+            if (!result.IsValid) throw new IdentityDomainException(nameof(bankAccountNumber));
         }
 
         #endregion
