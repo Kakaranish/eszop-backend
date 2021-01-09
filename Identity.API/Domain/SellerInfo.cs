@@ -40,7 +40,7 @@ namespace Identity.API.Domain
         {
             ValidateContactEmail(email);
 
-            ContactEmail = email;
+            ContactEmail = !string.IsNullOrWhiteSpace(email) ? email : null;
             UpdatedAt = DateTime.UtcNow;
         }
 
@@ -48,13 +48,13 @@ namespace Identity.API.Domain
         {
             ValidatePhoneNumber(phoneNumber);
 
-            PhoneNumber = phoneNumber;
+            PhoneNumber = !string.IsNullOrWhiteSpace(phoneNumber) ? phoneNumber : null;
             UpdatedAt = DateTime.UtcNow;
         }
 
         public void SetAdditionalInfo(string additionalInfo)
         {
-            AdditionalInfo = additionalInfo;
+            AdditionalInfo = !string.IsNullOrWhiteSpace(additionalInfo) ? additionalInfo : null;
             UpdatedAt = DateTime.UtcNow;
         }
 
@@ -62,7 +62,7 @@ namespace Identity.API.Domain
         {
             ValidateBankAccountNumber(bankAccountNumber);
 
-            BankAccountNumber = bankAccountNumber;
+            BankAccountNumber = !string.IsNullOrWhiteSpace(bankAccountNumber) ? bankAccountNumber : null;
             UpdatedAt = DateTime.UtcNow;
         }
 

@@ -1,4 +1,6 @@
-﻿using Common.Types;
+﻿using Common.Authentication;
+using Common.Types;
+using Identity.API.Application.Commands.CreateOrUpdateSellerInfo;
 using Identity.API.Application.Queries.GetSellerInfo;
 using Identity.API.Domain;
 using MediatR;
@@ -23,6 +25,14 @@ namespace Identity.API.Controllers
         public async Task<SellerInfo> Get([FromRoute] GetSellerInfoQuery request)
         {
             return await _mediator.Send(request);
+        }
+
+        [HttpPut("")]
+        [JwtAuthorize]
+        public async Task<IActionResult> CreateOrUpdate(CreateOrUpdateSellerInfoCommand request)
+        {
+            await _mediator.Send(request);
+            return Ok();
         }
     }
 }

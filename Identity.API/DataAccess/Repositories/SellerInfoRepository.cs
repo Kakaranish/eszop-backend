@@ -21,5 +21,20 @@ namespace Identity.API.DataAccess.Repositories
         {
             return await _appDbContext.SellerInfos.FirstOrDefaultAsync(x => x.Id == id);
         }
+
+        public async Task<SellerInfo> GetByUserIdAsync(Guid userId)
+        {
+            return await _appDbContext.SellerInfos.FirstOrDefaultAsync(x => x.UserId == userId);
+        }
+
+        public void Add(SellerInfo sellerInfo)
+        {
+            _appDbContext.SellerInfos.Add(sellerInfo);
+        }
+
+        public void Update(SellerInfo sellerInfo)
+        {
+            _appDbContext.Update(sellerInfo);
+        }
     }
 }

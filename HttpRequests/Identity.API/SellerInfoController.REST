@@ -1,6 +1,19 @@
 @url = https://localhost:6001
+@accessToken = 
 @sellerId = BA09CE67-B280-459B-9A48-08D8AE5B9007
 
 ###
 
 GET {{url}}/api/seller/{{sellerId}} HTTP/1.1
+
+###
+
+PUT {{url}}/api/seller HTTP/1.1
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+    "ContactEmail": "contact@mail.com",
+    "BankAccountNumber": "82 1020 5226 0000 6102 0417 7895",
+    "AdditionalInfo": ""
+}
