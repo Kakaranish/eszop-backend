@@ -25,6 +25,10 @@ namespace Orders.API.DataAccess
         {
             modelBuilder.Entity<Order>()
                 .HasKey(x => x.Id);
+            modelBuilder.Entity<Order>()
+                .Property(x => x.OrderState)
+                .HasConversion(x => x.Name, x => OrderState.Parse(x))
+                .HasDefaultValue(OrderState.Started);
 
             modelBuilder.Entity<OrderItem>()
                 .HasKey(x => x.Id);

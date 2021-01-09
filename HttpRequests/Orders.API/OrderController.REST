@@ -1,0 +1,12 @@
+@url = https://localhost:8001
+@accessToken = 
+@orderId = 
+###
+
+POST {{url}}/api/order/cancel HTTP/1.1
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+    "OrderId": "{{orderId}}"
+}

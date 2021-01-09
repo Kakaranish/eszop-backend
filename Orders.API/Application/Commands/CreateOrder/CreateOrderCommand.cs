@@ -2,18 +2,21 @@
 using System;
 using System.Collections.Generic;
 using Common.Dto;
+using Common.Extensions;
 using FluentValidation;
 
 namespace Orders.API.Application.Commands.CreateOrder
 {
     public class CreateOrderCommand : IRequest<Guid>
     {
-        public Guid UserId { get; init; }
-        public IList<CartItemDto> CartItems { get; init; }
+        public Guid BuyerId { get; }
+        public Guid SellerId { get; }
+        public IList<CartItemDto> CartItems { get; }
 
         public CreateOrderCommand(CartDto cartDto)
         {
-            UserId = cartDto.UserId;
+            BuyerId = cartDto.UserId;
+            SellerId = cartDto.SellerId;
             CartItems = cartDto.CartItems;
         }
     }
@@ -22,9 +25,11 @@ namespace Orders.API.Application.Commands.CreateOrder
     {
         public CreateOrderCommandValidator()
         {
-            RuleFor(x => x.UserId)
-                .NotEqual(Guid.Empty)
-                .WithMessage("Cannot be empty");
+            RuleFor(x => x.BuyerId)
+                .IsNotEmptyGuid();
+
+            RuleFor(x => x.SellerId)
+                .IsNotEmptyGuid();
 
             RuleFor(x => x.CartItems)
                 .NotNull();

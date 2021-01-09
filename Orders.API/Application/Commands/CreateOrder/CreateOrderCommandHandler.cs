@@ -23,12 +23,11 @@ namespace Orders.API.Application.Commands.CreateOrder
 
         public async Task<Guid> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
         {
-            var order = new Order();
             var orderItems = request.CartItems.Select(item => new OrderItem(
                 item.OfferId, item.OfferName, item.Quantity, item.PricePerItem)).ToList();
-            order.AddOrderItems(orderItems);
+            var order = new Order(request.BuyerId, request.SellerId, orderItems);
 
-            await _orderRepository.AddAsync(order);
+            _orderRepository.Add(order);
             await _orderRepository.UnitOfWork.SaveChangesAndDispatchDomainEventsAsync(cancellationToken);
 
             foreach (var orderItem in order.OrderItems)

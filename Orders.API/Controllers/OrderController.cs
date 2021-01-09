@@ -3,6 +3,7 @@ using Common.Dto;
 using Common.Types;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Orders.API.Application.Commands.CancelOrder;
 using Orders.API.Application.Commands.CreateOrder;
 using System;
 using System.Threading.Tasks;
@@ -20,13 +21,21 @@ namespace Orders.API.Controllers
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
-        [HttpPost("create")]
+        [HttpPost("")]
         [JwtAuthorize]
-        public async Task<OrderCreatedDto> CreateOrder(CartDto cartDto)
+        public async Task<OrderCreatedDto> Create(CartDto cartDto)
         {
             var request = new CreateOrderCommand(cartDto);
             var orderId = await _mediator.Send(request);
             return new OrderCreatedDto { OrderId = orderId };
+        }
+
+        [HttpPost("cancel")]
+        [JwtAuthorize]
+        public async Task<IActionResult> Cancel(CancelOrderCommand request)
+        {
+            await _mediator.Send(request);
+            return Ok();
         }
     }
 }

@@ -7,6 +7,7 @@ namespace Common.Dto
     {
         public Guid Id { get; init; }
         public Guid UserId { get; init; }
+        public Guid SellerId { get; init; }
         public IList<CartItemDto> CartItems { get; init; }
     }
 }

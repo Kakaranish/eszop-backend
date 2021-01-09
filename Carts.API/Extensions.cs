@@ -1,5 +1,6 @@
 ﻿using Carts.API.Domain;
 using Common.Dto;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -24,6 +25,7 @@ namespace Carts.API
             {
                 Id = cart.Id,
                 UserId = cart.UserId,
+                SellerId = cartItemDtos.FirstOrDefault()?.SellerId ?? Guid.Empty,
                 CartItems = cartItemDtos
             };
         }
