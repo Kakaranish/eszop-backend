@@ -20,6 +20,7 @@ namespace Orders.API.Domain
 
         [NotMapped] public bool IsCancelled => OrderState?.IsCancellationState() ?? false;
         [NotMapped] public bool IsEditable => !IsCancelled && OrderState != OrderState.Shipped;
+        [NotMapped] public decimal TotalPrice => OrderItems.Sum(orderItem => orderItem.TotalPrice);
 
         protected Order()
         {

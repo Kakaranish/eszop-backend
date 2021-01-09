@@ -5,6 +5,8 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Orders.API.Application.Commands.CancelOrder;
 using Orders.API.Application.Commands.CreateOrder;
+using Orders.API.Application.Commands.GetBankTransferDetails;
+using Orders.API.Application.Dto;
 using System;
 using System.Threading.Tasks;
 
@@ -36,6 +38,13 @@ namespace Orders.API.Controllers
         {
             await _mediator.Send(request);
             return Ok();
+        }
+
+        [HttpGet("{orderId}/transfer/details")]
+        [JwtAuthorize]
+        public async Task<BankTransferDetailsDto> GetBankTransferDetails([FromRoute] GetBankTransferDetailsCommand request)
+        {
+            return await _mediator.Send(request);
         }
     }
 }

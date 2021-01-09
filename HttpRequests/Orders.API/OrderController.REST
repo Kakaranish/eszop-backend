@@ -10,3 +10,8 @@ Content-Type: application/json
 {
     "OrderId": "{{orderId}}"
 }
+
+###
+
+GET {{url}}/api/order/{{orderId}}/transfer/details HTTP/1.1
+Authorization: Bearer {{accessToken}}
