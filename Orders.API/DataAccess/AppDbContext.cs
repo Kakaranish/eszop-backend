@@ -1,11 +1,11 @@
-﻿using Common.Extensions;
+﻿using Common.DataAccess;
+using Common.Extensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Orders.API.Domain;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Common.DataAccess;
 
 namespace Orders.API.DataAccess
 {
@@ -15,6 +15,7 @@ namespace Orders.API.DataAccess
 
         public DbSet<Order> Orders { get; private set; }
         public DbSet<OrderItem> OrderItems { get; private set; }
+        public DbSet<DeliveryAddress> DeliveryAddresses { get; set; }
 
         public AppDbContext(DbContextOptions options, IMediator mediator) : base(options)
         {
@@ -35,6 +36,9 @@ namespace Orders.API.DataAccess
             modelBuilder.Entity<OrderItem>()
                 .Property(x => x.PricePerItem)
                 .HasColumnType("decimal(18,4)");
+
+            modelBuilder.Entity<DeliveryAddress>()
+                .HasKey(x => x.Id);
         }
 
         public async Task<bool> SaveChangesAndDispatchDomainEventsAsync(CancellationToken cancellationToken = default)

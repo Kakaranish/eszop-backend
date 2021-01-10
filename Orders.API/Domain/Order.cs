@@ -10,13 +10,15 @@ namespace Orders.API.Domain
 {
     public class Order : EntityBase, IAggregateRoot, ITimeStamped
     {
+        public DateTime CreatedAt { get; private set; }
+        public DateTime UpdatedAt { get; private set; }
+
         private List<OrderItem> _orderItems;
         public Guid BuyerId { get; private set; }
         public Guid SellerId { get; private set; }
         public OrderState OrderState { get; private set; }
-        public DateTime CreatedAt { get; private set; }
-        public DateTime UpdatedAt { get; private set; }
         public virtual IReadOnlyCollection<OrderItem> OrderItems => _orderItems ?? new List<OrderItem>();
+        public virtual DeliveryAddress DeliveryAddress { get; set; }
 
         [NotMapped] public bool IsCancelled => OrderState?.IsCancellationState() ?? false;
         [NotMapped] public bool IsEditable => !IsCancelled && OrderState != OrderState.Shipped;
@@ -41,14 +43,14 @@ namespace Orders.API.Domain
         private void SetBuyerId(Guid buyerId)
         {
             ValidateBuyerId(buyerId);
-            
+
             BuyerId = buyerId;
         }
 
         private void SetSellerId(Guid sellerId)
         {
             ValidateSellerId(sellerId);
-            
+
             SellerId = sellerId;
         }
 
@@ -64,6 +66,14 @@ namespace Orders.API.Domain
             ValidateCancellation(orderState);
 
             OrderState = orderState;
+            UpdatedAt = DateTime.UtcNow;
+        }
+
+        public void SetDeliveryAddress(DeliveryAddress deliveryAddress)
+        {
+            ValidateDeliveryAddress(deliveryAddress);
+
+            DeliveryAddress = deliveryAddress;
             UpdatedAt = DateTime.UtcNow;
         }
 
@@ -97,6 +107,12 @@ namespace Orders.API.Domain
 
             if (OrderState.IsCancellationState())
                 throw new OrdersDomainException("Order is already cancelled");
+        }
+
+        private static void ValidateDeliveryAddress(DeliveryAddress deliveryAddress)
+        {
+            if (deliveryAddress == null) 
+                throw new OrdersDomainException($"'{nameof(deliveryAddress)}' cannot be null");
         }
 
         #endregion
