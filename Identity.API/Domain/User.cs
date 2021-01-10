@@ -1,11 +1,10 @@
 ﻿using Common.Domain;
 using Common.Types;
+using Common.Validators;
 using Identity.API.Application.DomainEvents.UserLocked;
-using Identity.API.Domain.CommonValidators;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using Common.Validators;
 
 namespace Identity.API.Domain
 {

@@ -1,27 +1,38 @@
 ﻿using Common.Domain;
 using Common.Types;
 using Common.Validators;
-using FluentValidation;
 using Offers.API.Application.DomainEvents.AvailableStockChanged;
 using Offers.API.Application.DomainEvents.OfferBecameUnavailable;
+using Offers.API.Domain.Validators;
 using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 
 namespace Offers.API.Domain
 {
     public class Offer : EntityBase, IAggregateRoot, ITimeStamped, IRemovable
     {
-        public Guid OwnerId { get; private set; }
+        private List<DeliveryMethod> _deliveryMethods;
+
         public DateTime CreatedAt { get; private set; }
         public DateTime UpdatedAt { get; private set; }
         public DateTime? UserEndedAt { get; private set; }
         public DateTime EndsAt { get; private set; }
         public DateTime? RemovedAt { get; private set; }
+        public DateTime? PublishedAt { get; set; }
+
+        public Guid OwnerId { get; private set; }
         public string Name { get; private set; }
         public string Description { get; private set; }
         public decimal Price { get; private set; }
         public int AvailableStock { get; private set; }
         public int TotalStock { get; private set; }
-        public Category Category { get; private set; }
+        
+        public virtual Category Category { get; private set; }
+        public virtual IReadOnlyCollection<DeliveryMethod> DeliveryMethods => _deliveryMethods;
+
+        [NotMapped] public bool IsPublished => PublishedAt != null;
 
         protected Offer()
         {
@@ -37,7 +48,7 @@ namespace Offers.API.Domain
             SetCategory(category);
 
             CreatedAt = DateTime.UtcNow;
-            EndsAt = CreatedAt.AddDays(14);
+            UpdatedAt = CreatedAt;
         }
 
         private void SetOwnerId(Guid ownerId)
@@ -143,61 +154,74 @@ namespace Offers.API.Domain
             AddDomainEvent(domainEvent);
         }
 
+        public void SetDeliveryMethods(IList<DeliveryMethod> deliveryMethods)
+        {
+            ValidateDeliveryMethods(deliveryMethods);
+
+            _deliveryMethods = deliveryMethods.ToList();
+            UpdatedAt = DateTime.UtcNow;
+        }
+
+        public void SetPublished()
+        {
+            if (IsPublished) 
+                throw new OffersDomainException("Offer is already published");
+            if (_deliveryMethods == null || _deliveryMethods.Count == 0)
+                throw new OffersDomainException("Offer has no delivery methods set");
+
+            PublishedAt = DateTime.UtcNow;
+            EndsAt = PublishedAt.Value.AddDays(14);
+            UpdatedAt = PublishedAt.Value;
+        }
+
         #region Validation
 
         private static void ValidateOwnerId(Guid ownerId)
         {
             var validator = new IdValidator();
             var result = validator.Validate(ownerId);
-            if (!result.IsValid) throw new OffersDomainException($"'{nameof(ownerId)}' is invalid id");
+            if (!result.IsValid) throw new OffersDomainException(nameof(OwnerId));
         }
 
         private static void ValidateName(string name)
         {
             var validator = new OfferNameValidator();
             var result = validator.Validate(name);
-            if (!result.IsValid) throw new OffersDomainException($"'{nameof(name)}' is invalid name");
+            if (!result.IsValid) throw new OffersDomainException(nameof(Name));
         }
 
         private static void ValidateDescription(string description)
         {
-            var validator = new InlineValidator<string>();
-            validator.RuleFor(x => x)
-                .NotNull()
-                .NotEmpty()
-                .MinimumLength(5);
-
+            var validator = new OfferDescriptionValidator();
             var result = validator.Validate(description);
-            if (!result.IsValid) throw new OffersDomainException($"'{nameof(description)}' is invalid description");
+            if (!result.IsValid) throw new OffersDomainException(nameof(Description));
         }
 
         private static void ValidatePrice(decimal price)
         {
-            var validator = new PriceValidator();
+            var validator = new OfferPriceValidator();
             var result = validator.Validate(price);
-            if (!result.IsValid) throw new OffersDomainException($"'{nameof(price)}' is invalid price");
+            if (!result.IsValid) throw new OffersDomainException(nameof(Price));
         }
 
         private static void ValidateTotalStock(int totalStock)
         {
-            if (totalStock <= 0) throw new OffersDomainException($"'{nameof(totalStock)}' must be > 0");
+            var validator = new TotalStockValidator();
+            var result = validator.Validate(totalStock);
+            if (!result.IsValid) throw new OffersDomainException(nameof(TotalStock));
         }
 
         private void ValidateDecreaseAvailableStock(int toDecrease)
         {
             if (toDecrease <= 0)
-            {
                 throw new OffersDomainException($"{nameof(toDecrease)} must be > 0");
-            }
             if (AvailableStock < toDecrease)
-            {
-                throw new OffersDomainException($"{nameof(toDecrease)} cannot be greater than AvailableStock");
-            }
+                throw new OffersDomainException($"{nameof(toDecrease)} cannot be greater than {nameof(AvailableStock)}");
         }
 
         private static void ValidateCategory(Category category)
         {
-            if (category == null) throw new OffersDomainException($"'{nameof(category)}' cannot be null");
+            if (category == null) throw new OffersDomainException($"{nameof(Category)} cannot be null");
         }
 
         private void ValidateEndOffer()
@@ -213,6 +237,11 @@ namespace Offers.API.Domain
         private void ValidateMarkAsRemoved()
         {
             if (RemovedAt != null) throw new OffersDomainException("Offer is already removed");
+        }
+
+        private void ValidateDeliveryMethods(IEnumerable<DeliveryMethod> deliveryMethods)
+        {
+            if (deliveryMethods == null) throw new OffersDomainException($"'{nameof(deliveryMethods)}' cannot be null");
         }
 
         #endregion

@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using MediatR;
+using Offers.API.Domain.Validators;
 using System;
 
 namespace Offers.API.Application.Commands.CreateCategory
@@ -14,9 +15,7 @@ namespace Offers.API.Application.Commands.CreateCategory
         public CreateCategoryCommandValidator()
         {
             RuleFor(x => x.Name)
-                .NotNull()
-                .NotEmpty()
-                .MinimumLength(3);
+                .SetValidator(new CategoryNameValidator());
         }
     }
 }

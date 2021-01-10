@@ -2,9 +2,9 @@
 
 namespace Common.Validators
 {
-    public class PriceValidator : AbstractValidator<decimal>
+    public class OfferPriceValidator : AbstractValidator<decimal>
     {
-        public PriceValidator()
+        public OfferPriceValidator()
         {
             RuleFor(x => x)
                 .GreaterThan(0);

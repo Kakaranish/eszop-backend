@@ -46,7 +46,7 @@ namespace Carts.API
                 builder
                     .UseSqlServer(connectionString)
                     .UseLazyLoadingProxies()
-                    .UseLoggerFactory(LoggerFactory.Create(loggingBuilder => loggingBuilder.AddDebug())) // DEBUG PURPOSES
+                    .UseLoggerFactory(LoggerFactory.Create(loggingBuilder => loggingBuilder.AddDebug()))
             );
             services.AddHealthChecks()
                 .AddCheck(

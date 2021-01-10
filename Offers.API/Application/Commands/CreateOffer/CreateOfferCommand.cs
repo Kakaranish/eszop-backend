@@ -1,9 +1,11 @@
-﻿using FluentValidation;
+﻿using Common.Extensions;
+using Common.Validators;
+using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.Http;
+using Offers.API.Domain.Validators;
 using System;
 using System.Collections.Generic;
-using Common.Extensions;
-using Microsoft.AspNetCore.Http;
 
 namespace Offers.API.Application.Commands.CreateOffer
 {
@@ -22,20 +24,16 @@ namespace Offers.API.Application.Commands.CreateOffer
         public CreateOfferCommandValidator()
         {
             RuleFor(x => x.Name)
-                .NotNull()
-                .NotEmpty()
-                .MinimumLength(5);
+                .SetValidator(new OfferNameValidator());
 
             RuleFor(x => x.Price)
-                .GreaterThan(0);
+                .SetValidator(new OfferPriceValidator());
 
             RuleFor(x => x.Description)
-                .NotNull()
-                .NotEmpty()
-                .MinimumLength(5);
+                .SetValidator(new OfferDescriptionValidator());
 
             RuleFor(x => x.TotalStock)
-                .GreaterThanOrEqualTo(1);
+                .SetValidator(new TotalStockValidator());
 
             RuleFor(x => x.CategoryId)
                 .IsGuid();

@@ -14,7 +14,7 @@ namespace Offers.API.Application.Commands.EndOffer
         public EndOfferCommandValidator()
         {
             RuleFor(x => x.OfferId)
-                .IsGuid();
+                .IsNotEmptyGuid();
         }
     }
 }

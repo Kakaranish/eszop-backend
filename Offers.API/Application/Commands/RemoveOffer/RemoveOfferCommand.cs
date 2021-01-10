@@ -14,7 +14,7 @@ namespace Offers.API.Application.Commands.RemoveOffer
         public RemoveOfferCommandValidator()
         {
             RuleFor(x => x.OfferId)
-                .IsGuid();
+                .IsNotEmptyGuid();
         }
     }
 }

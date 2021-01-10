@@ -1,6 +1,8 @@
 ﻿using Common.Extensions;
+using Common.Validators;
 using FluentValidation;
 using MediatR;
+using Offers.API.Domain.Validators;
 
 namespace Offers.API.Application.Commands.UpdateOffer
 {
@@ -18,25 +20,28 @@ namespace Offers.API.Application.Commands.UpdateOffer
         public UpdateOfferCommandValidator()
         {
             RuleFor(x => x.OfferId)
-                .IsGuid();
+                .IsNotEmptyGuid();
 
             RuleFor(x => x.Name)
-                .NotEmpty()
-                .MinimumLength(5)
+                .SetValidator(new OfferNameValidator())
                 .When(x => x.Name is not null);
 
             RuleFor(x => x.Description)
-                .NotEmpty()
-                .MinimumLength(5)
-                .When(x => x.Name is not null);
+                .SetValidator(new OfferDescriptionValidator())
+                .When(x => x.Description is not null);
 
             RuleFor(x => x.Price)
-                .GreaterThan(0)
-                .When(x => x.Name is not null);
+                .Must(price =>
+                {
+                    if (price == null) return true;
+                    var validator = new OfferPriceValidator();
+                    return validator.Validate(price.Value).IsValid;
+                })
+                .When(x => x.Price is not null);
 
             RuleFor(x => x.AvailableStock)
                 .GreaterThanOrEqualTo(0)
-                .When(x => x.Name is not null);
+                .When(x => x.AvailableStock is not null);
         }
     }
 }

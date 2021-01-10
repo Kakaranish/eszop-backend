@@ -1,8 +1,8 @@
 ﻿using Common.EventBus;
+using Common.EventBus.IntegrationEvents;
 using Offers.API.DataAccess.Repositories;
 using System;
 using System.Threading.Tasks;
-using Common.EventBus.IntegrationEvents;
 
 namespace Offers.API.Application.IntegrationEventHandlers
 {

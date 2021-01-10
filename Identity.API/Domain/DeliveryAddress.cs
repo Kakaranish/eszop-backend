@@ -1,6 +1,5 @@
 ﻿using Common.Domain;
 using Common.Validators;
-using Identity.API.Domain.CommonValidators;
 using System;
 
 namespace Identity.API.Domain

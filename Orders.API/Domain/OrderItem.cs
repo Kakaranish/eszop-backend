@@ -68,7 +68,7 @@ namespace Orders.API.Domain
         
         public void ValidatePricePerItem(decimal pricePerItem)
         {
-            var validator = new PriceValidator();
+            var validator = new OfferPriceValidator();
             var result = validator.Validate(pricePerItem);
             if (!result.IsValid) throw new OrdersDomainException($"'{nameof(pricePerItem)}' is invalid price");
         }
