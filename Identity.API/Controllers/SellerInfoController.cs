@@ -2,7 +2,7 @@
 using Common.Dto;
 using Common.Types;
 using Identity.API.Application.Commands.CreateOrUpdateSellerInfo;
-using Identity.API.Application.Queries.GetBankAccountNumber;
+using Identity.API.Application.Queries.GetBankAccountInfo;
 using Identity.API.Application.Queries.GetPublicSellerInfo;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -28,9 +28,9 @@ namespace Identity.API.Controllers
             return await _mediator.Send(request);
         }
 
-        [HttpGet("{sellerId}/bank-account-number")]
+        [HttpGet("{sellerId}/bank-account")]
         [JwtAuthorize]
-        public async Task<string> GetPublicSellerInfo([FromRoute] GetBankAccountNumberQuery request)
+        public async Task<BankAccountInfoDto> GetBankAccountInfo([FromRoute] GetBankAccountInfoQuery request)
         {
             return await _mediator.Send(request);
         }

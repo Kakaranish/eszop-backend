@@ -18,15 +18,15 @@ namespace Identity.API.Application.Commands.CreateOrUpdateSellerInfo
         {
             RuleFor(x => x.ContactEmail)
                 .SetValidator(new EmailValidator())
-                .When(x => x.ContactEmail != null);
+                .When(x => !string.IsNullOrWhiteSpace(x.ContactEmail));
 
             RuleFor(x => x.PhoneNumber)
                 .SetValidator(new PhoneNumberValidator())
-                .When(x => x.PhoneNumber != null);
+                .When(x => !string.IsNullOrWhiteSpace(x.PhoneNumber));
 
             RuleFor(x => x.BankAccountNumber)
                 .SetValidator(new BankAccountNumberValidator())
-                .When(x => x.BankAccountNumber != null);
+                .When(x => !string.IsNullOrWhiteSpace(x.BankAccountNumber));
         }
     }
 }

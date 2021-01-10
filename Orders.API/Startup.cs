@@ -1,4 +1,3 @@
-using System;
 using Common.Authentication;
 using Common.ErrorHandling;
 using Common.EventBus;
@@ -35,6 +34,7 @@ namespace Orders.API
             services.AddLocalhostCorsPolicy();
 
             services.ConfigureUrls();
+            services.AddHttpClient();
 
             services.AddJwtAuthentication();
             services.AddMediatR(typeof(Startup).Assembly);
