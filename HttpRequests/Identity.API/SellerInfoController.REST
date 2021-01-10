@@ -8,6 +8,11 @@ GET {{url}}/api/seller/{{sellerId}} HTTP/1.1
 
 ###
 
+GET {{url}}/api/seller/{{sellerId}}/bank-account-number HTTP/1.1
+Authorization: Bearer {{accessToken}}
+
+###
+
 PUT {{url}}/api/seller HTTP/1.1
 Authorization: Bearer {{accessToken}}
 Content-Type: application/json
