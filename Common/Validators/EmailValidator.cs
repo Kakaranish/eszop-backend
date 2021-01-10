@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace Identity.API.Domain.CommonValidators
+namespace Common.Validators
 {
     public class EmailValidator : AbstractValidator<string>
     {

@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using Common.Validators;
+using FluentValidation;
 using Identity.API.Application.Dto;
 using Identity.API.Domain.CommonValidators;
 using MediatR;

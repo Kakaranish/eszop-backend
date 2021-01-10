@@ -1,10 +1,10 @@
 ﻿using FluentValidation;
 
-namespace Identity.API.Domain.CommonValidators
+namespace Common.Validators
 {
-    public class LastNameValidator : AbstractValidator<string>
+    public class FirstNameValidator : AbstractValidator<string>
     {
-        public LastNameValidator()
+        public FirstNameValidator()
         {
             const string regex = @"^[a-zA-Z\p{L}\s,.'-]{3,}$";
 

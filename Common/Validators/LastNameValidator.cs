@@ -1,12 +1,12 @@
 ﻿using FluentValidation;
 
-namespace Identity.API.Domain.CommonValidators
+namespace Common.Validators
 {
-    public class ZipCodeValidator : AbstractValidator<string>
+    public class LastNameValidator : AbstractValidator<string>
     {
-        public ZipCodeValidator()
+        public LastNameValidator()
         {
-            const string regex = @"^\d{1,6}(-\d{1,6})?$";
+            const string regex = @"^[a-zA-Z\p{L}\s,.'-]{3,}$";
 
             RuleFor(x => x)
                 .NotEmpty()
