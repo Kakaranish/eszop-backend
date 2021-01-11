@@ -33,7 +33,7 @@ namespace Common.ErrorHandling
                 logger.LogError(integrationEventException.Message);
             }
 
-            return new ErrorActionResult("Internal error");
+            return new ErrorActionResult("Internal error", 500);
         }
     }
 }

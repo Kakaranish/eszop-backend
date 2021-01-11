@@ -1,9 +1,10 @@
-﻿using Common.DataAccess;
+using Common.DataAccess;
 using Common.Extensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Offers.API.Domain;
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -15,7 +16,7 @@ namespace Offers.API.DataAccess
 
         public DbSet<Offer> Offers { get; private set; }
         public DbSet<Category> Categories { get; private set; }
-        public DbSet<DeliveryMethod> DeliveryMethods { get; private set; }
+        public DbSet<PredefinedDeliveryMethod> PredefinedDeliveryMethods { get; private set; }
 
         public AppDbContext(DbContextOptions options, IMediator mediator) : base(options)
         {
@@ -30,13 +31,10 @@ namespace Offers.API.DataAccess
                 .Property(x => x.Price)
                 .HasColumnType("decimal(18,4)");
 
-            modelBuilder.Entity<DeliveryMethod>()
-                .HasKey(x => x.Id);
-            modelBuilder.Entity<DeliveryMethod>()
-                .Property(x => x.Price)
-                .HasColumnType("decimal(18,4)");
-
             modelBuilder.Entity<Category>()
+                .HasKey(x => x.Id);
+
+            modelBuilder.Entity<PredefinedDeliveryMethod>()
                 .HasKey(x => x.Id);
         }
 

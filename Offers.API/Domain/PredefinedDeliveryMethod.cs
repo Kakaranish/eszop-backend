@@ -1,14 +1,16 @@
-﻿namespace Offers.API.Domain
+﻿using Common.Domain;
+
+namespace Offers.API.Domain
 {
-    public class DeliveryMethod
+    public class PredefinedDeliveryMethod : EntityBase, IAggregateRoot
     {
         public string Name { get; private set; }
-        public decimal Price { get; private set; }
+        public string Description { get; private set; }
 
-        public DeliveryMethod(string name, decimal price)
+        public PredefinedDeliveryMethod(string name, string description)
         {
             SetName(name);
-            SetPrice(price);
+            SetDescription(description);
         }
 
         public void SetName(string name)
@@ -17,10 +19,9 @@
             Name = name;
         }
 
-        public void SetPrice(decimal price)
+        public void SetDescription(string description)
         {
-            ValidatePrice(price);
-            Price = price;
+            Description = description;
         }
 
         #region Validation
@@ -29,11 +30,6 @@
         {
             if (string.IsNullOrWhiteSpace(name))
                 throw new OffersDomainException($"{nameof(Name)} cannot be null or whitespace");
-        }
-
-        public void ValidatePrice(decimal price)
-        {
-            if (price < 0) throw new OffersDomainException($"{nameof(Price)} must be >= 0");
         }
 
         #endregion

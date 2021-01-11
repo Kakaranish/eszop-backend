@@ -10,8 +10,8 @@ using Offers.API.DataAccess;
 namespace Offers.API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20210110191002_DeliverMethod")]
-    partial class DeliverMethod
+    [Migration("20210111184749_PredefinedDeliveryAddress")]
+    partial class PredefinedDeliveryAddress
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -41,28 +41,6 @@ namespace Offers.API.Migrations
                     b.ToTable("Categories");
                 });
 
-            modelBuilder.Entity("Offers.API.Domain.DeliveryMethod", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid?>("OfferId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,4)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OfferId");
-
-                    b.ToTable("DeliveryMethods");
-                });
-
             modelBuilder.Entity("Offers.API.Domain.Offer", b =>
                 {
                     b.Property<Guid>("Id")
@@ -77,6 +55,9 @@ namespace Offers.API.Migrations
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("DeliveryMethods")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
@@ -115,11 +96,21 @@ namespace Offers.API.Migrations
                     b.ToTable("Offers");
                 });
 
-            modelBuilder.Entity("Offers.API.Domain.DeliveryMethod", b =>
+            modelBuilder.Entity("Offers.API.Domain.PredefinedDeliveryMethod", b =>
                 {
-                    b.HasOne("Offers.API.Domain.Offer", null)
-                        .WithMany("DeliveryMethods")
-                        .HasForeignKey("OfferId");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PredefinedDeliveryMethods");
                 });
 
             modelBuilder.Entity("Offers.API.Domain.Offer", b =>
@@ -129,11 +120,6 @@ namespace Offers.API.Migrations
                         .HasForeignKey("CategoryId");
 
                     b.Navigation("Category");
-                });
-
-            modelBuilder.Entity("Offers.API.Domain.Offer", b =>
-                {
-                    b.Navigation("DeliveryMethods");
                 });
 #pragma warning restore 612, 618
         }

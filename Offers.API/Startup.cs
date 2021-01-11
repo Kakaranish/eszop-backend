@@ -65,6 +65,7 @@ namespace Offers.API
 
             services.AddScoped<IOfferRepository, OfferRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<IPredefinedDeliveryMethodRepository, PredefinedDeliveryMethodRepository>();
 
             services.AddExceptionHandling<OffersDomainException>();
 

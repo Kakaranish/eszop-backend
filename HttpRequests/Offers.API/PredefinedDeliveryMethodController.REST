@@ -1,0 +1,36 @@
+@url = https://localhost:5001
+@adminAccessToken = 
+
+###
+
+GET {{url}}/api/delivery-methods/ HTTP/1.1
+
+###
+
+@deliveryMethodId = 714cdf36-059a-495f-b1f3-08d8b6635dad
+
+GET {{url}}/api/delivery-methods/{{deliveryMethodId}} HTTP/1.1
+
+###
+
+POST {{url}}/api/delivery-methods HTTP/1.1
+Authorization: Bearer {{adminAccessToken}}
+Content-Type: application/json
+
+{
+    "Name": "Poczta Polska (Za pobraniem)",
+    "Description": "Some desc"
+}
+
+###
+
+PUT {{url}}/api/delivery-methods HTTP/1.1
+Authorization: Bearer {{adminAccessToken}}
+Content-Type: application/json
+
+{
+    "DeliveryMethodId": "{{deliveryMethodId}}",
+    "Name": "Poczta Polska",
+    "Description": "Some desc {{$datetime iso8601}}"
+}
+
