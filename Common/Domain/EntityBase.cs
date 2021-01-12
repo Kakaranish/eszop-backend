@@ -12,12 +12,8 @@ namespace Common.Domain
         public Guid Id { get; protected set; }
 
         [JsonIgnore]
-        [NotMapped] 
+        [NotMapped]
         public IReadOnlyList<IDomainEvent> DomainEvents => _domainEvents?.AsReadOnly();
-        
-        [JsonIgnore]
-        [NotMapped] 
-        public bool IsTransient => Id == default;
 
         public void AddDomainEvent(IDomainEvent domainEvent)
         {
