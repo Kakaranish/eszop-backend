@@ -28,9 +28,9 @@ namespace Offers.API.Domain
         public decimal Price { get; private set; }
         public int AvailableStock { get; private set; }
         public int TotalStock { get; private set; }
-        
+
         public virtual Category Category { get; private set; }
-        public virtual IReadOnlyCollection<DeliveryMethod> DeliveryMethods => _deliveryMethods;
+        public IReadOnlyCollection<DeliveryMethod> DeliveryMethods => _deliveryMethods;
 
         [NotMapped] public bool IsPublished => PublishedAt != null;
 
@@ -164,7 +164,7 @@ namespace Offers.API.Domain
 
         public void SetPublished()
         {
-            if (IsPublished) 
+            if (IsPublished)
                 throw new OffersDomainException("Offer is already published");
             if (_deliveryMethods == null || _deliveryMethods.Count == 0)
                 throw new OffersDomainException("Offer has no delivery methods set");

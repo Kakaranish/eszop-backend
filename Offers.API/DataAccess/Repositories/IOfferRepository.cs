@@ -1,9 +1,10 @@
-﻿using System;
+﻿using Common.DataAccess;
+using Common.Types;
+using Offers.API.Application.Dto;
+using Offers.API.Domain;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Common.DataAccess;
-using Common.Types;
-using Offers.API.Domain;
 
 namespace Offers.API.DataAccess.Repositories
 {
@@ -11,7 +12,7 @@ namespace Offers.API.DataAccess.Repositories
     {
         Task<IList<Offer>> GetAllAsync();
         Task<Offer> GetByIdAsync(Guid offerId);
-        Task<Pagination<Offer>> GetFiltered(OfferFilter filter, PageDetails pageDetails);
+        Task<Pagination<OfferDto>> GetFiltered(OfferFilter filter, PageDetails pageDetails);
         Task AddAsync(Offer product);
         void Update(Offer offer);
     }

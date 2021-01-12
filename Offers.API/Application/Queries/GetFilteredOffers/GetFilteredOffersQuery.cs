@@ -1,12 +1,12 @@
 ﻿using Common.Types;
-using MediatR;
-using Offers.API.Domain;
-using System;
 using FluentValidation;
+using MediatR;
+using Offers.API.Application.Dto;
+using System;
 
 namespace Offers.API.Application.Queries.GetFilteredOffers
 {
-    public class GetFilteredOffersQuery : IRequest<Pagination<Offer>>
+    public class GetFilteredOffersQuery : IRequest<Pagination<OfferDto>>
     {
         public int PageSize { get; init; } = 10;
         public int PageIndex { get; init; } = 1;

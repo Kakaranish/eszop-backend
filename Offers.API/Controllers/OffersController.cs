@@ -6,10 +6,10 @@ using Offers.API.Application.Commands.CreateOffer;
 using Offers.API.Application.Commands.EndOffer;
 using Offers.API.Application.Commands.RemoveOffer;
 using Offers.API.Application.Commands.UpdateOffer;
+using Offers.API.Application.Dto;
 using Offers.API.Application.Queries.GetAllOffers;
 using Offers.API.Application.Queries.GetFilteredOffers;
 using Offers.API.Application.Queries.GetOffer;
-using Offers.API.Domain;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -28,20 +28,20 @@ namespace Offers.API.Controllers
         }
 
         [HttpGet("")]
-        public async Task<IList<Offer>> GetAll()
+        public async Task<IList<OfferDto>> GetAll()
         {
             var query = new GetAllOffersQuery();
             return await _mediator.Send(query);
         }
 
         [HttpGet("filtered")]
-        public async Task<Pagination<Offer>> GetFiltered([FromQuery] GetFilteredOffersQuery query)
+        public async Task<Pagination<OfferDto>> GetFiltered([FromQuery] GetFilteredOffersQuery query)
         {
             return await _mediator.Send(query);
         }
 
         [HttpGet("{offerId}")]
-        public async Task<Offer> GetById(string offerId)
+        public async Task<OfferDto> GetById(string offerId)
         {
             var query = new GetOfferQuery { OfferId = offerId };
             return await _mediator.Send(query);

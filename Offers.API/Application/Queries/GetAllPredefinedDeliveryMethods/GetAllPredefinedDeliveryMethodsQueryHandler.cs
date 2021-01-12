@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Offers.API.Application.Dto;
 using Offers.API.DataAccess.Repositories;
+using Offers.API.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,14 +27,7 @@ namespace Offers.API.Application.Queries.GetAllPredefinedDeliveryMethods
         {
             var deliveryMethods = await _predefinedDeliveryMethodRepository.GetAll();
 
-            return deliveryMethods.Select(method =>
-                new PredefinedDeliveryMethodDto
-                {
-                    Id = method.Id,
-                    Name = method.Name,
-                    Description = method.Description
-                })
-                .ToList();
+            return deliveryMethods.Select(deliveryMethod => deliveryMethod.ToDto()).ToList();
         }
     }
 }

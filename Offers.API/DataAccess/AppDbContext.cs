@@ -1,7 +1,8 @@
-using Common.DataAccess;
+﻿using Common.DataAccess;
 using Common.Extensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using Offers.API.Domain;
 using System;
 using System.Collections.Generic;
@@ -30,6 +31,11 @@ namespace Offers.API.DataAccess
             modelBuilder.Entity<Offer>()
                 .Property(x => x.Price)
                 .HasColumnType("decimal(18,4)");
+            modelBuilder.Entity<Offer>()
+                .Property(x => x.DeliveryMethods)
+                .HasConversion(
+                    x => JsonConvert.SerializeObject(x),
+                    x => JsonConvert.DeserializeObject<List<DeliveryMethod>>(x));
 
             modelBuilder.Entity<Category>()
                 .HasKey(x => x.Id);

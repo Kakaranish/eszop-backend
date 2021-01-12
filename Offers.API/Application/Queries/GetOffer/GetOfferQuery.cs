@@ -1,11 +1,11 @@
 ﻿using Common.Extensions;
 using FluentValidation;
 using MediatR;
-using Offers.API.Domain;
+using Offers.API.Application.Dto;
 
 namespace Offers.API.Application.Queries.GetOffer
 {
-    public class GetOfferQuery : IRequest<Offer>
+    public class GetOfferQuery : IRequest<OfferDto>
     {
         public string OfferId { get; init; }
     }
