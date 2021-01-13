@@ -1,12 +1,87 @@
-version: '3.4'
+version: "3.4"
 
 services:
-  offers.api:
-    image: ${DOCKER_REGISTRY-}offersapi
+  eszop-offers:
+    image: eszop-offers
+    container_name: eszop-offers
     build:
       context: .
       dockerfile: Offers.API/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=${CERT_PASSWORD}
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+    ports:
+      - "5000:80"
+      - "5001:443"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${CERT_PATH}:/https/
+    networks:
+      - eszop-network
+
+  eszop-identity:
+    image: eszop-identity
+    container_name: eszop-identity
+    build:
+      context: .
+      dockerfile: Identity.API/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=${CERT_PASSWORD}
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+    ports:
+      - "6000:80"
+      - "6001:443"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${CERT_PATH}:/https/
+    networks:
+      - eszop-network
+
+  eszop-carts:
+    image: eszop-carts
+    container_name: eszop-carts
+    build:
+      context: .
+      dockerfile: Carts.API/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=${CERT_PASSWORD}
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+    ports:
+      - "7000:80"
+      - "7001:443"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${CERT_PATH}:/https/
+    networks:
+      - eszop-network
+
+  eszop-orders:
+    image: eszop-orders
+    container_name: eszop-orders
+    build:
+      context: .
+      dockerfile: Orders.API/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=${CERT_PASSWORD}
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+    ports:
+      - "8000:80"
+      - "8001:443"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${CERT_PATH}:/https/
+    networks:
+      - eszop-network
 
 networks:
   eszop-network:
-    external: true
+    external:
+      name: eszop-network
