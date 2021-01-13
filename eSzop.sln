@@ -6,6 +6,10 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Offers.API", "Offers.API\Offers.API.csproj", "{BF02C75A-82D2-494C-AA19-6F7848E1B571}"
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{7277ED04-1640-48EB-8BE3-4B0E85FE4B1C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{3975614A-7D36-4904-8028-80643C21ADE3} = {3975614A-7D36-4904-8028-80643C21ADE3}
+		{FE7F0CA9-F429-4759-851D-076015FAB95B} = {FE7F0CA9-F429-4759-851D-076015FAB95B}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Identity.API", "Identity.API\Identity.API.csproj", "{E094B45E-EE7B-4533-8792-3C2CF0B28231}"
 EndProject
@@ -13,7 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "Common\Common.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Carts.API", "Carts.API\Carts.API.csproj", "{FE7F0CA9-F429-4759-851D-076015FAB95B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orders.API", "Orders.API\Orders.API.csproj", "{3975614A-7D36-4904-8028-80643C21ADE3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orders.API", "Orders.API\Orders.API.csproj", "{3975614A-7D36-4904-8028-80643C21ADE3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

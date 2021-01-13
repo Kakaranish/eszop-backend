@@ -13,6 +13,7 @@ namespace Common.EventBus
             var configuration = serviceProvider.GetRequiredService<IConfiguration>();
 
             var rabbitMqConfig = new RawRabbitConfiguration();
+            rabbitMqConfig.Hostnames.Clear();
             configuration.GetSection("EventBus:RabbitMq").Bind(rabbitMqConfig);
             var busClient = BusClientFactory.CreateDefault(rabbitMqConfig);
 
