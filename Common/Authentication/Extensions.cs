@@ -1,10 +1,9 @@
-﻿using System;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using System;
 using System.Collections.Generic;
 using System.Text;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace Common.Authentication
 {
@@ -22,12 +21,9 @@ namespace Common.Authentication
 
             var jwtConfig = new JwtConfig();
             configuration.GetSection("JwtConfig").Bind(jwtConfig);
+
             services
-                .AddAuthentication(options =>
-                {
-                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                })
+                .AddAuthentication()
                 .AddJwtBearer(options =>
                 {
                     var accessTokenSecret = Encoding.UTF8.GetBytes(jwtConfig.AccessTokenSecretKey);

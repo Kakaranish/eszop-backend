@@ -73,8 +73,6 @@ namespace Orders.API
 
             app.UseExceptionHandler("/error");
 
-            app.UseHttpsRedirection();
-
             app.UseRouting();
 
             app.UseAuthorization();

@@ -1,6 +1,4 @@
-@url = https://localhost:7001
-@offerId = 
-@accessToken = 
+@url = http://localhost:7000
 
 ###
 

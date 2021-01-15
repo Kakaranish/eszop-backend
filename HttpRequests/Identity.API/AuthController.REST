@@ -1,4 +1,4 @@
-@url = https://localhost:6001
+@url = http://localhost:6000
 
 ### Sign up
 

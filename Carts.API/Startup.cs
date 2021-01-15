@@ -62,7 +62,7 @@ namespace Carts.API
             services.AddScoped<ICartItemRepository, CartItemRepository>();
 
             services.AddExceptionHandling<CartsDomainException>();
-            
+
             services
                 .AddRabbitMqEventBus()
                 .Subscribe<OfferChangedIntegrationEvent, OfferChangedIntegrationEventHandler>()
@@ -78,8 +78,6 @@ namespace Carts.API
             }
 
             app.UseExceptionHandler("/error");
-
-            app.UseHttpsRedirection();
 
             app.UseRouting();
 

@@ -1,4 +1,4 @@
-@url = https://localhost:5001
+@url = http://localhost:5000
 ###
 
 GET {{url}}/api/offers HTTP/1.1

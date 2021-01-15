@@ -1,5 +1,4 @@
-@url = https://localhost:6001
-@accessToken = 
+@url = http://localhost:6000
 @sellerId = BA09CE67-B280-459B-9A48-08D8AE5B9007
 
 ###

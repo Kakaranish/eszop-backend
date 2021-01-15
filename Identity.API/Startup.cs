@@ -46,7 +46,7 @@ namespace Identity.API
             );
             var redisConnectionString = Configuration.GetConnectionString("Redis");
             services.AddDistributedRedisCache(options => options.Configuration = redisConnectionString);
-                
+
             services.AddHealthChecks()
                 .AddCheck(
                     name: "SqlServerCheck",
@@ -77,8 +77,6 @@ namespace Identity.API
             }
 
             app.UseExceptionHandler("/error");
-
-            app.UseHttpsRedirection();
 
             app.UseRouting();
 

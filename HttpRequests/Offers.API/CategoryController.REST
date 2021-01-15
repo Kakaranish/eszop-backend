@@ -1,5 +1,4 @@
-@url = https://localhost:5001
-@accessToken = 
+@url = http://localhost:5000
 
 ### Get all
 

@@ -84,8 +84,6 @@ namespace Offers.API
 
             app.UseExceptionHandler("/error");
 
-            app.UseHttpsRedirection();
-
             app.UseRouting();
 
             app.UseAuthorization();

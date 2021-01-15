@@ -1,6 +1,4 @@
-@url = https://localhost:6001
-@accessToken = 
-@userIdToBlock = 
+@url = http://localhost:6000
 
 ### Lock
 

@@ -1,5 +1,4 @@
-@url = https://localhost:5001
-@adminAccessToken = 
+@url = http://localhost:5000
 
 ###
 

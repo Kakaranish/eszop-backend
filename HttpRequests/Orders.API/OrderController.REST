@@ -1,6 +1,4 @@
-@url = https://localhost:8001
-@accessToken = 
-@orderId = 
+@url = http://localhost:8000
 ###
 
 POST {{url}}/api/order/cancel HTTP/1.1

@@ -1,5 +1,4 @@
-@url = https://localhost:6001
-@accessToken = 
+@url = http://localhost:6000
 
 ### Invalid data #1
 
