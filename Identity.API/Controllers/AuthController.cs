@@ -1,5 +1,6 @@
 ﻿using Common.Types;
 using Identity.API.Application.Commands.SignIn;
+using Identity.API.Application.Commands.SignOut;
 using Identity.API.Application.Commands.SignUp;
 using Identity.API.Application.Dto;
 using MediatR;
@@ -24,6 +25,13 @@ namespace Identity.API.Controllers
         public async Task<TokenResponse> SignIn(SignInCommand request)
         {
             return await _mediator.Send(request);
+        }
+
+        [HttpPost("sign-out")]
+        public async Task<IActionResult> SignOut(SignOutCommand request)
+        {
+            await _mediator.Send(request);
+            return Ok();
         }
 
         [HttpPost("sign-up")]

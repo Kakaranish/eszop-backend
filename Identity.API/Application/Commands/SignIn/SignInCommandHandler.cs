@@ -4,6 +4,7 @@ using Identity.API.DataAccess.Repositories;
 using Identity.API.Extensions;
 using Identity.API.Services;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,14 +17,18 @@ namespace Identity.API.Application.Commands.SignIn
         private readonly IPasswordHasher _passwordHasher;
         private readonly IAccessTokenService _accessTokenService;
         private readonly IRefreshTokenService _refreshTokenService;
+        private readonly HttpContext _httpContext;
 
         public SignInCommandHandler(IUserRepository userRepository, IPasswordHasher passwordHasher,
-            IAccessTokenService accessTokenService, IRefreshTokenService refreshTokenService)
+            IAccessTokenService accessTokenService, IRefreshTokenService refreshTokenService,
+            IHttpContextAccessor httpContextAccessor)
         {
             _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
             _passwordHasher = passwordHasher ?? throw new ArgumentNullException(nameof(passwordHasher));
             _accessTokenService = accessTokenService ?? throw new ArgumentNullException(nameof(accessTokenService));
             _refreshTokenService = refreshTokenService ?? throw new ArgumentNullException(nameof(refreshTokenService));
+            _httpContext = httpContextAccessor.HttpContext ??
+                           throw new ArgumentNullException(nameof(httpContextAccessor.HttpContext));
         }
 
         public async Task<TokenResponse> Handle(SignInCommand request, CancellationToken cancellationToken)
@@ -44,6 +49,15 @@ namespace Identity.API.Application.Commands.SignIn
 
             _userRepository.Update(user);
             await _userRepository.UnitOfWork.SaveChangesAndDispatchDomainEventsAsync(cancellationToken);
+
+            var cookieOptions = new CookieOptions
+            {
+                HttpOnly = true,
+                SameSite = SameSiteMode.Lax,
+                Expires = DateTimeOffset.MaxValue
+            };
+            _httpContext.Response.Cookies.Append("accessToken", accessToken, cookieOptions);
+            _httpContext.Response.Cookies.Append("refreshToken", refreshToken.Token, cookieOptions);
 
             return new TokenResponse
             {
