@@ -1,3 +1,4 @@
+using API.Gateway.Configuration;
 using API.Gateway.Middlewares;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -19,23 +20,14 @@ namespace API.Gateway
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCors();
+            services.AddGlobalCors();
             services.AddOcelot(Configuration);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.UseCors(builder =>
-            {
-                builder
-                    .WithOrigins("https://localhost:3000")
-                    .AllowAnyHeader()
-                    .AllowAnyMethod()
-                    .AllowCredentials();
-            });
-
+            app.UseCors();
             app.UseCookieTokenMiddleware();
-            
             app.UseOcelot().Wait();
         }
     }
