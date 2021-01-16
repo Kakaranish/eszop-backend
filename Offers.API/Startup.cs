@@ -35,7 +35,6 @@ namespace Offers.API
         {
             services.AddControllers();
             services.AddHttpContextAccessor();
-            services.AddLocalhostCorsPolicy();
 
             services.ConfigureUrls();
 
@@ -79,7 +78,6 @@ namespace Offers.API
             if (env.IsCustomDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseCors("LocalhostCorsPolicy");
             }
 
             app.UseExceptionHandler("/error");

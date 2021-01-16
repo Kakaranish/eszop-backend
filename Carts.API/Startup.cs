@@ -33,7 +33,6 @@ namespace Carts.API
         {
             services.AddControllers();
             services.AddHttpContextAccessor();
-            services.AddLocalhostCorsPolicy();
 
             services.ConfigureUrls();
             services.AddHttpClient();
@@ -74,7 +73,6 @@ namespace Carts.API
             if (env.IsCustomDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseCors("LocalhostCorsPolicy");
             }
 
             app.UseExceptionHandler("/error");

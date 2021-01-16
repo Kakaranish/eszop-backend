@@ -31,7 +31,6 @@ namespace Identity.API
         {
             services.AddControllers();
             services.AddHttpContextAccessor();
-            services.AddLocalhostCorsPolicy();
 
             services.Configure<JwtConfig>(Configuration.GetSection("JwtConfig"));
             services.AddJwtAuthentication();
@@ -73,7 +72,6 @@ namespace Identity.API
             if (env.IsCustomDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseCors("LocalhostCorsPolicy");
             }
 
             app.UseExceptionHandler("/error");

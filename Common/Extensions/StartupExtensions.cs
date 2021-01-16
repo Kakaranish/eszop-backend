@@ -22,7 +22,8 @@ namespace Common.Extensions
             {
                 corsOptions.AddPolicy("LocalhostCorsPolicy", builder =>
                 {
-                    builder.AllowAnyOrigin()
+                    builder
+                        .WithOrigins("https://localhost:3000")
                         .AllowAnyMethod()
                         .AllowAnyHeader();
                 });
