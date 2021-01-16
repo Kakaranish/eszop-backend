@@ -1,3 +1,4 @@
+using API.Gateway.Middlewares;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -29,8 +30,12 @@ namespace API.Gateway
                 builder
                     .WithOrigins("https://localhost:3000")
                     .AllowAnyHeader()
-                    .AllowAnyMethod();
+                    .AllowAnyMethod()
+                    .AllowCredentials();
             });
+
+            app.UseCookieTokenMiddleware();
+            
             app.UseOcelot().Wait();
         }
     }
