@@ -1,6 +1,18 @@
 {
   "Routes": [
     {
+      "UpstreamPathTemplate": "/offers-api/healthcheck",
+      "UpstreamHttpMethod": [ "Post" ],
+      "DownstreamPathTemplate": "/healthcheck",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5000
+        }
+      ]
+    },
+    {
       "UpstreamPathTemplate": "/offers-api/{url}",
       "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete" ],
       "DownstreamPathTemplate": "/api/{url}",
@@ -9,6 +21,18 @@
         {
           "Host": "localhost",
           "Port": 5000
+        }
+      ]
+    },
+    {
+      "UpstreamPathTemplate": "/identity-api/healthcheck",
+      "UpstreamHttpMethod": [ "Post" ],
+      "DownstreamPathTemplate": "/healthcheck",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 6000
         }
       ]
     },
@@ -25,6 +49,18 @@
       ]
     },
     {
+      "UpstreamPathTemplate": "/carts-api/healthcheck",
+      "UpstreamHttpMethod": [ "Post" ],
+      "DownstreamPathTemplate": "/healthcheck",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7000
+        }
+      ]
+    },
+    {
       "UpstreamPathTemplate": "/carts-api/{url}",
       "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete" ],
       "DownstreamPathTemplate": "/api/{url}",
@@ -33,6 +69,18 @@
         {
           "Host": "localhost",
           "Port": 7000
+        }
+      ]
+    },
+    {
+      "UpstreamPathTemplate": "/orders-api/healthcheck",
+      "UpstreamHttpMethod": [ "Post" ],
+      "DownstreamPathTemplate": "/healthcheck",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 8000
         }
       ]
     },

@@ -1,6 +1,18 @@
 {
   "Routes": [
     {
+      "UpstreamPathTemplate": "/offers-api/healthcheck",
+      "UpstreamHttpMethod": [ "Post" ],
+      "DownstreamPathTemplate": "/healthcheck",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "eszop-offers",
+          "Port": 80
+        }
+      ]
+    },
+    {
       "UpstreamPathTemplate": "/offers-api/{url}",
       "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete" ],
       "DownstreamPathTemplate": "/api/{url}",
@@ -8,6 +20,18 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "eszop-offers",
+          "Port": 80
+        }
+      ]
+    },
+    {
+      "UpstreamPathTemplate": "/identity-api/healthcheck",
+      "UpstreamHttpMethod": [ "Post" ],
+      "DownstreamPathTemplate": "/healthcheck",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "eszop-identity",
           "Port": 80
         }
       ]
@@ -25,6 +49,18 @@
       ]
     },
     {
+      "UpstreamPathTemplate": "/carts-api/healthcheck",
+      "UpstreamHttpMethod": [ "Post" ],
+      "DownstreamPathTemplate": "/healthcheck",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "eszop-carts",
+          "Port": 80
+        }
+      ]
+    },
+    {
       "UpstreamPathTemplate": "/carts-api/{url}",
       "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete" ],
       "DownstreamPathTemplate": "/api/{url}",
@@ -32,6 +68,18 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "eszop-carts",
+          "Port": 80
+        }
+      ]
+    },
+    {
+      "UpstreamPathTemplate": "/orders-api/healthcheck",
+      "UpstreamHttpMethod": [ "Post" ],
+      "DownstreamPathTemplate": "/healthcheck",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "eszop-orders",
           "Port": 80
         }
       ]
