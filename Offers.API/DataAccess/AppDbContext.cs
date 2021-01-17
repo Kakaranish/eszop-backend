@@ -36,6 +36,11 @@ namespace Offers.API.DataAccess
                 .HasConversion(
                     x => JsonConvert.SerializeObject(x),
                     x => JsonConvert.DeserializeObject<List<DeliveryMethod>>(x));
+            modelBuilder.Entity<Offer>()
+                .Property(x => x.Images)
+                .HasConversion(
+                    x => JsonConvert.SerializeObject(x),
+                    x => JsonConvert.DeserializeObject<List<ImageInfo>>(x));
 
             modelBuilder.Entity<Category>()
                 .HasKey(x => x.Id);

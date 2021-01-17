@@ -3,8 +3,8 @@ using Common.Types;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Offers.API.Application.Commands.CreateCategory;
+using Offers.API.Application.Dto;
 using Offers.API.Application.Queries.GetCategories;
-using Offers.API.Domain;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -13,17 +13,17 @@ namespace Offers.API.Controllers
 {
     [ApiController]
     [Route("/api/[controller]/")]
-    public class CategoryController : BaseController
+    public class CategoriesController : BaseController
     {
         private readonly IMediator _mediator;
 
-        public CategoryController(IMediator mediator)
+        public CategoriesController(IMediator mediator)
         {
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
         [HttpGet("")]
-        public async Task<IList<Category>> GetAll()
+        public async Task<IList<CategoryDto>> GetAll()
         {
             var request = new GetCategoriesQuery();
             var categories = await _mediator.Send(request);

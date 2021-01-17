@@ -37,6 +37,11 @@ namespace Offers.API.Application.Commands.CreateOffer
 
             RuleFor(x => x.CategoryId)
                 .IsGuid();
+
+            RuleFor(x => x.Images)
+                .NotNull()
+                .Must(x => x.Count > 0)
+                .WithMessage("At least 1 image required");
         }
     }
 }

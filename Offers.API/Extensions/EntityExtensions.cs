@@ -49,7 +49,8 @@ namespace Offers.API.Extensions
                 AvailableStock = offer.AvailableStock,
                 TotalStock = offer.TotalStock,
                 Category = offer.Category.ToDto(),
-                DeliveryMethods = offer.DeliveryMethods?.ToList() ?? new List<DeliveryMethod>()
+                DeliveryMethods = offer.DeliveryMethods?.ToList() ?? new List<DeliveryMethod>(),
+                Images = offer.Images?.ToList() ?? new List<ImageInfo>()
             };
         }
     }

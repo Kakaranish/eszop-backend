@@ -16,22 +16,6 @@ namespace Common.Extensions
             "DevelopmentLocal"
         };
 
-        public static IServiceCollection AddLocalhostCorsPolicy(this IServiceCollection services)
-        {
-            services.AddCors(corsOptions =>
-            {
-                corsOptions.AddPolicy("LocalhostCorsPolicy", builder =>
-                {
-                    builder
-                        .WithOrigins("https://localhost:3000")
-                        .AllowAnyMethod()
-                        .AllowAnyHeader();
-                });
-            });
-
-            return services;
-        }
-
         public static IServiceCollection ConfigureUrls(this IServiceCollection services)
         {
             using var servicesProvider = services.BuildServiceProvider();

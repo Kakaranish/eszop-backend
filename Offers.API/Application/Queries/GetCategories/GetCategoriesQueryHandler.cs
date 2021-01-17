@@ -1,14 +1,16 @@
 ﻿using MediatR;
+using Offers.API.Application.Dto;
 using Offers.API.DataAccess.Repositories;
-using Offers.API.Domain;
+using Offers.API.Extensions;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Offers.API.Application.Queries.GetCategories
 {
-    public class GetCategoriesQueryHandler : IRequestHandler<GetCategoriesQuery, IList<Category>>
+    public class GetCategoriesQueryHandler : IRequestHandler<GetCategoriesQuery, IList<CategoryDto>>
     {
         private readonly ICategoryRepository _categoryRepository;
 
@@ -17,11 +19,11 @@ namespace Offers.API.Application.Queries.GetCategories
             _categoryRepository = categoryRepository ?? throw new ArgumentNullException(nameof(categoryRepository));
         }
 
-        public async Task<IList<Category>> Handle(GetCategoriesQuery request, CancellationToken cancellationToken)
+        public async Task<IList<CategoryDto>> Handle(GetCategoriesQuery request, CancellationToken cancellationToken)
         {
             var categories = await _categoryRepository.GetAllAsync();
 
-            return categories;
+            return categories.Select(x => x.ToDto()).ToList();
         }
     }
 }

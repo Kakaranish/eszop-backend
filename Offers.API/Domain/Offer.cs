@@ -8,12 +8,15 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Threading;
+using Offers.API.Services.Dto;
 
 namespace Offers.API.Domain
 {
     public class Offer : EntityBase, IAggregateRoot, ITimeStamped, IRemovable
     {
         private List<DeliveryMethod> _deliveryMethods;
+        private List<ImageInfo> _images;
 
         public DateTime CreatedAt { get; private set; }
         public DateTime UpdatedAt { get; private set; }
@@ -31,6 +34,8 @@ namespace Offers.API.Domain
 
         public virtual Category Category { get; private set; }
         public IReadOnlyCollection<DeliveryMethod> DeliveryMethods => _deliveryMethods;
+        public IReadOnlyCollection<ImageInfo> Images => _images;
+
 
         [NotMapped] public bool IsPublished => PublishedAt != null;
 
@@ -172,6 +177,24 @@ namespace Offers.API.Domain
             PublishedAt = DateTime.UtcNow;
             EndsAt = PublishedAt.Value.AddDays(14);
             UpdatedAt = PublishedAt.Value;
+        }
+
+        public void AddImage(UploadedFileDto imageDto, int? sortId = default)
+        {
+            var image = new ImageInfo(imageDto.Filename, imageDto.ContainerName, sortId);
+            _images ??= new List<ImageInfo>();
+            _images.Add(image);
+        }
+
+        public void RemoveImage(ImageInfo imageInfo)
+        {
+            if (_images == null || _images.Count == 0)
+                throw new OffersDomainException("Offer has no such image to remove");
+            
+            var removed = _images.Remove(imageInfo);
+            
+            if(!removed)
+                throw new OffersDomainException("Offer has no such image to remove");
         }
 
         #region Validation

@@ -23,7 +23,7 @@ namespace Offers.API.Application.Dto
         public int TotalStock { get; init; }
 
         public CategoryDto Category { get; init; }
-        public List<DeliveryMethod> DeliveryMethods { get; set; }
-
+        public List<DeliveryMethod> DeliveryMethods { get; init; }
+        public List<ImageInfo> Images { get; init; }
     }
 }
