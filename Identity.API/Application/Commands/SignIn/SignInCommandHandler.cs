@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Http;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Common.Authentication;
+using Microsoft.Extensions.Options;
 
 namespace Identity.API.Application.Commands.SignIn
 {
@@ -18,10 +20,11 @@ namespace Identity.API.Application.Commands.SignIn
         private readonly IAccessTokenService _accessTokenService;
         private readonly IRefreshTokenService _refreshTokenService;
         private readonly HttpContext _httpContext;
-
+        private readonly JwtConfig _jwtConfig;
+        
         public SignInCommandHandler(IUserRepository userRepository, IPasswordHasher passwordHasher,
             IAccessTokenService accessTokenService, IRefreshTokenService refreshTokenService,
-            IHttpContextAccessor httpContextAccessor)
+            IHttpContextAccessor httpContextAccessor, IOptions<JwtConfig> jwtConfigOptions)
         {
             _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
             _passwordHasher = passwordHasher ?? throw new ArgumentNullException(nameof(passwordHasher));
@@ -29,6 +32,7 @@ namespace Identity.API.Application.Commands.SignIn
             _refreshTokenService = refreshTokenService ?? throw new ArgumentNullException(nameof(refreshTokenService));
             _httpContext = httpContextAccessor.HttpContext ??
                            throw new ArgumentNullException(nameof(httpContextAccessor.HttpContext));
+            _jwtConfig = jwtConfigOptions.Value ?? throw new ArgumentNullException(nameof(jwtConfigOptions.Value));
         }
 
         public async Task<TokenResponse> Handle(SignInCommand request, CancellationToken cancellationToken)
@@ -59,6 +63,11 @@ namespace Identity.API.Application.Commands.SignIn
             _httpContext.Response.Cookies.Append("accessToken", accessToken, cookieOptions);
             _httpContext.Response.Cookies.Append("refreshToken", refreshToken.Token, cookieOptions);
 
+            var accessTokenExp = DateTimeOffset.UtcNow
+                .AddMinutes(_jwtConfig.AccessTokenExpirationInMinutes).ToUnixTimeSeconds();
+            _httpContext.Response.Cookies.Append("accessTokenExp", $"{accessTokenExp}",
+                new CookieOptions { SameSite = SameSiteMode.Lax });
+            
             return new TokenResponse
             {
                 AccessToken = accessToken,

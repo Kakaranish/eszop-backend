@@ -36,7 +36,6 @@ namespace Offers.API.Domain
         public IReadOnlyCollection<DeliveryMethod> DeliveryMethods => _deliveryMethods;
         public IReadOnlyCollection<ImageInfo> Images => _images;
 
-
         [NotMapped] public bool IsPublished => PublishedAt != null;
 
         protected Offer()

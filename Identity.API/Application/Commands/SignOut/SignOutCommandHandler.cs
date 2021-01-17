@@ -20,6 +20,7 @@ namespace Identity.API.Application.Commands.SignOut
         {
             _httpContext.Response.Cookies.Delete("accessToken");
             _httpContext.Response.Cookies.Delete("refreshToken");
+            _httpContext.Response.Cookies.Delete("accessTokenExp");
 
             return Unit.Task;
         }

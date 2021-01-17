@@ -11,6 +11,7 @@ namespace Offers.API.DataAccess.Repositories
     public interface IOfferRepository : IDomainRepository<Offer>
     {
         Task<IList<Offer>> GetAllAsync();
+        Task<IList<Offer>> GetAllPublishedAsync();
         Task<Offer> GetByIdAsync(Guid offerId);
         Task<Pagination<OfferDto>> GetFiltered(OfferFilter filter, PageDetails pageDetails);
         Task AddAsync(Offer product);

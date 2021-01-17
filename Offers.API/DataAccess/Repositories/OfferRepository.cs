@@ -25,8 +25,13 @@ namespace Offers.API.DataAccess.Repositories
 
         public async Task<IList<Offer>> GetAllAsync()
         {
+            return await _appDbContext.Offers.Include(x => x.Category).ToListAsync();
+        }
+
+        public async Task<IList<Offer>> GetAllPublishedAsync()
+        {
             return await _appDbContext.Offers.Include(x => x.Category)
-                .ToListAsync();
+                .Where(x => x.PublishedAt != null).ToListAsync();
         }
 
         public async Task<Offer> GetByIdAsync(Guid offerId)

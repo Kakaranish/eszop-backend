@@ -21,7 +21,7 @@ namespace Offers.API.Application.Queries.GetAllOffers
 
         public async Task<IList<OfferDto>> Handle(GetAllOffersQuery request, CancellationToken cancellationToken)
         {
-            var offers = await _offerRepository.GetAllAsync();
+            var offers = await _offerRepository.GetAllPublishedAsync();
             return offers.Select(offer => offer.ToDto()).ToList();
         }
     }
