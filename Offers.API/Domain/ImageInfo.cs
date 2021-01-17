@@ -6,6 +6,7 @@ namespace Offers.API.Domain
     {
         public Guid Id { get; set; }
         public int? SortId { get; private set; }
+        public string Uri { get; private set; }
         public string Filename { get; private set; }
         public string ContainerName { get; private set; }
 
@@ -13,12 +14,19 @@ namespace Offers.API.Domain
         {
         }
 
-        public ImageInfo(string filename, string containerName, int? sortId = default)
+        public ImageInfo(string filename, string containerName, string uri, int? sortId = default)
         {
             Id = Guid.NewGuid();
+            SetUri(uri);
             SetFilename(filename);
             SetContainerName(containerName);
             SetSortId(sortId);
+        }
+
+        public void SetUri(string uri)
+        {
+            ValidateUri(uri);
+            Uri = uri;
         }
 
         public void SetFilename(string filename)
@@ -39,6 +47,12 @@ namespace Offers.API.Domain
         }
 
         #region Validation
+
+        private void ValidateUri(string uri)
+        {
+            if (string.IsNullOrWhiteSpace(uri))
+                throw new OffersDomainException($"{nameof(uri)} cannot be null or whitespace");
+        }
 
         private void ValidateFilename(string filename)
         {

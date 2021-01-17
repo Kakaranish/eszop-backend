@@ -31,6 +31,7 @@ namespace Offers.API.Services
 
             return new UploadedFileDto
             {
+                Uri = blobClient.Uri.ToString(),
                 ContainerName = ContainerName,
                 Filename = blobName
             };

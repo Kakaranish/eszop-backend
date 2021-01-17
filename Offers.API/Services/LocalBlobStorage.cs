@@ -24,6 +24,7 @@ namespace Offers.API.Services
 
             return new UploadedFileDto
             {
+                Uri = path,
                 ContainerName = ContainerName,
                 Filename = blobName
             };

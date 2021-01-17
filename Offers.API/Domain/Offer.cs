@@ -181,7 +181,7 @@ namespace Offers.API.Domain
 
         public void AddImage(UploadedFileDto imageDto, int? sortId = default)
         {
-            var image = new ImageInfo(imageDto.Filename, imageDto.ContainerName, sortId);
+            var image = new ImageInfo(imageDto.Filename, imageDto.ContainerName, imageDto.Uri, sortId);
             _images ??= new List<ImageInfo>();
             _images.Add(image);
         }
