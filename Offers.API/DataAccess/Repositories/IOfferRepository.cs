@@ -12,6 +12,7 @@ namespace Offers.API.DataAccess.Repositories
     {
         Task<IList<Offer>> GetAllAsync();
         Task<IList<Offer>> GetAllPublishedAsync();
+        Task<IList<Offer>> GetAllByUserIdAsync(Guid userId);
         Task<Offer> GetByIdAsync(Guid offerId);
         Task<Pagination<OfferDto>> GetFiltered(OfferFilter filter, PageDetails pageDetails);
         Task AddAsync(Offer product);

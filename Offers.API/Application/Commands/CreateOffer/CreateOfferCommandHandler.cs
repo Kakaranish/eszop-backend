@@ -7,6 +7,7 @@ using Offers.API.Services;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Offers.API.Services.Dto;
 
 namespace Offers.API.Application.Commands.CreateOffer
 {
@@ -45,10 +46,19 @@ namespace Offers.API.Application.Commands.CreateOffer
                 category: category
             );
 
-            foreach (var image in command.Images)
+            var uploadedMainImage = (await _imageUploader.UploadAsync(command.MainImage)).ToImageInfo();
+            uploadedMainImage.SetIsMain(true);
+            uploadedMainImage.SetSortId(0);
+            offer.AddImage(uploadedMainImage);
+
+            if (command.Images != null)
             {
-                var uploadedImage = await _imageUploader.UploadAsync(image);
-                offer.AddImage(uploadedImage);
+                foreach (var (image, index) in command.Images.WithIndex(1))
+                {
+                    var uploadedImage = (await _imageUploader.UploadAsync(image)).ToImageInfo();
+                    uploadedImage.SetSortId(index);
+                    offer.AddImage(uploadedImage);
+                }
             }
 
             await _offerRepository.AddAsync(offer);

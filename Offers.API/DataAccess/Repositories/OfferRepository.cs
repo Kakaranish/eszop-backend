@@ -34,6 +34,11 @@ namespace Offers.API.DataAccess.Repositories
                 .Where(x => x.PublishedAt != null).ToListAsync();
         }
 
+        public async Task<IList<Offer>> GetAllByUserIdAsync(Guid userId)
+        {
+            return await _appDbContext.Offers.Where(x => x.OwnerId == userId).ToListAsync();
+        }
+
         public async Task<Offer> GetByIdAsync(Guid offerId)
         {
             return await _appDbContext.Offers.Include(x => x.Category)

@@ -16,6 +16,7 @@ namespace Offers.API.Application.Commands.CreateOffer
         public decimal Price { get; init; }
         public int TotalStock { get; init; }
         public string CategoryId { get; init; }
+        public IFormFile MainImage { get; init; }
         public IList<IFormFile> Images { get; init; }
     }
 
@@ -38,10 +39,13 @@ namespace Offers.API.Application.Commands.CreateOffer
             RuleFor(x => x.CategoryId)
                 .IsGuid();
 
+            RuleFor(x => x.MainImage)
+                .NotNull()
+                .WithMessage("Required main image");
+
             RuleFor(x => x.Images)
                 .NotNull()
-                .Must(x => x.Count > 0)
-                .WithMessage("At least 1 image required");
+                .WithMessage("Must be an array with 0 or more elements");
         }
     }
 }

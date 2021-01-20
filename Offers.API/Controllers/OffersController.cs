@@ -10,6 +10,7 @@ using Offers.API.Application.Dto;
 using Offers.API.Application.Queries.GetAllOffers;
 using Offers.API.Application.Queries.GetFilteredOffers;
 using Offers.API.Application.Queries.GetOffer;
+using Offers.API.Application.Queries.GetUserOffers;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -44,6 +45,14 @@ namespace Offers.API.Controllers
         public async Task<OfferDto> GetById(string offerId)
         {
             var query = new GetOfferQuery { OfferId = offerId };
+            return await _mediator.Send(query);
+        }
+
+        [HttpGet("user")]
+        [JwtAuthorize]
+        public async Task<IList<OfferDto>> GetByUser()
+        {
+            var query = new GetUserOffersQuery();
             return await _mediator.Send(query);
         }
 

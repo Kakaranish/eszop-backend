@@ -5,22 +5,22 @@ namespace Offers.API.Domain
     public class ImageInfo
     {
         public Guid Id { get; set; }
-        public int? SortId { get; private set; }
         public string Uri { get; private set; }
         public string Filename { get; private set; }
         public string ContainerName { get; private set; }
+        public int? SortId { get; private set; }
+        public bool IsMain { get; private set; }
 
         protected ImageInfo()
         {
         }
 
-        public ImageInfo(string filename, string containerName, string uri, int? sortId = default)
+        public ImageInfo(string filename, string containerName, string uri)
         {
             Id = Guid.NewGuid();
             SetUri(uri);
             SetFilename(filename);
             SetContainerName(containerName);
-            SetSortId(sortId);
         }
 
         public void SetUri(string uri)
@@ -44,6 +44,11 @@ namespace Offers.API.Domain
         public void SetSortId(int? sortId)
         {
             SortId = sortId;
+        }
+
+        public void SetIsMain(bool value)
+        {
+            IsMain = value;
         }
 
         #region Validation

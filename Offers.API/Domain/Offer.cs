@@ -8,8 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
-using System.Threading;
-using Offers.API.Services.Dto;
 
 namespace Offers.API.Domain
 {
@@ -178,9 +176,9 @@ namespace Offers.API.Domain
             UpdatedAt = PublishedAt.Value;
         }
 
-        public void AddImage(UploadedFileDto imageDto, int? sortId = default)
+        public void AddImage(ImageInfo image)
         {
-            var image = new ImageInfo(imageDto.Filename, imageDto.ContainerName, imageDto.Uri, sortId);
+            ValidateAddImage(image);
             _images ??= new List<ImageInfo>();
             _images.Add(image);
         }
@@ -189,10 +187,10 @@ namespace Offers.API.Domain
         {
             if (_images == null || _images.Count == 0)
                 throw new OffersDomainException("Offer has no such image to remove");
-            
+
             var removed = _images.Remove(imageInfo);
-            
-            if(!removed)
+
+            if (!removed)
                 throw new OffersDomainException("Offer has no such image to remove");
         }
 
@@ -264,6 +262,14 @@ namespace Offers.API.Domain
         private void ValidateDeliveryMethods(IEnumerable<DeliveryMethod> deliveryMethods)
         {
             if (deliveryMethods == null) throw new OffersDomainException($"'{nameof(deliveryMethods)}' cannot be null");
+        }
+
+        private void ValidateAddImage(ImageInfo image)
+        {
+            if (image == null)
+                throw new OffersDomainException($"'{nameof(image)}' cannot be null");
+            if (image.IsMain && (_images?.Any(x => x.IsMain) ?? false))
+                throw new OffersDomainException("There is already main image");
         }
 
         #endregion
