@@ -1,5 +1,5 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
+using System.Threading.Tasks;
 
 namespace API.Gateway.Middlewares
 {
@@ -17,6 +17,11 @@ namespace API.Gateway.Middlewares
             if (httpContext.Request.Cookies.TryGetValue("accessToken", out var accessToken))
             {
                 httpContext.Request.Headers.Add("Authorization", $"Bearer {accessToken}");
+            }
+
+            if (httpContext.Request.Cookies.TryGetValue("refreshToken", out var refreshToken))
+            {
+                httpContext.Request.Headers.Add("refreshToken", refreshToken);
             }
 
             return _next(httpContext);

@@ -1,9 +1,11 @@
 ﻿using Common.Authentication;
 using Common.Types;
 using Identity.API.Services;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
+using Identity.API.Application.Commands.RefreshAccessToken;
 
 namespace Identity.API.Controllers
 {
@@ -14,13 +16,15 @@ namespace Identity.API.Controllers
         private readonly IAccessTokenDecoder _accessTokenDecoder;
         private readonly IRefreshTokenDecoder _refreshTokenDecoder;
         private readonly IRefreshTokenService _refreshTokenService;
+        private readonly IMediator _mediator;
 
         public TokenController(IAccessTokenDecoder accessTokenDecoder, IRefreshTokenDecoder refreshTokenDecoder,
-            IRefreshTokenService refreshTokenService)
+            IRefreshTokenService refreshTokenService, IMediator mediator)
         {
             _accessTokenDecoder = accessTokenDecoder ?? throw new ArgumentNullException(nameof(accessTokenDecoder));
             _refreshTokenDecoder = refreshTokenDecoder ?? throw new ArgumentNullException(nameof(refreshTokenDecoder));
             _refreshTokenService = refreshTokenService ?? throw new ArgumentNullException(nameof(refreshTokenService));
+            _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
         [HttpPost("decode/access-token")]
@@ -50,6 +54,17 @@ namespace Identity.API.Controllers
         {
             var result = await _refreshTokenService.RefreshAccessToken(refreshToken);
 
+            return result != null
+                ? Ok(result)
+                : ErrorResponse("Invalid/expired/revoked refresh token");
+        }
+
+        [HttpPost("refresh/access-token")]
+        public async Task<IActionResult> RefreshAccessTokenFromHeader()
+        {
+            var command = new RefreshAccessTokenCommand();
+            var result = await _mediator.Send(command);
+            
             return result != null
                 ? Ok(result)
                 : ErrorResponse("Invalid/expired/revoked refresh token");
