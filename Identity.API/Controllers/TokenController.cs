@@ -50,16 +50,6 @@ namespace Identity.API.Controllers
         }
 
         [HttpPost("refresh/access-token")]
-        public async Task<IActionResult> RefreshAccessToken([FromBody] string refreshToken)
-        {
-            var result = await _refreshTokenService.RefreshAccessToken(refreshToken);
-
-            return result != null
-                ? Ok(result)
-                : ErrorResponse("Invalid/expired/revoked refresh token");
-        }
-
-        [HttpPost("refresh/access-token")]
         public async Task<IActionResult> RefreshAccessTokenFromHeader()
         {
             var command = new RefreshAccessTokenCommand();

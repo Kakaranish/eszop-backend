@@ -66,7 +66,7 @@ namespace Identity.API.Application.Commands.SignIn
             var accessTokenExp = DateTimeOffset.UtcNow
                 .AddMinutes(_jwtConfig.AccessTokenExpirationInMinutes).ToUnixTimeSeconds();
             _httpContext.Response.Cookies.Append("accessTokenExp", $"{accessTokenExp}",
-                new CookieOptions { SameSite = SameSiteMode.Lax });
+                new CookieOptions { SameSite = SameSiteMode.Lax, Expires = DateTimeOffset.MaxValue});
             
             return new TokenResponse
             {
