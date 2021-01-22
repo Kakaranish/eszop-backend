@@ -1,15 +1,16 @@
-﻿using Common.Exceptions;
+﻿using Common.Authentication;
+using Common.Exceptions;
 using Identity.API.Application.Dto;
+using Identity.API.Configuration;
 using Identity.API.DataAccess.Repositories;
 using Identity.API.Extensions;
 using Identity.API.Services;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Options;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Common.Authentication;
-using Microsoft.Extensions.Options;
 
 namespace Identity.API.Application.Commands.SignIn
 {
@@ -21,7 +22,7 @@ namespace Identity.API.Application.Commands.SignIn
         private readonly IRefreshTokenService _refreshTokenService;
         private readonly HttpContext _httpContext;
         private readonly JwtConfig _jwtConfig;
-        
+
         public SignInCommandHandler(IUserRepository userRepository, IPasswordHasher passwordHasher,
             IAccessTokenService accessTokenService, IRefreshTokenService refreshTokenService,
             IHttpContextAccessor httpContextAccessor, IOptions<JwtConfig> jwtConfigOptions)
@@ -54,20 +55,13 @@ namespace Identity.API.Application.Commands.SignIn
             _userRepository.Update(user);
             await _userRepository.UnitOfWork.SaveChangesAndDispatchDomainEventsAsync(cancellationToken);
 
-            var cookieOptions = new CookieOptions
-            {
-                HttpOnly = true,
-                SameSite = SameSiteMode.Lax,
-                Expires = DateTimeOffset.MaxValue
-            };
-            _httpContext.Response.Cookies.Append("accessToken", accessToken, cookieOptions);
-            _httpContext.Response.Cookies.Append("refreshToken", refreshToken.Token, cookieOptions);
+            _httpContext.Response.Cookies.Append("accessToken", accessToken, CookieSettings.PrivateCookie);
+            _httpContext.Response.Cookies.Append("refreshToken", refreshToken.Token, CookieSettings.PrivateCookie);
 
             var accessTokenExp = DateTimeOffset.UtcNow
                 .AddMinutes(_jwtConfig.AccessTokenExpirationInMinutes).ToUnixTimeSeconds();
-            _httpContext.Response.Cookies.Append("accessTokenExp", $"{accessTokenExp}",
-                new CookieOptions { SameSite = SameSiteMode.Lax, Expires = DateTimeOffset.MaxValue});
-            
+            _httpContext.Response.Cookies.Append("accessTokenExp", $"{accessTokenExp}", CookieSettings.PublicCookie);
+
             return new TokenResponse
             {
                 AccessToken = accessToken,

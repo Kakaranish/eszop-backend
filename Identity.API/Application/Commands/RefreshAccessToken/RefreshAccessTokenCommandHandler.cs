@@ -1,4 +1,5 @@
 ﻿using Common.Authentication;
+using Identity.API.Configuration;
 using Identity.API.Domain;
 using Identity.API.Services;
 using MediatR;
@@ -32,20 +33,14 @@ namespace Identity.API.Application.Commands.RefreshAccessToken
 
             var accessToken = await _refreshTokenService.RefreshAccessToken(refreshToken);
 
-            var cookieOptions = new CookieOptions
-            {
-                HttpOnly = true,
-                SameSite = SameSiteMode.Lax,
-                Expires = DateTimeOffset.MaxValue
-            };
             _httpContext.Response.Cookies.Delete("accessToken");
-            _httpContext.Response.Cookies.Append("accessToken", accessToken, cookieOptions);
+            _httpContext.Response.Cookies.Append("accessToken", accessToken, CookieSettings.PrivateCookie);
 
             _httpContext.Response.Cookies.Delete("accessTokenExp");
-            var accessTokenExp = DateTimeOffset.UtcNow
-                .AddMinutes(_jwtConfig.AccessTokenExpirationInMinutes).ToUnixTimeSeconds();
-            _httpContext.Response.Cookies.Append("accessTokenExp", $"{accessTokenExp}",
-                new CookieOptions { SameSite = SameSiteMode.Lax, Expires = DateTimeOffset.MaxValue });
+            var accessTokenExp = DateTimeOffset.UtcNow.AddMinutes(
+                _jwtConfig.AccessTokenExpirationInMinutes).ToUnixTimeSeconds();
+            _httpContext.Response.Cookies.Append(
+                "accessTokenExp", $"{accessTokenExp}", CookieSettings.PublicCookie);
 
             return accessToken;
         }
