@@ -1,16 +1,18 @@
 ﻿using System;
+using Newtonsoft.Json;
 
 namespace Offers.API.Domain
 {
     public class ImageInfo
     {
-        public Guid Id { get; set; }
-        public string Uri { get; private set; }
-        public string Filename { get; private set; }
-        public string ContainerName { get; private set; }
-        public int? SortId { get; private set; }
-        public bool IsMain { get; private set; }
+        [JsonProperty] public Guid Id { get; set; }
+        [JsonProperty] public string Uri { get; private set; }
+        [JsonProperty] public string Filename { get; private set; }
+        [JsonProperty] public string ContainerName { get; private set; }
+        [JsonProperty] public int? SortId { get; private set; }
+        [JsonProperty] public bool IsMain { get; private set; }
 
+        [JsonConstructor]
         protected ImageInfo()
         {
         }
