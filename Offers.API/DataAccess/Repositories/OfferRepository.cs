@@ -2,9 +2,7 @@
 using Common.Extensions;
 using Common.Types;
 using Microsoft.EntityFrameworkCore;
-using Offers.API.Application.Dto;
 using Offers.API.Domain;
-using Offers.API.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -45,7 +43,7 @@ namespace Offers.API.DataAccess.Repositories
                 .FirstOrDefaultAsync(x => x.Id == offerId);
         }
 
-        public async Task<Pagination<OfferDto>> GetFiltered(OfferFilter filter, PageDetails pageDetails)
+        public async Task<Pagination<Offer>> GetFiltered(OfferFilter filter, PageDetails pageDetails)
         {
             var offers = _appDbContext.Offers.AsQueryable();
 
@@ -54,11 +52,7 @@ namespace Offers.API.DataAccess.Repositories
             if (filter.PriceTo != null) offers = offers.Where(x => x.Price <= filter.PriceTo);
             if (filter.Category != null) offers = offers.Where(x => x.Category.Id == filter.Category);
 
-            var offerPagination = await offers.PaginateAsync(pageDetails);
-            var offerDtoPagination = new Pagination<OfferDto>(offerPagination.PageDetails,
-                offerPagination.Items.Select(offer => offer.ToDto()).ToList(), offerPagination.TotalPages);
-
-            return offerDtoPagination;
+            return await offers.PaginateAsync(pageDetails);
         }
 
         public async Task AddAsync(Offer offer)
