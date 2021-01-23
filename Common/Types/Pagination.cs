@@ -5,13 +5,13 @@ namespace Common.Types
 {
     public class Pagination<T>
     {
-        public PageDetails PageDetails { get; }
+        public PageCriteria PageCriteria { get; }
         public IList<T> Items { get; }
         public int TotalPages { get; }
 
-        public Pagination(PageDetails pageDetails, IList<T> items, int totalPages)
+        public Pagination(PageCriteria pageCriteria, IList<T> items, int totalPages)
         {
-            PageDetails = pageDetails ?? throw new ArgumentNullException(nameof(pageDetails));
+            PageCriteria = pageCriteria ?? throw new ArgumentNullException(nameof(pageCriteria));
             Items = items ?? throw new ArgumentNullException(nameof(items));
             
             if (totalPages < 0) throw new ArgumentException($"'{nameof(totalPages)}' must be >= 0");

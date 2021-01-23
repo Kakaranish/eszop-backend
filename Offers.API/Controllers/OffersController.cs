@@ -7,13 +7,12 @@ using Offers.API.Application.Commands.EndOffer;
 using Offers.API.Application.Commands.RemoveOffer;
 using Offers.API.Application.Commands.UpdateOffer;
 using Offers.API.Application.Dto;
-using Offers.API.Application.Queries.GetAllOffers;
 using Offers.API.Application.Queries.GetFilteredOffers;
 using Offers.API.Application.Queries.GetOffer;
-using Offers.API.Application.Queries.GetUserOffers;
+using Offers.API.Application.Types;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
+using Offers.API.Application.Queries.GetMyOffers;
 
 namespace Offers.API.Controllers
 {
@@ -29,15 +28,17 @@ namespace Offers.API.Controllers
         }
 
         [HttpGet("")]
-        public async Task<IList<OfferDto>> GetAll()
+        public async Task<Pagination<OfferDto>> GetMany([FromQuery] OfferFilter offerFilter)
         {
-            var query = new GetAllOffersQuery();
+            var query = new GetOffersQuery { OfferFilter = offerFilter };
             return await _mediator.Send(query);
         }
 
-        [HttpGet("filtered")]
-        public async Task<Pagination<OfferDto>> GetFiltered([FromQuery] GetFilteredOffersQuery query)
+        [HttpGet("my")]
+        [JwtAuthorize]
+        public async Task<Pagination<OfferDto>> GetMyOffers([FromQuery] OfferFilter offerFilter)
         {
+            var query = new GetMyOffersQuery { OfferFilter = offerFilter };
             return await _mediator.Send(query);
         }
 
@@ -45,14 +46,6 @@ namespace Offers.API.Controllers
         public async Task<OfferDto> GetById(string offerId)
         {
             var query = new GetOfferQuery { OfferId = offerId };
-            return await _mediator.Send(query);
-        }
-
-        [HttpGet("user")]
-        [JwtAuthorize]
-        public async Task<IList<OfferDto>> GetByUser()
-        {
-            var query = new GetUserOffersQuery();
             return await _mediator.Send(query);
         }
 
@@ -80,7 +73,7 @@ namespace Offers.API.Controllers
             return Ok();
         }
 
-        [HttpDelete]
+        [HttpDelete("")]
         [JwtAuthorize]
         public async Task<IActionResult> Remove(RemoveOfferCommand command)
         {

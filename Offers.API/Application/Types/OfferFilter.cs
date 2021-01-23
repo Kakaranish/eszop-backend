@@ -1,12 +1,9 @@
-﻿using Common.Types;
+﻿using System;
 using FluentValidation;
-using MediatR;
-using Offers.API.Application.Dto;
-using System;
 
-namespace Offers.API.Application.Queries.GetFilteredOffers
+namespace Offers.API.Application.Types
 {
-    public class GetFilteredOffersQuery : IRequest<Pagination<OfferDto>>
+    public class OfferFilter
     {
         public int PageSize { get; init; } = 10;
         public int PageIndex { get; init; } = 1;
@@ -15,9 +12,9 @@ namespace Offers.API.Application.Queries.GetFilteredOffers
         public Guid? Category { get; init; }
     }
 
-    public class GetFilteredOffersQueryValidator : AbstractValidator<GetFilteredOffersQuery>
+    public class OfferFilterValidator : AbstractValidator<OfferFilter>
     {
-        public GetFilteredOffersQueryValidator()
+        public OfferFilterValidator()
         {
             RuleFor(x => x.PageSize)
                 .GreaterThan(0);

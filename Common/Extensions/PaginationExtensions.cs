@@ -9,17 +9,17 @@ namespace Common.Extensions
 {
     public static class PaginationExtensions
     {
-        public static async Task<Pagination<T>> PaginateAsync<T>(this IQueryable<T> queryable, PageDetails pageDetails)
+        public static async Task<Pagination<T>> PaginateAsync<T>(this IQueryable<T> queryable, PageCriteria pageCriteria)
         {
             var paginatedQueryable = queryable
-                .Skip((pageDetails.Index - 1) * pageDetails.Size)
-                .Take(pageDetails.Size);
+                .Skip((pageCriteria.Index - 1) * pageCriteria.Size)
+                .Take(pageCriteria.Size);
             var items = await paginatedQueryable.ToListAsync();
 
             var totalCount = await queryable.CountAsync();
-            var totalPages = (int)Math.Ceiling((decimal)totalCount / pageDetails.Size);
+            var totalPages = (int)Math.Ceiling((decimal)totalCount / pageCriteria.Size);
 
-            return new Pagination<T>(pageDetails, items, totalPages);
+            return new Pagination<T>(pageCriteria, items, totalPages);
         }
 
         public static Pagination<TDestination> Transform<TSource, TDestination>(
@@ -29,7 +29,7 @@ namespace Common.Extensions
             if (transformFunc == null) throw new ArgumentNullException(nameof(transformFunc));
 
             var transformedItems = transformFunc(pagination.Items).ToList();
-            return new Pagination<TDestination>(pagination.PageDetails, transformedItems, pagination.TotalPages);
+            return new Pagination<TDestination>(pagination.PageCriteria, transformedItems, pagination.TotalPages);
         }
     }
 }

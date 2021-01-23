@@ -1,5 +1,6 @@
 ﻿using Common.DataAccess;
 using Common.Types;
+using Offers.API.Application.Types;
 using Offers.API.Domain;
 using System;
 using System.Collections.Generic;
@@ -9,11 +10,10 @@ namespace Offers.API.DataAccess.Repositories
 {
     public interface IOfferRepository : IDomainRepository<Offer>
     {
-        Task<IList<Offer>> GetAllAsync();
+        Task<Pagination<Offer>> GetFiltered(OfferFilter filter);
         Task<IList<Offer>> GetAllPublishedAsync();
-        Task<IList<Offer>> GetAllByUserIdAsync(Guid userId);
+        Task<Pagination<Offer>> GetByUserIdAsync(Guid userId, OfferFilter filter);
         Task<Offer> GetByIdAsync(Guid offerId);
-        Task<Pagination<Offer>> GetFiltered(OfferFilter filter, PageDetails pageDetails);
         Task AddAsync(Offer product);
         void Update(Offer offer);
     }
