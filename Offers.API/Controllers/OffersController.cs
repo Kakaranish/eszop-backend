@@ -1,4 +1,4 @@
-﻿using Common.Authentication;
+using Common.Authentication;
 using Common.Types;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -12,7 +12,7 @@ using Offers.API.Application.Queries.GetOffer;
 using Offers.API.Application.Types;
 using System;
 using System.Threading.Tasks;
-using Offers.API.Application.Queries.GetMyOffers;
+using Offers.API.Application.Commands.CreateOfferDraft;
 
 namespace Offers.API.Controllers
 {
@@ -51,7 +51,7 @@ namespace Offers.API.Controllers
 
         [HttpPost("")]
         [JwtAuthorize]
-        public async Task<IActionResult> Create([FromForm] CreateOfferCommand command)
+        public async Task<IActionResult> Create([FromForm] CreateOfferDraftCommand command)
         {
             var offerId = await _mediator.Send(command);
             return Ok(new { OfferId = offerId });

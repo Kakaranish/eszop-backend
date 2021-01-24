@@ -1,31 +1,32 @@
-﻿using Common.Extensions;
+﻿using System;
+using System.Collections.Generic;
+using Common.Extensions;
 using Common.Validators;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Offers.API.Domain.Validators;
-using System;
-using System.Collections.Generic;
 
-namespace Offers.API.Application.Commands.CreateOffer
+namespace Offers.API.Application.Commands.CreateOfferDraft
 {
-    public class CreateOfferCommand : IRequest<Guid>
+    public class CreateOfferDraftCommand : IRequest<Guid>
     {
         public string Name { get; init; }
         public string Description { get; init; }
         public decimal Price { get; init; }
         public int TotalStock { get; init; }
         public string CategoryId { get; init; }
-        public IFormFile MainImage { get; init; }
         public IList<IFormFile> Images { get; init; }
+        public string ImagesMetadata { get; set; }
     }
 
-    public class CreateOfferCommandValidator : AbstractValidator<CreateOfferCommand>
+    public class CreateOfferDraftCommandValidator : AbstractValidator<CreateOfferDraftCommand>
     {
-        public CreateOfferCommandValidator()
+        public CreateOfferDraftCommandValidator()
         {
             RuleFor(x => x.Name)
-                .SetValidator(new OfferNameValidator());
+                .SetValidator(new OfferNameValidator())
+                .OverridePropertyName("Name");
 
             RuleFor(x => x.Price)
                 .SetValidator(new OfferPriceValidator());
@@ -39,13 +40,14 @@ namespace Offers.API.Application.Commands.CreateOffer
             RuleFor(x => x.CategoryId)
                 .IsGuid();
 
-            RuleFor(x => x.MainImage)
-                .NotNull()
-                .WithMessage("Required main image");
-
             RuleFor(x => x.Images)
-                .NotNull()
-                .WithMessage("Must be an array with 0 or more elements");
+                .Must(x => x.Count > 0)
+                .WithMessage("At least one image")
+                .Must(x => x.Count <= 5)
+                .WithName("Max number of images is 5");
+
+            RuleFor(x => x.ImagesMetadata)
+                .NotEmpty();
         }
     }
 }

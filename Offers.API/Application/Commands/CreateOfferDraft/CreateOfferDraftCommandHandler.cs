@@ -1,0 +1,136 @@
+﻿using Common.Extensions;
+using MediatR;
+using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
+using Offers.API.DataAccess.Repositories;
+using Offers.API.Domain;
+using Offers.API.Services;
+using Offers.API.Services.Dto;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace Offers.API.Application.Commands.CreateOfferDraft
+{
+    public class CreateOfferDraftCommandHandler : IRequestHandler<CreateOfferDraftCommand, Guid>
+    {
+        private readonly IOfferRepository _offerRepository;
+        private readonly ICategoryRepository _categoryRepository;
+        private readonly IImageUploader _imageUploader;
+        private readonly HttpContext _httpContext;
+
+        public CreateOfferDraftCommandHandler(IHttpContextAccessor httpContextAccessor,
+            IOfferRepository offerRepository, ICategoryRepository categoryRepository,
+            IImageUploader imageUploader)
+        {
+            _httpContext = httpContextAccessor?.HttpContext ??
+                           throw new ArgumentNullException(nameof(httpContextAccessor));
+            _offerRepository = offerRepository ?? throw new ArgumentNullException(nameof(offerRepository));
+            _categoryRepository = categoryRepository ?? throw new ArgumentNullException(nameof(categoryRepository));
+            _imageUploader = imageUploader ?? throw new ArgumentNullException(nameof(imageUploader));
+        }
+
+        public async Task<Guid> Handle(CreateOfferDraftCommand command, CancellationToken cancellationToken)
+        {
+            var categoryId = Guid.Parse(command.CategoryId);
+            var category = await _categoryRepository.GetByIdAsync(categoryId);
+            if (category is null) throw new OffersDomainException($"There is no category with id {categoryId}");
+
+            var tokenPayload = _httpContext.User.Claims.ToTokenPayload();
+
+            var offer = new Offer(
+                ownerId: tokenPayload.UserClaims.Id,
+                name: command.Name,
+                description: command.Description,
+                price: command.Price,
+                totalStock: command.TotalStock,
+                category: category
+            );
+
+            var imagesToUpload = ExtractImagesToUpload(command);
+            var uploadedImages = await UploadImages(imagesToUpload);
+            foreach (var uploadedImage in uploadedImages)
+            {
+                offer.AddImage(uploadedImage);
+            }
+
+            await _offerRepository.AddAsync(offer);
+            await _offerRepository.UnitOfWork.SaveChangesAndDispatchDomainEventsAsync(cancellationToken);
+
+            return await Task.FromResult(offer.Id);
+        }
+
+        private async Task<IList<ImageInfo>> UploadImages(IList<ImageToUpload> imagesToUpload)
+        {
+            var uploadedImages = new List<ImageInfo>();
+
+            var mainImage = imagesToUpload[0];
+            var uploadedMainImage = (await _imageUploader.UploadAsync(mainImage.File)).ToImageInfo();
+            uploadedMainImage.SetIsMain(true);
+            uploadedMainImage.SetSortId(0);
+            uploadedImages.Add(uploadedMainImage);
+
+            foreach (var (imageToUpload, index) in imagesToUpload.Skip(1).WithIndex(1))
+            {
+                var uploadedImage = (await _imageUploader.UploadAsync(imageToUpload.File)).ToImageInfo();
+                uploadedImage.SetSortId(index);
+                uploadedImages.Add(uploadedImage);
+            }
+
+            return uploadedImages;
+        }
+
+        private static IList<ImageToUpload> ExtractImagesToUpload(CreateOfferDraftCommand request)
+        {
+            var imagesMetadata = ExtractImagesMetadata(request);
+            var imagesToUpload = new List<ImageToUpload>();
+
+            ImageToUpload mainImage = null;
+            foreach (var requestImage in request.Images)
+            {
+                var id = Path.GetFileNameWithoutExtension(requestImage.FileName);
+                var metadata = imagesMetadata[id];
+
+                var imageToUpload = new ImageToUpload
+                {
+                    Id = id,
+                    File = requestImage,
+                    Metadata = imagesMetadata[id]
+                };
+
+                if (metadata.IsMain) mainImage = imageToUpload;
+                else imagesToUpload.Add(imageToUpload);
+            }
+
+            imagesToUpload = imagesToUpload.OrderBy(x => x.Metadata.SortId).ToList();
+            imagesToUpload.Insert(0, mainImage);
+
+            return imagesToUpload;
+        }
+
+        private static Dictionary<string, ImageMetadata> ExtractImagesMetadata(CreateOfferDraftCommand command)
+        {
+            var imagesMetadataList = JsonConvert.DeserializeObject<IList<ImageMetadata>>(command.ImagesMetadata);
+            var metadataDict = imagesMetadataList.ToDictionary(x => x.ImageId);
+
+            if (!imagesMetadataList.Any(img => img.IsMain))
+                throw new OffersDomainException("No main image indicated");
+
+            var imagesIdList = command.Images.Select(img => Path.GetFileNameWithoutExtension(img.FileName));
+            if (imagesIdList.Any(id => !metadataDict.ContainsKey(id)))
+                throw new OffersDomainException("Invalid images metadata");
+
+            return metadataDict;
+        }
+    }
+
+    class ImageToUpload
+    {
+        public string Id { get; set; }
+        public IFormFile File { get; set; }
+        public ImageMetadata Metadata { get; set; }
+    }
+}
