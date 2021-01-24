@@ -1,13 +1,14 @@
-using Common.Authentication;
+﻿using Common.Authentication;
 using Common.Types;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Offers.API.Application.Commands.CreateOffer;
 using Offers.API.Application.Commands.EndOffer;
 using Offers.API.Application.Commands.RemoveOffer;
 using Offers.API.Application.Commands.UpdateOffer;
 using Offers.API.Application.Dto;
 using Offers.API.Application.Queries.GetFilteredOffers;
+using Offers.API.Application.Queries.GetMyOffer;
+using Offers.API.Application.Queries.GetMyOffers;
 using Offers.API.Application.Queries.GetOffer;
 using Offers.API.Application.Types;
 using System;
@@ -39,6 +40,14 @@ namespace Offers.API.Controllers
         public async Task<Pagination<OfferDto>> GetMyOffers([FromQuery] OfferFilter offerFilter)
         {
             var query = new GetMyOffersQuery { OfferFilter = offerFilter };
+            return await _mediator.Send(query);
+        }
+
+        [HttpGet("{offerId}/my")]
+        [JwtAuthorize]
+        public async Task<OfferDto> GetMyOffers(string offerId)
+        {
+            var query = new GetMyOfferQuery { OfferId = offerId };
             return await _mediator.Send(query);
         }
 
