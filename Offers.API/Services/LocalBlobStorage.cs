@@ -30,6 +30,18 @@ namespace Offers.API.Services
             };
         }
 
+        public Task<bool> DeleteAsync(string blobName)
+        {
+            EnsureUploadDirExists();
+
+            var path = Path.Combine(UploadDir, blobName);
+
+            var fileExists = File.Exists(path);
+            if (fileExists) File.Delete(blobName);
+
+            return Task.FromResult(fileExists);
+        }
+
         public Task<Stream> DownloadAsync(string blobName)
         {
             EnsureUploadDirExists();

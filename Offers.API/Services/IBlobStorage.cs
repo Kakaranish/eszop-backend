@@ -8,6 +8,7 @@ namespace Offers.API.Services
     {
         string ContainerName { get; }
         Task<UploadedFileDto> UploadAsync(Stream content, string blobName);
+        Task<bool> DeleteAsync(string blobName);
         Task<Stream> DownloadAsync(string blobName);
     }
 }

@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace Offers.API.Services
 {
-    public class ImageUploader : IImageUploader
+    public class ImageStorage : IImageStorage
     {
         public const int MaxImageSizeInKb = 2048;
         private readonly IBlobStorage _blobStorage;
 
-        public ImageUploader(IBlobStorage blobStorage)
+        public ImageStorage(IBlobStorage blobStorage)
         {
             _blobStorage = blobStorage ?? throw new ArgumentNullException(nameof(blobStorage));
         }
@@ -24,6 +24,11 @@ namespace Offers.API.Services
 
             var uploadFilename = Guid.NewGuid() + Path.GetExtension(imageFile.FileName);
             return await _blobStorage.UploadAsync(imageFile.OpenReadStream(), uploadFilename);
+        }
+
+        public async Task<bool> DeleteAsync(string blobName)
+        {
+            return await _blobStorage.DeleteAsync(blobName);
         }
     }
 }

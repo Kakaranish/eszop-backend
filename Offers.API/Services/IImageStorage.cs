@@ -4,8 +4,9 @@ using System.Threading.Tasks;
 
 namespace Offers.API.Services
 {
-    public interface IImageUploader
+    public interface IImageStorage
     {
         Task<UploadedFileDto> UploadAsync(IFormFile imageFile);
+        Task<bool> DeleteAsync(string blobName);
     }
 }

@@ -37,6 +37,16 @@ namespace Offers.API.Services
             };
         }
 
+        public async Task<bool> DeleteAsync(string blobName)
+        {
+            await EnsureContainerExistsAsync();
+
+            var blobClient = _containerClient.GetBlobClient(blobName);
+            var result = await blobClient.DeleteIfExistsAsync(DeleteSnapshotsOption.IncludeSnapshots);
+
+            return result.Value;
+        }
+
         public async Task<Stream> DownloadAsync(string blobName)
         {
             await EnsureContainerExistsAsync();
