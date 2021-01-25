@@ -2,6 +2,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
+using Offers.API.Application.Types;
 using Offers.API.DataAccess.Repositories;
 using Offers.API.Domain;
 using Offers.API.Services;
@@ -19,18 +20,18 @@ namespace Offers.API.Application.Commands.CreateOfferDraft
     {
         private readonly IOfferRepository _offerRepository;
         private readonly ICategoryRepository _categoryRepository;
-        private readonly IImageUploader _imageUploader;
+        private readonly IImageStorage _imageStorage;
         private readonly HttpContext _httpContext;
 
         public CreateOfferDraftCommandHandler(IHttpContextAccessor httpContextAccessor,
             IOfferRepository offerRepository, ICategoryRepository categoryRepository,
-            IImageUploader imageUploader)
+            IImageStorage imageStorage)
         {
             _httpContext = httpContextAccessor?.HttpContext ??
                            throw new ArgumentNullException(nameof(httpContextAccessor));
             _offerRepository = offerRepository ?? throw new ArgumentNullException(nameof(offerRepository));
             _categoryRepository = categoryRepository ?? throw new ArgumentNullException(nameof(categoryRepository));
-            _imageUploader = imageUploader ?? throw new ArgumentNullException(nameof(imageUploader));
+            _imageStorage = imageStorage ?? throw new ArgumentNullException(nameof(imageStorage));
         }
 
         public async Task<Guid> Handle(CreateOfferDraftCommand command, CancellationToken cancellationToken)
@@ -68,14 +69,14 @@ namespace Offers.API.Application.Commands.CreateOfferDraft
             var uploadedImages = new List<ImageInfo>();
 
             var mainImage = imagesToUpload[0];
-            var uploadedMainImage = (await _imageUploader.UploadAsync(mainImage.File)).ToImageInfo();
+            var uploadedMainImage = (await _imageStorage.UploadAsync(mainImage.File)).ToImageInfo();
             uploadedMainImage.SetIsMain(true);
             uploadedMainImage.SetSortId(0);
             uploadedImages.Add(uploadedMainImage);
 
             foreach (var (imageToUpload, index) in imagesToUpload.Skip(1).WithIndex(1))
             {
-                var uploadedImage = (await _imageUploader.UploadAsync(imageToUpload.File)).ToImageInfo();
+                var uploadedImage = (await _imageStorage.UploadAsync(imageToUpload.File)).ToImageInfo();
                 uploadedImage.SetSortId(index);
                 uploadedImages.Add(uploadedImage);
             }
@@ -98,7 +99,7 @@ namespace Offers.API.Application.Commands.CreateOfferDraft
                 {
                     Id = id,
                     File = requestImage,
-                    Metadata = imagesMetadata[id]
+                    Metadata = metadata
                 };
 
                 if (metadata.IsMain) mainImage = imageToUpload;
@@ -111,26 +112,21 @@ namespace Offers.API.Application.Commands.CreateOfferDraft
             return imagesToUpload;
         }
 
-        private static Dictionary<string, ImageMetadata> ExtractImagesMetadata(CreateOfferDraftCommand command)
+        private static Dictionary<string, ImageMetadata> ExtractImagesMetadata(CreateOfferDraftCommand request)
         {
-            var imagesMetadataList = JsonConvert.DeserializeObject<IList<ImageMetadata>>(command.ImagesMetadata);
+            var imagesMetadataList = JsonConvert.DeserializeObject<IList<ImageMetadata>>(request.ImagesMetadata);
+            if (imagesMetadataList == null) throw new OffersDomainException("Invalid images metadata");
+
             var metadataDict = imagesMetadataList.ToDictionary(x => x.ImageId);
 
             if (!imagesMetadataList.Any(img => img.IsMain))
                 throw new OffersDomainException("No main image indicated");
 
-            var imagesIdList = command.Images.Select(img => Path.GetFileNameWithoutExtension(img.FileName));
+            var imagesIdList = request.Images.Select(img => Path.GetFileNameWithoutExtension(img.FileName));
             if (imagesIdList.Any(id => !metadataDict.ContainsKey(id)))
                 throw new OffersDomainException("Invalid images metadata");
 
             return metadataDict;
         }
-    }
-
-    class ImageToUpload
-    {
-        public string Id { get; set; }
-        public IFormFile File { get; set; }
-        public ImageMetadata Metadata { get; set; }
     }
 }

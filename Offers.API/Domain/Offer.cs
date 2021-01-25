@@ -194,6 +194,11 @@ namespace Offers.API.Domain
                 throw new OffersDomainException("Offer has no such image to remove");
         }
 
+        public void ClearImages()
+        {
+            _images?.Clear();
+        }
+
         #region Validation
 
         private static void ValidateOwnerId(Guid ownerId)

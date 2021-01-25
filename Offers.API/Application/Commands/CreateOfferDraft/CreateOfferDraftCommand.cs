@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using Common.Extensions;
+﻿using Common.Extensions;
 using Common.Validators;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Offers.API.Domain.Validators;
+using System;
+using System.Collections.Generic;
 
 namespace Offers.API.Application.Commands.CreateOfferDraft
 {
@@ -17,7 +17,7 @@ namespace Offers.API.Application.Commands.CreateOfferDraft
         public int TotalStock { get; init; }
         public string CategoryId { get; init; }
         public IList<IFormFile> Images { get; init; }
-        public string ImagesMetadata { get; set; }
+        public string ImagesMetadata { get; init; }
     }
 
     public class CreateOfferDraftCommandValidator : AbstractValidator<CreateOfferDraftCommand>
@@ -42,7 +42,7 @@ namespace Offers.API.Application.Commands.CreateOfferDraft
 
             RuleFor(x => x.Images)
                 .Must(x => x.Count > 0)
-                .WithMessage("At least one image")
+                .WithMessage("Min number of images is 1")
                 .Must(x => x.Count <= 5)
                 .WithName("Max number of images is 5");
 

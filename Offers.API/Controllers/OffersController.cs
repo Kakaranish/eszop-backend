@@ -2,9 +2,10 @@
 using Common.Types;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Offers.API.Application.Commands.CreateOfferDraft;
 using Offers.API.Application.Commands.EndOffer;
 using Offers.API.Application.Commands.RemoveOffer;
-using Offers.API.Application.Commands.UpdateOffer;
+using Offers.API.Application.Commands.UpdateOfferDraft;
 using Offers.API.Application.Dto;
 using Offers.API.Application.Queries.GetFilteredOffers;
 using Offers.API.Application.Queries.GetMyOffer;
@@ -13,7 +14,6 @@ using Offers.API.Application.Queries.GetOffer;
 using Offers.API.Application.Types;
 using System;
 using System.Threading.Tasks;
-using Offers.API.Application.Commands.CreateOfferDraft;
 
 namespace Offers.API.Controllers
 {
@@ -29,7 +29,7 @@ namespace Offers.API.Controllers
         }
 
         [HttpGet("")]
-        public async Task<Pagination<OfferDto>> GetMany([FromQuery] OfferFilter offerFilter)
+        public async Task<Pagination<OfferDto>> GetMultiple([FromQuery] OfferFilter offerFilter)
         {
             var query = new GetOffersQuery { OfferFilter = offerFilter };
             return await _mediator.Send(query);
@@ -68,7 +68,7 @@ namespace Offers.API.Controllers
 
         [HttpPut("")]
         [JwtAuthorize]
-        public async Task<IActionResult> Update(UpdateOfferCommand command)
+        public async Task<IActionResult> Update([FromForm] UpdateOfferDraftCommand command)
         {
             await _mediator.Send(command);
             return Ok();
