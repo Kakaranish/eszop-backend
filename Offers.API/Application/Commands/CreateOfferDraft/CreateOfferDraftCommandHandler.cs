@@ -54,17 +54,22 @@ namespace Offers.API.Application.Commands.CreateOfferDraft
             var keyValueInfos = ExtractKeyValueInfos(request);
             offer.SetKeyValueInfos(keyValueInfos);
 
+            await ProcessOfferImages(request, offer);
+
+            await _offerRepository.AddAsync(offer);
+            await _offerRepository.UnitOfWork.SaveChangesAndDispatchDomainEventsAsync(cancellationToken);
+
+            return await Task.FromResult(offer.Id);
+        }
+
+        private async Task ProcessOfferImages(CreateOfferDraftCommand request, Offer offer)
+        {
             var imagesToUpload = ExtractImagesToUpload(request);
             var uploadedImages = await UploadImages(imagesToUpload);
             foreach (var uploadedImage in uploadedImages)
             {
                 offer.AddImage(uploadedImage);
             }
-
-            await _offerRepository.AddAsync(offer);
-            await _offerRepository.UnitOfWork.SaveChangesAndDispatchDomainEventsAsync(cancellationToken);
-
-            return await Task.FromResult(offer.Id);
         }
 
         private async Task<IList<ImageInfo>> UploadImages(IList<ImageToUpload> imagesToUpload)

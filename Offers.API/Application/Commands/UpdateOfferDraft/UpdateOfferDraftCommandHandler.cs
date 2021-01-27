@@ -60,6 +60,9 @@ namespace Offers.API.Application.Commands.UpdateOfferDraft
                 AvailableStock = new ChangeState<int?>(offer.AvailableStock, request.AvailableStock)
             };
 
+            var keyValueInfos = ExtractKeyValueInfos(request);
+            offer.SetKeyValueInfos(keyValueInfos);
+
             await ProcessOfferImages(request, offer);
 
             if (@event.Name.Changed) offer.SetName(request.Name);
@@ -120,23 +123,27 @@ namespace Offers.API.Application.Commands.UpdateOfferDraft
                 throw new OffersDomainException("Uploaded image cannot be marked as isRemote");
 
             var uploadedImages = new List<ImageInfo>();
-            foreach (var requestImageFile in request.Images)
+
+            if (request.Images != null)
             {
-                var id = Path.GetFileNameWithoutExtension(requestImageFile.FileName);
-                var metadata = imagesMetadataDict[id];
-
-                var uploadedImage = (await _imageStorage.UploadAsync(requestImageFile)).ToImageInfo();
-                uploadedImage.SetIsMain(metadata.IsMain);
-
-                if (uploadedImage.IsMain)
+                foreach (var requestImageFile in request.Images)
                 {
-                    uploadedImage.SetSortId(0);
-                    mainImage = uploadedImage;
-                }
-                else
-                {
-                    uploadedImage.SetSortId(metadata.SortId);
-                    uploadedImages.Add(uploadedImage);
+                    var id = Path.GetFileNameWithoutExtension(requestImageFile.FileName);
+                    var metadata = imagesMetadataDict[id];
+
+                    var uploadedImage = (await _imageStorage.UploadAsync(requestImageFile)).ToImageInfo();
+                    uploadedImage.SetIsMain(metadata.IsMain);
+
+                    if (uploadedImage.IsMain)
+                    {
+                        uploadedImage.SetSortId(0);
+                        mainImage = uploadedImage;
+                    }
+                    else
+                    {
+                        uploadedImage.SetSortId(metadata.SortId);
+                        uploadedImages.Add(uploadedImage);
+                    }
                 }
             }
 
@@ -167,11 +174,24 @@ namespace Offers.API.Application.Commands.UpdateOfferDraft
             if (mainImages.Count > 1)
                 throw new OffersDomainException("Possible only 1 main image");
 
-            var imagesIdList = request.Images.Select(img => Path.GetFileNameWithoutExtension(img.FileName));
-            if (imagesIdList.Any(id => !metadataDict.ContainsKey(id)))
-                throw new OffersDomainException("Invalid images metadata");
+            if (request.Images != null)
+            {
+                var imagesIdList = request.Images.Select(img => Path.GetFileNameWithoutExtension(img.FileName));
+                if (imagesIdList.Any(id => !metadataDict.ContainsKey(id)))
+                    throw new OffersDomainException("Invalid images metadata");
+            }
 
             return metadataDict;
+        }
+
+        private static IList<KeyValueInfo> ExtractKeyValueInfos(UpdateOfferDraftCommand request)
+        {
+            if (request.KeyValueInfos == null) return null;
+
+            var extractKeyValueInfos = JsonConvert.DeserializeObject<IList<KeyValueInfo>>(request.KeyValueInfos)
+                                       ?? throw new OffersDomainException($"'{request.KeyValueInfos}' is not parsable");
+
+            return extractKeyValueInfos;
         }
     }
 }
