@@ -15,6 +15,7 @@ namespace Offers.API.Domain
     {
         private List<DeliveryMethod> _deliveryMethods;
         private List<ImageInfo> _images;
+        private List<KeyValueInfo> _keyValueInfos;
 
         public DateTime CreatedAt { get; private set; }
         public DateTime UpdatedAt { get; private set; }
@@ -33,6 +34,7 @@ namespace Offers.API.Domain
         public virtual Category Category { get; private set; }
         public IReadOnlyCollection<DeliveryMethod> DeliveryMethods => _deliveryMethods;
         public IReadOnlyCollection<ImageInfo> Images => _images;
+        public IReadOnlyCollection<KeyValueInfo> KeyValueInfos => _keyValueInfos;
 
         [NotMapped] public bool IsPublished => PublishedAt != null;
 
@@ -192,6 +194,24 @@ namespace Offers.API.Domain
 
             if (!removed)
                 throw new OffersDomainException("Offer has no such image to remove");
+        }
+
+        public void SetKeyValueInfos(IList<KeyValueInfo> keyValueInfos)
+        {
+            ValidateKeyValueInfos(keyValueInfos);
+
+            _keyValueInfos = keyValueInfos?.ToList();
+        }
+
+        private void ValidateKeyValueInfos(IList<KeyValueInfo> keyValueInfos)
+        {
+            var hasUniqueKeys = keyValueInfos.Select(x => x.Key).Distinct().Count() == keyValueInfos.Count;
+            if (!hasUniqueKeys) throw new OffersDomainException($"Two {nameof(KeyValueInfo)} cannot have the same key");
+        }
+
+        public void ClearKeyValueInfos()
+        {
+            _keyValueInfos = null;
         }
 
         public void ClearImages()

@@ -7,7 +7,7 @@ namespace Offers.API.Application.Dto
     public class OfferDto
     {
         public Guid Id { get; init; }
-        
+
         public DateTime CreatedAt { get; init; }
         public DateTime UpdatedAt { get; init; }
         public DateTime? UserEndedAt { get; init; }
@@ -25,5 +25,6 @@ namespace Offers.API.Application.Dto
         public CategoryDto Category { get; init; }
         public List<DeliveryMethod> DeliveryMethods { get; init; }
         public List<ImageInfo> Images { get; init; }
+        public List<KeyValueInfo> KeyValueInfos { get; init; }
     }
 }

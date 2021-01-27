@@ -18,6 +18,7 @@ namespace Offers.API.Application.Commands.CreateOfferDraft
         public string CategoryId { get; init; }
         public IList<IFormFile> Images { get; init; }
         public string ImagesMetadata { get; init; }
+        public string KeyValueInfos { get; init; }
     }
 
     public class CreateOfferDraftCommandValidator : AbstractValidator<CreateOfferDraftCommand>
@@ -48,6 +49,10 @@ namespace Offers.API.Application.Commands.CreateOfferDraft
 
             RuleFor(x => x.ImagesMetadata)
                 .NotEmpty();
+
+            RuleFor(x => x.KeyValueInfos)
+                .Must(x => x == null || !string.IsNullOrWhiteSpace(x))
+                .WithMessage("Must be null or not empty string");
         }
     }
 }

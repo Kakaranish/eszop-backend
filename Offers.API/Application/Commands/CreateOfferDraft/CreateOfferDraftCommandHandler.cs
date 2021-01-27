@@ -34,9 +34,9 @@ namespace Offers.API.Application.Commands.CreateOfferDraft
             _imageStorage = imageStorage ?? throw new ArgumentNullException(nameof(imageStorage));
         }
 
-        public async Task<Guid> Handle(CreateOfferDraftCommand command, CancellationToken cancellationToken)
+        public async Task<Guid> Handle(CreateOfferDraftCommand request, CancellationToken cancellationToken)
         {
-            var categoryId = Guid.Parse(command.CategoryId);
+            var categoryId = Guid.Parse(request.CategoryId);
             var category = await _categoryRepository.GetByIdAsync(categoryId);
             if (category is null) throw new OffersDomainException($"There is no category with id {categoryId}");
 
@@ -44,14 +44,17 @@ namespace Offers.API.Application.Commands.CreateOfferDraft
 
             var offer = new Offer(
                 ownerId: tokenPayload.UserClaims.Id,
-                name: command.Name,
-                description: command.Description,
-                price: command.Price,
-                totalStock: command.TotalStock,
+                name: request.Name,
+                description: request.Description,
+                price: request.Price,
+                totalStock: request.TotalStock,
                 category: category
             );
 
-            var imagesToUpload = ExtractImagesToUpload(command);
+            var keyValueInfos = ExtractKeyValueInfos(request);
+            offer.SetKeyValueInfos(keyValueInfos);
+
+            var imagesToUpload = ExtractImagesToUpload(request);
             var uploadedImages = await UploadImages(imagesToUpload);
             foreach (var uploadedImage in uploadedImages)
             {
@@ -127,6 +130,16 @@ namespace Offers.API.Application.Commands.CreateOfferDraft
                 throw new OffersDomainException("Invalid images metadata");
 
             return metadataDict;
+        }
+
+        private static IList<KeyValueInfo> ExtractKeyValueInfos(CreateOfferDraftCommand request)
+        {
+            if (request.KeyValueInfos == null) return null;
+
+            var extractKeyValueInfos = JsonConvert.DeserializeObject<IList<KeyValueInfo>>(request.KeyValueInfos)
+                                       ?? throw new OffersDomainException($"'{request.KeyValueInfos}' is not parsable");
+
+            return extractKeyValueInfos;
         }
     }
 }

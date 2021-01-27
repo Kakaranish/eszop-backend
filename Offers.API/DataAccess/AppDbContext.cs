@@ -41,6 +41,11 @@ namespace Offers.API.DataAccess
                 .HasConversion(
                     x => JsonConvert.SerializeObject(x),
                     x => JsonConvert.DeserializeObject<List<ImageInfo>>(x));
+            modelBuilder.Entity<Offer>()
+                .Property(x => x.KeyValueInfos)
+                .HasConversion(
+                    x => x == null ? null : JsonConvert.SerializeObject(x),
+                    x => x == null ? null : JsonConvert.DeserializeObject<List<KeyValueInfo>>(x));
 
             modelBuilder.Entity<Category>()
                 .HasKey(x => x.Id);
