@@ -29,7 +29,7 @@ Content-Type: application/json
 
 {
     "DeliveryMethodId": "{{deliveryMethodId}}",
-    "Name": "Poczta Polska",
-    "Description": "Some desc {{$datetime iso8601}}"
+    "Name": "DHL",
+    "Description": "Some desc {{$datetime iso8601}}",
+    "Price": 12.00
 }
-

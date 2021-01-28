@@ -30,6 +30,7 @@ namespace Offers.API.Domain
         public decimal Price { get; private set; }
         public int AvailableStock { get; private set; }
         public int TotalStock { get; private set; }
+        public string BankAccountNumber { get; private set; }
 
         public virtual Category Category { get; private set; }
         public IReadOnlyCollection<DeliveryMethod> DeliveryMethods => _deliveryMethods;
@@ -196,6 +197,11 @@ namespace Offers.API.Domain
                 throw new OffersDomainException("Offer has no such image to remove");
         }
 
+        public void ClearImages()
+        {
+            _images?.Clear();
+        }
+
         public void SetKeyValueInfos(IList<KeyValueInfo> keyValueInfos)
         {
             ValidateKeyValueInfos(keyValueInfos);
@@ -214,9 +220,12 @@ namespace Offers.API.Domain
             _keyValueInfos = null;
         }
 
-        public void ClearImages()
+        public void SetBankAccountNumber(string bankAccountNumber)
         {
-            _images?.Clear();
+            ValidateBankAccountNumber(bankAccountNumber);
+
+            BankAccountNumber = !string.IsNullOrWhiteSpace(bankAccountNumber) ? bankAccountNumber : null;
+            UpdatedAt = DateTime.UtcNow;
         }
 
         #region Validation
@@ -295,6 +304,15 @@ namespace Offers.API.Domain
                 throw new OffersDomainException($"'{nameof(image)}' cannot be null");
             if (image.IsMain && (_images?.Any(x => x.IsMain) ?? false))
                 throw new OffersDomainException("There is already main image");
+        }
+
+        private static void ValidateBankAccountNumber(string bankAccountNumber)
+        {
+            if (string.IsNullOrEmpty(bankAccountNumber)) return;
+
+            var validator = new BankAccountNumberValidator();
+            var result = validator.Validate(bankAccountNumber);
+            if (!result.IsValid) throw new OffersDomainException(nameof(bankAccountNumber));
         }
 
         #endregion
