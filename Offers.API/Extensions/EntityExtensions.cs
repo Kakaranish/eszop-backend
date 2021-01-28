@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Offers.API.Application.Dto;
+﻿using Offers.API.Application.Dto;
 using Offers.API.Domain;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Offers.API.Extensions
 {
@@ -15,7 +15,8 @@ namespace Offers.API.Extensions
             {
                 Id = predefinedDeliveryMethod.Id,
                 Name = predefinedDeliveryMethod.Name,
-                Description = predefinedDeliveryMethod.Description
+                Description = predefinedDeliveryMethod.Description,
+                Price = predefinedDeliveryMethod.Price
             };
         }
 

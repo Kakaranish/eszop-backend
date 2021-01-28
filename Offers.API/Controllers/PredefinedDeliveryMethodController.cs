@@ -55,7 +55,7 @@ namespace Offers.API.Controllers
 
         [HttpDelete("")]
         [JwtAuthorize("Admin")]
-        public async Task<IActionResult> Update(RemovePredefinedDeliveryMethodCommand command)
+        public async Task<IActionResult> Remove(RemovePredefinedDeliveryMethodCommand command)
         {
             await _mediator.Send(command);
             return Ok();

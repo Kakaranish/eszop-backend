@@ -26,6 +26,7 @@ namespace Offers.API.Application.Commands.UpdatePredefinedDeliveryMethod
 
             deliveryMethod.SetName(request.Name);
             deliveryMethod.SetDescription(request.Description);
+            deliveryMethod.SetPrice(request.Price);
 
             _deliveryMethodRepository.Update(deliveryMethod);
             await _deliveryMethodRepository.UnitOfWork.SaveChangesAndDispatchDomainEventsAsync(cancellationToken);
