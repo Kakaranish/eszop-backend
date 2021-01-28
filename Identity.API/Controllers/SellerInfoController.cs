@@ -28,9 +28,9 @@ namespace Identity.API.Controllers
             return await _mediator.Send(request);
         }
 
-        [HttpGet("{sellerId}/bank-account")]
+        [HttpGet("bank-account/my")]
         [JwtAuthorize]
-        public async Task<BankAccountInfoDto> GetBankAccountInfo([FromRoute] GetBankAccountInfoQuery request)
+        public async Task<BankAccountInfoDto> GetMyBankAccountInfo([FromRoute] GetMyBankAccountInfoQuery request)
         {
             return await _mediator.Send(request);
         }

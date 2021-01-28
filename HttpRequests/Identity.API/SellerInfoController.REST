@@ -1,4 +1,5 @@
 @url = http://localhost:6000
+@accessToken = 
 @sellerId = BA09CE67-B280-459B-9A48-08D8AE5B9007
 
 ###
@@ -7,7 +8,7 @@ GET {{url}}/api/seller/{{sellerId}} HTTP/1.1
 
 ###
 
-GET {{url}}/api/seller/{{sellerId}}/bank-account-number HTTP/1.1
+GET {{url}}/api/seller/bank-account/my HTTP/1.1
 Authorization: Bearer {{accessToken}}
 
 ###
@@ -19,5 +20,5 @@ Content-Type: application/json
 {
     "ContactEmail": "contact@mail.com",
     "BankAccountNumber": "82 1020 5226 0000 6102 0417 7895",
-    "AdditionalInfo": ""
+    "AdditionalInfo": "Nothing more here"
 }
