@@ -21,6 +21,7 @@ namespace Offers.API.Application.Dto
         public decimal Price { get; init; }
         public int AvailableStock { get; init; }
         public int TotalStock { get; init; }
+        public string BankAccountNumber { get; init; }
 
         public CategoryDto Category { get; init; }
         public List<DeliveryMethod> DeliveryMethods { get; init; }

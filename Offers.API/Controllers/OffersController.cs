@@ -2,10 +2,11 @@
 using Common.Types;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Offers.API.Application.Commands.CreateOfferDraft;
+using Offers.API.Application.Commands.CreateOfferDraftOne;
 using Offers.API.Application.Commands.EndOffer;
 using Offers.API.Application.Commands.RemoveOffer;
-using Offers.API.Application.Commands.UpdateOfferDraft;
+using Offers.API.Application.Commands.UpdateOfferDraftOne;
+using Offers.API.Application.Commands.UpdateOfferDraftTwo;
 using Offers.API.Application.Dto;
 using Offers.API.Application.Queries.GetFilteredOffers;
 using Offers.API.Application.Queries.GetMyOffer;
@@ -58,17 +59,25 @@ namespace Offers.API.Controllers
             return await _mediator.Send(query);
         }
 
-        [HttpPost("")]
+        [HttpPost("draft/1")]
         [JwtAuthorize]
-        public async Task<IActionResult> Create([FromForm] CreateOfferDraftCommand command)
+        public async Task<IActionResult> CreateDraftOne([FromForm] CreateOfferDraftOneCommand command)
         {
             var offerId = await _mediator.Send(command);
             return Ok(new { OfferId = offerId });
         }
 
-        [HttpPut("")]
+        [HttpPut("draft/1")]
         [JwtAuthorize]
-        public async Task<IActionResult> Update([FromForm] UpdateOfferDraftCommand command)
+        public async Task<IActionResult> UpdateDraftOne([FromForm] UpdateOfferDraftOneCommand command)
+        {
+            await _mediator.Send(command);
+            return Ok();
+        }
+
+        [HttpPut("draft/2")]
+        [JwtAuthorize]
+        public async Task<IActionResult> UpdateDraftTwo([FromForm] UpdateOfferDraftTwoCommand command)
         {
             await _mediator.Send(command);
             return Ok();

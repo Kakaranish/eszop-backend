@@ -1,15 +1,15 @@
-﻿using Common.Extensions;
+﻿using System;
+using System.Collections.Generic;
+using Common.Extensions;
 using Common.Validators;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Offers.API.Domain.Validators;
-using System;
-using System.Collections.Generic;
 
-namespace Offers.API.Application.Commands.CreateOfferDraft
+namespace Offers.API.Application.Commands.CreateOfferDraftOne
 {
-    public class CreateOfferDraftCommand : IRequest<Guid>
+    public class CreateOfferDraftOneCommand : IRequest<Guid>
     {
         public string Name { get; init; }
         public string Description { get; init; }
@@ -21,9 +21,9 @@ namespace Offers.API.Application.Commands.CreateOfferDraft
         public string KeyValueInfos { get; init; }
     }
 
-    public class CreateOfferDraftCommandValidator : AbstractValidator<CreateOfferDraftCommand>
+    public class CreateOfferDraftOneCommandValidator : AbstractValidator<CreateOfferDraftOneCommand>
     {
-        public CreateOfferDraftCommandValidator()
+        public CreateOfferDraftOneCommandValidator()
         {
             RuleFor(x => x.Name)
                 .SetValidator(new OfferNameValidator())

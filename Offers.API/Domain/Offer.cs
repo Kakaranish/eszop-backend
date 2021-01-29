@@ -209,12 +209,6 @@ namespace Offers.API.Domain
             _keyValueInfos = keyValueInfos?.ToList();
         }
 
-        private void ValidateKeyValueInfos(IList<KeyValueInfo> keyValueInfos)
-        {
-            var hasUniqueKeys = keyValueInfos.Select(x => x.Key).Distinct().Count() == keyValueInfos.Count;
-            if (!hasUniqueKeys) throw new OffersDomainException($"Two {nameof(KeyValueInfo)} cannot have the same key");
-        }
-
         public void ClearKeyValueInfos()
         {
             _keyValueInfos = null;
@@ -293,17 +287,34 @@ namespace Offers.API.Domain
             if (RemovedAt != null) throw new OffersDomainException("Offer is already removed");
         }
 
-        private void ValidateDeliveryMethods(IEnumerable<DeliveryMethod> deliveryMethods)
-        {
-            if (deliveryMethods == null) throw new OffersDomainException($"'{nameof(deliveryMethods)}' cannot be null");
-        }
-
         private void ValidateAddImage(ImageInfo image)
         {
             if (image == null)
                 throw new OffersDomainException($"'{nameof(image)}' cannot be null");
             if (image.IsMain && (_images?.Any(x => x.IsMain) ?? false))
                 throw new OffersDomainException("There is already main image");
+        }
+
+        private void ValidateKeyValueInfos(IList<KeyValueInfo> keyValueInfos)
+        {
+            var hasUniqueKeys = keyValueInfos.Select(x => x.Key).Distinct().Count() == keyValueInfos.Count;
+            if (!hasUniqueKeys) throw new OffersDomainException($"Two {nameof(KeyValueInfo)} cannot have the same key");
+        }
+
+        private void ValidateDeliveryMethods(IList<DeliveryMethod> deliveryMethods)
+        {
+            if (deliveryMethods == null) 
+                throw new OffersDomainException($"'{nameof(deliveryMethods)}' cannot be null");
+
+            if(deliveryMethods.Count == 0)
+                throw new OffersDomainException($"{nameof(DeliveryMethods)} must contain at least one element");
+
+            var hasUniqueNames = deliveryMethods.Select(x => x.Name).Distinct().Count() == deliveryMethods.Count;
+            if (!hasUniqueNames) 
+                throw new OffersDomainException($"Two {nameof(DeliveryMethods)} cannot have the same key");
+
+            if(deliveryMethods.Any(x => string.IsNullOrWhiteSpace(x.Name) || x.Price < 0))
+                throw new OffersDomainException($"{nameof(DeliveryMethods)} contains at least one invalid entry");
         }
 
         private static void ValidateBankAccountNumber(string bankAccountNumber)

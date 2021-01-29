@@ -1,4 +1,10 @@
-﻿using Common.Extensions;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using Common.Extensions;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
@@ -7,23 +13,17 @@ using Offers.API.DataAccess.Repositories;
 using Offers.API.Domain;
 using Offers.API.Services;
 using Offers.API.Services.Dto;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
-namespace Offers.API.Application.Commands.CreateOfferDraft
+namespace Offers.API.Application.Commands.CreateOfferDraftOne
 {
-    public class CreateOfferDraftCommandHandler : IRequestHandler<CreateOfferDraftCommand, Guid>
+    public class CreateOfferDraftOneCommandHandler : IRequestHandler<CreateOfferDraftOneCommand, Guid>
     {
         private readonly IOfferRepository _offerRepository;
         private readonly ICategoryRepository _categoryRepository;
         private readonly IImageStorage _imageStorage;
         private readonly HttpContext _httpContext;
 
-        public CreateOfferDraftCommandHandler(IHttpContextAccessor httpContextAccessor,
+        public CreateOfferDraftOneCommandHandler(IHttpContextAccessor httpContextAccessor,
             IOfferRepository offerRepository, ICategoryRepository categoryRepository,
             IImageStorage imageStorage)
         {
@@ -34,7 +34,7 @@ namespace Offers.API.Application.Commands.CreateOfferDraft
             _imageStorage = imageStorage ?? throw new ArgumentNullException(nameof(imageStorage));
         }
 
-        public async Task<Guid> Handle(CreateOfferDraftCommand request, CancellationToken cancellationToken)
+        public async Task<Guid> Handle(CreateOfferDraftOneCommand request, CancellationToken cancellationToken)
         {
             var categoryId = Guid.Parse(request.CategoryId);
             var category = await _categoryRepository.GetByIdAsync(categoryId);
@@ -62,7 +62,7 @@ namespace Offers.API.Application.Commands.CreateOfferDraft
             return await Task.FromResult(offer.Id);
         }
 
-        private async Task ProcessOfferImages(CreateOfferDraftCommand request, Offer offer)
+        private async Task ProcessOfferImages(CreateOfferDraftOneCommand request, Offer offer)
         {
             var imagesToUpload = ExtractImagesToUpload(request);
             var uploadedImages = await UploadImages(imagesToUpload);
@@ -92,7 +92,7 @@ namespace Offers.API.Application.Commands.CreateOfferDraft
             return uploadedImages;
         }
 
-        private static IList<ImageToUpload> ExtractImagesToUpload(CreateOfferDraftCommand request)
+        private static IList<ImageToUpload> ExtractImagesToUpload(CreateOfferDraftOneCommand request)
         {
             var imagesMetadata = ExtractImagesMetadata(request);
             var imagesToUpload = new List<ImageToUpload>();
@@ -120,7 +120,7 @@ namespace Offers.API.Application.Commands.CreateOfferDraft
             return imagesToUpload;
         }
 
-        private static Dictionary<string, ImageMetadata> ExtractImagesMetadata(CreateOfferDraftCommand request)
+        private static Dictionary<string, ImageMetadata> ExtractImagesMetadata(CreateOfferDraftOneCommand request)
         {
             var imagesMetadataList = JsonConvert.DeserializeObject<IList<ImageMetadata>>(request.ImagesMetadata);
             if (imagesMetadataList == null) throw new OffersDomainException("Invalid images metadata");
@@ -137,7 +137,7 @@ namespace Offers.API.Application.Commands.CreateOfferDraft
             return metadataDict;
         }
 
-        private static IList<KeyValueInfo> ExtractKeyValueInfos(CreateOfferDraftCommand request)
+        private static IList<KeyValueInfo> ExtractKeyValueInfos(CreateOfferDraftOneCommand request)
         {
             if (request.KeyValueInfos == null) return null;
 

@@ -6,9 +6,9 @@ using Microsoft.AspNetCore.Http;
 using Offers.API.Domain.Validators;
 using System.Collections.Generic;
 
-namespace Offers.API.Application.Commands.UpdateOfferDraft
+namespace Offers.API.Application.Commands.UpdateOfferDraftOne
 {
-    public class UpdateOfferDraftCommand : IRequest
+    public class UpdateOfferDraftOneCommand : IRequest
     {
         public string OfferId { get; init; }
         public string Name { get; init; }
@@ -20,9 +20,9 @@ namespace Offers.API.Application.Commands.UpdateOfferDraft
         public string KeyValueInfos { get; init; }
     }
 
-    public class UpdateOfferDraftCommandValidator : AbstractValidator<UpdateOfferDraftCommand>
+    public class UpdateOfferDraftOneCommandValidator : AbstractValidator<UpdateOfferDraftOneCommand>
     {
-        public UpdateOfferDraftCommandValidator()
+        public UpdateOfferDraftOneCommandValidator()
         {
             RuleFor(x => x.OfferId)
                 .IsNotEmptyGuid();

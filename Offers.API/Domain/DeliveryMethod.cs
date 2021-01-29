@@ -1,10 +1,13 @@
-﻿namespace Offers.API.Domain
+﻿using Newtonsoft.Json;
+
+namespace Offers.API.Domain
 {
     public class DeliveryMethod
     {
-        public string Name { get; private set; }
-        public decimal Price { get; private set; }
+        [JsonProperty] public string Name { get; private set; }
+        [JsonProperty] public decimal Price { get; private set; }
 
+        [JsonConstructor]
         public DeliveryMethod(string name, decimal price)
         {
             SetName(name);

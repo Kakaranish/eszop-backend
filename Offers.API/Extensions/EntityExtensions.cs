@@ -52,7 +52,8 @@ namespace Offers.API.Extensions
                 Category = offer.Category.ToDto(),
                 DeliveryMethods = offer.DeliveryMethods?.ToList() ?? new List<DeliveryMethod>(),
                 Images = offer.Images?.ToList() ?? new List<ImageInfo>(),
-                KeyValueInfos = offer.KeyValueInfos?.ToList() ?? new List<KeyValueInfo>()
+                KeyValueInfos = offer.KeyValueInfos?.ToList() ?? new List<KeyValueInfo>(),
+                BankAccountNumber = offer.BankAccountNumber
             };
         }
     }

@@ -18,17 +18,17 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Offers.API.Application.Commands.UpdateOfferDraft
+namespace Offers.API.Application.Commands.UpdateOfferDraftOne
 {
-    public class UpdateOfferDraftCommandHandler : IRequestHandler<UpdateOfferDraftCommand>
+    public class UpdateOfferDraftOneCommandHandler : IRequestHandler<UpdateOfferDraftOneCommand>
     {
-        private readonly ILogger<UpdateOfferDraftCommandHandler> _logger;
+        private readonly ILogger<UpdateOfferDraftOneCommandHandler> _logger;
         private readonly IOfferRepository _offerRepository;
         private readonly HttpContext _httpContext;
         private readonly IEventBus _eventBus;
         private readonly IImageStorage _imageStorage;
 
-        public UpdateOfferDraftCommandHandler(ILogger<UpdateOfferDraftCommandHandler> logger,
+        public UpdateOfferDraftOneCommandHandler(ILogger<UpdateOfferDraftOneCommandHandler> logger,
             IHttpContextAccessor httpContextAccessor, IOfferRepository offerRepository, IEventBus eventBus,
             IImageStorage imageStorage)
         {
@@ -40,7 +40,7 @@ namespace Offers.API.Application.Commands.UpdateOfferDraft
             _imageStorage = imageStorage ?? throw new ArgumentNullException(nameof(imageStorage));
         }
 
-        public async Task<Unit> Handle(UpdateOfferDraftCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(UpdateOfferDraftOneCommand request, CancellationToken cancellationToken)
         {
             var userId = _httpContext.User.Claims.ToTokenPayload().UserClaims.Id;
             var offer = await _offerRepository.GetByIdAsync(Guid.Parse(request.OfferId));
@@ -82,7 +82,7 @@ namespace Offers.API.Application.Commands.UpdateOfferDraft
             return await Unit.Task;
         }
 
-        private async Task ProcessOfferImages(UpdateOfferDraftCommand request, Offer offer)
+        private async Task ProcessOfferImages(UpdateOfferDraftOneCommand request, Offer offer)
         {
             var imagesMetadataDict = ExtractImagesMetadata(request);
 
@@ -156,7 +156,7 @@ namespace Offers.API.Application.Commands.UpdateOfferDraft
             }
         }
 
-        private static Dictionary<string, ImageMetadata> ExtractImagesMetadata(UpdateOfferDraftCommand request)
+        private static Dictionary<string, ImageMetadata> ExtractImagesMetadata(UpdateOfferDraftOneCommand request)
         {
             var imagesMetadataList = JsonConvert.DeserializeObject<IList<ImageMetadata>>(request.ImagesMetadata);
             var metadataDict = imagesMetadataList.ToDictionary(x => x.ImageId);
@@ -184,7 +184,7 @@ namespace Offers.API.Application.Commands.UpdateOfferDraft
             return metadataDict;
         }
 
-        private static IList<KeyValueInfo> ExtractKeyValueInfos(UpdateOfferDraftCommand request)
+        private static IList<KeyValueInfo> ExtractKeyValueInfos(UpdateOfferDraftOneCommand request)
         {
             if (request.KeyValueInfos == null) return null;
 
