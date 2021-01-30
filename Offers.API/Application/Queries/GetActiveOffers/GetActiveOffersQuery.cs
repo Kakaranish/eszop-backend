@@ -4,16 +4,16 @@ using MediatR;
 using Offers.API.Application.Dto;
 using Offers.API.Application.Types;
 
-namespace Offers.API.Application.Queries.GetFilteredOffers
+namespace Offers.API.Application.Queries.GetActiveOffers
 {
-    public class GetOffersQuery : IRequest<Pagination<OfferDto>>
+    public class GetActiveOffersQuery : IRequest<Pagination<OfferDto>>
     {
         public OfferFilter OfferFilter { get; init; }
     }
 
-    public class GetOffersQueryValidator : AbstractValidator<GetOffersQuery>
+    public class GetActiveOffersQueryValidator : AbstractValidator<GetActiveOffersQuery>
     {
-        public GetOffersQueryValidator()
+        public GetActiveOffersQueryValidator()
         {
             RuleFor(x => x.OfferFilter)
                 .SetValidator(new OfferFilterValidator());

@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Offers.API.Extensions;
 
 namespace Offers.API.DataAccess.Repositories
 {
@@ -22,35 +23,37 @@ namespace Offers.API.DataAccess.Repositories
             _appDbContext = appDbContext ?? throw new ArgumentNullException(nameof(appDbContext));
         }
 
-        public async Task<Pagination<Offer>> GetFiltered(OfferFilter filter)
+        public async Task<Pagination<Offer>> GetAllAsync(OfferFilter filter)
         {
-            var offers = _appDbContext.Offers.AsQueryable();
-
-            offers = offers.OrderByDescending(x => x.CreatedAt);
-            if (filter.FromPrice != null) offers = offers.Where(x => x.Price >= filter.FromPrice);
-            if (filter.ToPrice != null) offers = offers.Where(x => x.Price <= filter.ToPrice);
-            if (filter.Category != null) offers = offers.Where(x => x.Category.Id == filter.Category);
+            var offers = _appDbContext.Offers
+                .AsQueryable()
+                .ApplyFilter(filter)
+                .OrderByDescending(x => x.CreatedAt);
 
             var pageDetails = new PageCriteria(filter.PageIndex, filter.PageSize);
 
             return await offers.PaginateAsync(pageDetails);
         }
 
-        public async Task<IList<Offer>> GetAllPublishedAsync()
+        public async Task<Pagination<Offer>> GetAllActiveAsync(OfferFilter filter)
         {
-            return await _appDbContext.Offers.Include(x => x.Category)
-                .Where(x => x.PublishedAt != null).ToListAsync();
+            var offers = _appDbContext.Offers
+                .AsQueryable()
+                .Where(x => x.PublishedAt != null)
+                .ApplyFilter(filter)
+                .OrderByDescending(x => x.CreatedAt)
+                .Include(x => x.Category);
+            
+            var pageDetails = new PageCriteria(filter.PageIndex, filter.PageSize);
+
+            return await offers.PaginateAsync(pageDetails);
         }
 
         public async Task<Pagination<Offer>> GetByUserIdAsync(Guid userId, OfferFilter filter)
         {
-            // TODO: Deduplicate
-            var offers = _appDbContext.Offers.AsQueryable();
-
-            offers = offers.OrderByDescending(x => x.CreatedAt);
-            if (filter.FromPrice != null) offers = offers.Where(x => x.Price >= filter.FromPrice);
-            if (filter.ToPrice != null) offers = offers.Where(x => x.Price <= filter.ToPrice);
-            if (filter.Category != null) offers = offers.Where(x => x.Category.Id == filter.Category);
+            var offers = _appDbContext.Offers.AsQueryable()
+                .OrderByDescending(x => x.CreatedAt)
+                .ApplyFilter(filter);
 
             var pageDetails = new PageCriteria(filter.PageIndex, filter.PageSize);
 

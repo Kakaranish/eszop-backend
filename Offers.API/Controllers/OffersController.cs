@@ -8,13 +8,13 @@ using Offers.API.Application.Commands.RemoveOffer;
 using Offers.API.Application.Commands.UpdateOfferDraftOne;
 using Offers.API.Application.Commands.UpdateOfferDraftTwo;
 using Offers.API.Application.Dto;
-using Offers.API.Application.Queries.GetFilteredOffers;
 using Offers.API.Application.Queries.GetMyOffer;
 using Offers.API.Application.Queries.GetMyOffers;
 using Offers.API.Application.Queries.GetOffer;
 using Offers.API.Application.Types;
 using System;
 using System.Threading.Tasks;
+using Offers.API.Application.Queries.GetActiveOffers;
 
 namespace Offers.API.Controllers
 {
@@ -30,9 +30,9 @@ namespace Offers.API.Controllers
         }
 
         [HttpGet("")]
-        public async Task<Pagination<OfferDto>> GetMultiple([FromQuery] OfferFilter offerFilter)
+        public async Task<Pagination<OfferDto>> GetActive([FromQuery] OfferFilter offerFilter)
         {
-            var query = new GetOffersQuery { OfferFilter = offerFilter };
+            var query = new GetActiveOffersQuery { OfferFilter = offerFilter };
             return await _mediator.Send(query);
         }
 
