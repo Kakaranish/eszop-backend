@@ -1,9 +1,10 @@
 ﻿using Common.Extensions;
 using FluentValidation;
+using MediatR;
 
 namespace Offers.API.Application.Commands.PublishOffer
 {
-    public class PublishOfferCommand
+    public class PublishOfferCommand : IRequest
     {
         public string OfferId { get; init; }
     }

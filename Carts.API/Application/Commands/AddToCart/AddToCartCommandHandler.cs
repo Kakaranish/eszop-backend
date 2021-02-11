@@ -48,21 +48,21 @@ namespace Carts.API.Application.Commands.AddToCart
             }
 
             var userId = _httpContext.User.Claims.ToTokenPayload().UserClaims.Id;
-            if (userId == offerDto.OwnerId)
-            {
-                throw new CartsDomainException("Buying from himself/herself is illegal");
-            }
+            //if (userId == offerDto.OwnerId)
+            //{
+            //    throw new CartsDomainException("Buying from himself/herself is illegal");
+            //}
 
             var cart = await _cartRepository.GetOrCreateByUserIdAsync(userId);
             var cartItem = new CartItem(cart.Id, Guid.Parse(request.OfferId), userId,
                 offerDto.Name, offerDto.Price, request.Quantity, offerDto.AvailableStock);
             cart.AddCartItem(cartItem);
-            
+
             _cartRepository.Update(cart);
             await _cartRepository.UnitOfWork.SaveChangesAndDispatchDomainEventsAsync(cancellationToken);
 
             _logger.LogInformation($"Added {request.OfferId} offer to cart {cart.Id} as cart item {cartItem.Id}");
-            
+
             return cartItem.Id;
         }
 

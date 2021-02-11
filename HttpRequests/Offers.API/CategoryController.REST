@@ -1,15 +1,16 @@
 @url = http://localhost:5000
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJUb2tlbklkIjoiNjg5NzljOGUtZDM3NC00ODVmLTkxZjctZjM1NjAxNWJlZGYzIiwiVXNlcklkIjoiOTUzZTkyMmQtYjRiZC00ZTA5LTllNjctNDNiZWViZDU5ZjM2IiwiRW1haWwiOiJhZG1pbkBtYWlsLmNvbSIsIlJvbGUiOiJhZG1pbiIsImV4cCI6MTYxMDk3ODk5NCwiaXNzIjoiSWRlbnRpdHkuQVBJIiwiYXVkIjoiSWRlbnRpdHkuQVBJLkF1ZGllbmNlIn0.6wG41u9gUqPgRa_OlRXwDeoR7YmFyd714iOlKgaKUz8
 
 ### Get all
 
-GET {{url}}/api/category HTTP/1.1
+GET {{url}}/api/categories HTTP/1.1
 
 ###
 
-POST {{url}}/api/category HTTP/1.1
+POST {{url}}/api/categories HTTP/1.1
 Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 
 {
-    "Name": "TestCategory"
+    "Name": "Music"
 }

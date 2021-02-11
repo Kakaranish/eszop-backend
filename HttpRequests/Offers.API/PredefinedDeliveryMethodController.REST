@@ -1,4 +1,5 @@
 @url = http://localhost:5000
+@adminAccessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJUb2tlbklkIjoiNjJiMWZjMGYtMGVhMy00NWYwLTk5ZDgtODZlNDhhNDlmNWZiIiwiVXNlcklkIjoiOTUzZTkyMmQtYjRiZC00ZTA5LTllNjctNDNiZWViZDU5ZjM2IiwiRW1haWwiOiJhZG1pbkBtYWlsLmNvbSIsIlJvbGUiOiJhZG1pbiIsImV4cCI6MTYxMjQ1ODI0NiwiaXNzIjoiSWRlbnRpdHkuQVBJIiwiYXVkIjoiSWRlbnRpdHkuQVBJLkF1ZGllbmNlIn0.bDYntiEvhCbuQ3juJ3e-T-gSY_UgH0Fekns_bj5K5jg
 
 ###
 
@@ -17,8 +18,8 @@ Authorization: Bearer {{adminAccessToken}}
 Content-Type: application/json
 
 {
-    "Name": "Poczta Polska (Za pobraniem)",
-    "Description": "Some desc"
+    "Name": "Odbiór osobisty",
+    "Price": 0
 }
 
 ###

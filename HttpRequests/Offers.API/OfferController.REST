@@ -1,15 +1,16 @@
 @url = http://localhost:5000
-@accessToken = 
-@offerId = 
-@categoryId = 
+### Immortal access token
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJUb2tlbklkIjoiOGYxZGIxNjYtZjE4Yy00NWYyLTgzNTktZDIyMmQzYjliMmRhIiwiVXNlcklkIjoiYmEwOWNlNjctYjI4MC00NTliLTlhNDgtMDhkOGFlNWI5MDA3IiwiRW1haWwiOiJ1c2VyQG1haWwuY29tIiwiUm9sZSI6InVzZXIiLCJleHAiOjE2NzE0MDkyNTQsImlzcyI6IklkZW50aXR5LkFQSSIsImF1ZCI6IklkZW50aXR5LkFQSS5BdWRpZW5jZSJ9.heCDM4ATRWPJ2mDxRi3qh4fvbMeegBhwURYOZGvDLGA
+@offerId = daa0fd21-3000-48c7-afa5-08d8ae5ca027
+@categoryId = ccf260b6-b73a-4294-d6ab-08d8af4dc126
 
 ###
 
-GET {{url}}/api/offers?fromPrice=48&toPrice=54&pageSize=2&pageIndex=1 HTTP/1.1
+GET {{url}}/api/offers?fromPrice=48&toPrice=54&pageSize=20&pageIndex=1 HTTP/1.1
 
 ### 
 
-GET {{url}}/api/offers/my?pageSize=2&pageIndex=1 HTTP/1.1
+GET {{url}}/api/offers/my?pageSize=20&pageIndex=1 HTTP/1.1
 Authorization: Bearer {{accessToken}}
 
 ###

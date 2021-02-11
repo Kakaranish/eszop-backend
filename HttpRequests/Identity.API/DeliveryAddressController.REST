@@ -1,4 +1,6 @@
 @url = http://localhost:6000
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJUb2tlbklkIjoiMzA3ZmUwZGQtY2ExYi00ZDNmLTk5ZWEtOTdjZDgyYjFmNjFkIiwiVXNlcklkIjoiYmEwOWNlNjctYjI4MC00NTliLTlhNDgtMDhkOGFlNWI5MDA3IiwiRW1haWwiOiJ1c2VyQG1haWwuY29tIiwiUm9sZSI6InVzZXIiLCJleHAiOjE2MTAyMTg1NjMsImlzcyI6IklkZW50aXR5LkFQSSIsImF1ZCI6IklkZW50aXR5LkFQSS5BdWRpZW5jZSJ9.pQkxEGw4a469jgmS9Kdy3Qv1Wzdi1sqI1VbMK776Eb0
+@deliveryAddressId = EAAAFFCD-4C27-45D7-F11B-08D8B41181CB
 
 ### Create
 
@@ -9,7 +11,7 @@ Content-Type: application/json
 {
     "FirstName": "Jan",
     "LastName": "Ryba-Okoń",
-    "PhoneNumber": "+48 123 456 789",
+    "PhoneNumber": "+48 123 456 789 2",
     "Country": "Poland",
     "City": "Poznań",
     "ZipCode": "21-370",

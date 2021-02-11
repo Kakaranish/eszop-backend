@@ -1,4 +1,5 @@
 @url = http://localhost:6000
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJUb2tlbklkIjoiNmIzMTkyMGMtZDhiMS00N2RlLWFmYWYtNTFjM2EyYjJmMTQ1IiwiVXNlcklkIjoiNTg1ZWFmNDItN2RiYS00MjUyLTkxY2YtYzZkM2RiZjRhMzU0IiwiRW1haWwiOiJhZG1pbkBtYWlsLmNvbSIsIlJvbGUiOiJhZG1pbiIsImV4cCI6MTYwOTY5OTA2NCwiaXNzIjoiSWRlbnRpdHkuQVBJIiwiYXVkIjoiSWRlbnRpdHkuQVBJLkF1ZGllbmNlIn0.CxT1GCSxrdXrTGTS7jGaoH5fIIh_A8yVm6dpORpPDEA
 @refreshToken = 
 
 ###
@@ -25,6 +26,7 @@ Content-Type: application/json
 ###
 
 POST {{url}}/api/token/refresh/access-token HTTP/1.1
+// TODO: In header
 Content-Type: application/json
 
 "{{refreshToken}}"
