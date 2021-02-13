@@ -20,7 +20,9 @@ namespace Offers.API.Application.Commands.CreatePredefinedDeliveryMethod
 
         public async Task<Guid> Handle(CreatePredefinedDeliveryMethodCommand request, CancellationToken cancellationToken)
         {
-            var deliveryMethod = new PredefinedDeliveryMethod(request.Name, request.Description);
+            var deliveryMethod = new PredefinedDeliveryMethod(request.Name);
+            deliveryMethod.SetDescription(request.Description);
+            deliveryMethod.SetPrice(request.Price);
 
             _deliveryMethodRepository.Add(deliveryMethod);
             await _deliveryMethodRepository.UnitOfWork.SaveChangesAndDispatchDomainEventsAsync(cancellationToken);

@@ -12,11 +12,9 @@ namespace Offers.API.Domain
         {
         }
 
-        public PredefinedDeliveryMethod(string name, string description = default, decimal price = default)
+        public PredefinedDeliveryMethod(string name)
         {
             SetName(name);
-            SetDescription(description);
-            SetPrice(price);
         }
 
         public void SetName(string name)
