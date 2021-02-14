@@ -169,10 +169,7 @@ namespace Offers.API.Domain
 
         public void SetPublished()
         {
-            if (IsPublished)
-                throw new OffersDomainException("Offer is already published");
-            if (_deliveryMethods == null || _deliveryMethods.Count == 0)
-                throw new OffersDomainException("Offer has no delivery methods set");
+            ValidateCanBePublished();
 
             PublishedAt = DateTime.UtcNow;
             EndsAt = PublishedAt.Value.AddDays(14);
@@ -287,6 +284,16 @@ namespace Offers.API.Domain
             if (RemovedAt != null) throw new OffersDomainException("Offer is already removed");
         }
 
+        private void ValidateCanBePublished()
+        {
+            if (IsPublished)
+                throw new OffersDomainException("Offer is already published");
+            if (_deliveryMethods == null || _deliveryMethods.Count == 0)
+                throw new OffersDomainException("Offer has no delivery methods set");
+            if (string.IsNullOrWhiteSpace(BankAccountNumber))
+                throw new OffersDomainException($"Offer has no {nameof(BankAccountNumber)}");
+        }
+
         private void ValidateAddImage(ImageInfo image)
         {
             if (image == null)
@@ -303,17 +310,17 @@ namespace Offers.API.Domain
 
         private void ValidateDeliveryMethods(IList<DeliveryMethod> deliveryMethods)
         {
-            if (deliveryMethods == null) 
+            if (deliveryMethods == null)
                 throw new OffersDomainException($"'{nameof(deliveryMethods)}' cannot be null");
 
-            if(deliveryMethods.Count == 0)
+            if (deliveryMethods.Count == 0)
                 throw new OffersDomainException($"{nameof(DeliveryMethods)} must contain at least one element");
 
             var hasUniqueNames = deliveryMethods.Select(x => x.Name).Distinct().Count() == deliveryMethods.Count;
-            if (!hasUniqueNames) 
+            if (!hasUniqueNames)
                 throw new OffersDomainException($"Two {nameof(DeliveryMethods)} cannot have the same key");
 
-            if(deliveryMethods.Any(x => string.IsNullOrWhiteSpace(x.Name) || x.Price < 0))
+            if (deliveryMethods.Any(x => string.IsNullOrWhiteSpace(x.Name) || x.Price < 0))
                 throw new OffersDomainException($"{nameof(DeliveryMethods)} contains at least one invalid entry");
         }
 
