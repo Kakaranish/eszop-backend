@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Offers.API.Application.Queries.GetOffer
 {
-    public class GetOfferQueryHandler : IRequestHandler<GetOfferQuery, OfferDto>
+    public class GetOfferQueryHandler : IRequestHandler<GetOfferQuery, OfferViewDto>
     {
         private readonly IOfferRepository _offerRepository;
 
@@ -17,12 +17,12 @@ namespace Offers.API.Application.Queries.GetOffer
             _offerRepository = offerRepository ?? throw new ArgumentNullException(nameof(offerRepository));
         }
 
-        public async Task<OfferDto> Handle(GetOfferQuery request, CancellationToken cancellationToken)
+        public async Task<OfferViewDto> Handle(GetOfferQuery request, CancellationToken cancellationToken)
         {
             var offerId = Guid.Parse(request.OfferId);
             var offer = await _offerRepository.GetByIdAsync(offerId);
 
-            return offer.ToDto();
+            return offer.ToOfferViewDto();
         }
     }
 }

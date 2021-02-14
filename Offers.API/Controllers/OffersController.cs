@@ -31,7 +31,7 @@ namespace Offers.API.Controllers
         }
 
         [HttpGet("")]
-        public async Task<Pagination<OfferDto>> GetActive([FromQuery] OfferFilter offerFilter)
+        public async Task<Pagination<OfferListPreviewDto>> GetActive([FromQuery] OfferFilter offerFilter)
         {
             var query = new GetActiveOffersQuery { OfferFilter = offerFilter };
             return await _mediator.Send(query);
@@ -39,7 +39,7 @@ namespace Offers.API.Controllers
 
         [HttpGet("my")]
         [JwtAuthorize]
-        public async Task<Pagination<OfferDto>> GetMyOffers([FromQuery] OfferFilter offerFilter)
+        public async Task<Pagination<OfferListPreviewDto>> GetMyOffers([FromQuery] OfferFilter offerFilter)
         {
             var query = new GetMyOffersQuery { OfferFilter = offerFilter };
             return await _mediator.Send(query);
@@ -47,14 +47,14 @@ namespace Offers.API.Controllers
 
         [HttpGet("{offerId}/my")]
         [JwtAuthorize]
-        public async Task<OfferDto> GetMyOffers(string offerId)
+        public async Task<OfferFullViewDto> GetMyOffer(string offerId)
         {
             var query = new GetMyOfferQuery { OfferId = offerId };
             return await _mediator.Send(query);
         }
 
         [HttpGet("{offerId}")]
-        public async Task<OfferDto> GetById(string offerId)
+        public async Task<OfferViewDto> GetById(string offerId)
         {
             var query = new GetOfferQuery { OfferId = offerId };
             return await _mediator.Send(query);

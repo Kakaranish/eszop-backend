@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Offers.API.Application.Dto
 {
-    public class OfferDto
+    public class OfferFullViewDto
     {
         public Guid Id { get; init; }
 
@@ -25,7 +25,7 @@ namespace Offers.API.Application.Dto
 
         public CategoryDto Category { get; init; }
         public List<DeliveryMethod> DeliveryMethods { get; init; }
-        public List<ImageInfo> Images { get; init; }
+        public List<ImageInfoDto> Images { get; init; }
         public List<KeyValueInfo> KeyValueInfos { get; init; }
     }
 }

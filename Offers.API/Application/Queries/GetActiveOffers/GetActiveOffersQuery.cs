@@ -6,7 +6,7 @@ using Offers.API.Application.Types;
 
 namespace Offers.API.Application.Queries.GetActiveOffers
 {
-    public class GetActiveOffersQuery : IRequest<Pagination<OfferDto>>
+    public class GetActiveOffersQuery : IRequest<Pagination<OfferListPreviewDto>>
     {
         public OfferFilter OfferFilter { get; init; }
     }

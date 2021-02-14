@@ -5,7 +5,7 @@ using Offers.API.Application.Dto;
 
 namespace Offers.API.Application.Queries.GetMyOffer
 {
-    public class GetMyOfferQuery : IRequest<OfferDto>
+    public class GetMyOfferQuery : IRequest<OfferFullViewDto>
     {
         public string OfferId { get; init; }
     }

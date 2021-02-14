@@ -30,11 +30,21 @@ namespace Offers.API.Extensions
             };
         }
 
-        public static OfferDto ToDto(this Offer offer)
+        public static ImageInfoDto ToDto(this ImageInfo imageInfo)
+        {
+            if (imageInfo == null) return null;
+
+            return new ImageInfoDto
+            {
+                Uri = imageInfo.Uri
+            };
+        }
+
+        public static OfferFullViewDto ToOfferFullViewDto(this Offer offer)
         {
             if (offer == null) return null;
 
-            return new OfferDto
+            return new OfferFullViewDto
             {
                 Id = offer.Id,
                 CreatedAt = offer.CreatedAt,
@@ -51,9 +61,50 @@ namespace Offers.API.Extensions
                 TotalStock = offer.TotalStock,
                 Category = offer.Category.ToDto(),
                 DeliveryMethods = offer.DeliveryMethods?.ToList() ?? new List<DeliveryMethod>(),
-                Images = offer.Images?.ToList() ?? new List<ImageInfo>(),
+                Images = offer.Images?.Select(x => x.ToDto()).ToList() ?? new List<ImageInfoDto>(),
                 KeyValueInfos = offer.KeyValueInfos?.ToList() ?? new List<KeyValueInfo>(),
                 BankAccountNumber = offer.BankAccountNumber
+            };
+        }
+
+        public static OfferViewDto ToOfferViewDto(this Offer offer)
+        {
+            if (offer == null) return null;
+
+            return new OfferViewDto
+            {
+                Id = offer.Id,
+                UpdatedAt = offer.UpdatedAt,
+                UserEndedAt = offer.UserEndedAt,
+                EndsAt = offer.EndsAt,
+                PublishedAt = offer.PublishedAt,
+                OwnerId = offer.OwnerId,
+                Name = offer.Name,
+                Description = offer.Description,
+                Price = offer.Price,
+                AvailableStock = offer.AvailableStock,
+                TotalStock = offer.TotalStock,
+                Category = offer.Category.ToDto(),
+                DeliveryMethods = offer.DeliveryMethods?.ToList() ?? new List<DeliveryMethod>(),
+                Images = offer.Images?.Select(x => x.ToDto()).ToList() ?? new List<ImageInfoDto>(),
+                KeyValueInfos = offer.KeyValueInfos?.ToList() ?? new List<KeyValueInfo>()
+            };
+        }
+
+        public static OfferListPreviewDto ToOfferListPreviewDto(this Offer offer)
+        {
+            if (offer == null) return null;
+
+            return new OfferListPreviewDto
+            {
+                Id = offer.Id,
+                EndsAt = offer.EndsAt,
+                PublishedAt = offer.PublishedAt,
+                Name = offer.Name,
+                Price = offer.Price,
+                AvailableStock = offer.AvailableStock,
+                Category = offer.Category.ToDto(),
+                MainImage = offer.Images?.FirstOrDefault(x => x.IsMain).ToDto()
             };
         }
     }

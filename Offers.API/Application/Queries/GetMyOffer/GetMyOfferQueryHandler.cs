@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Offers.API.Application.Queries.GetMyOffer
 {
-    public class GetMyOfferQueryHandler : IRequestHandler<GetMyOfferQuery, OfferDto>
+    public class GetMyOfferQueryHandler : IRequestHandler<GetMyOfferQuery, OfferFullViewDto>
     {
         private readonly HttpContext _httpContext;
         private readonly IOfferRepository _offerRepository;
@@ -22,7 +22,7 @@ namespace Offers.API.Application.Queries.GetMyOffer
             _offerRepository = offerRepository ?? throw new ArgumentNullException(nameof(offerRepository));
         }
 
-        public async Task<OfferDto> Handle(GetMyOfferQuery request, CancellationToken cancellationToken)
+        public async Task<OfferFullViewDto> Handle(GetMyOfferQuery request, CancellationToken cancellationToken)
         {
             var userId = _httpContext.User.Claims.ToTokenPayload().UserClaims.Id;
             var offerId = Guid.Parse(request.OfferId);
@@ -31,7 +31,7 @@ namespace Offers.API.Application.Queries.GetMyOffer
             if (offer == null) return null;
 
             return offer.OwnerId == userId
-                ? offer.ToDto()
+                ? offer.ToOfferFullViewDto()
                 : null;
         }
     }
