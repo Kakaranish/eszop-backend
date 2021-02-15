@@ -304,6 +304,7 @@ namespace Offers.API.Domain
 
         private void ValidateKeyValueInfos(IList<KeyValueInfo> keyValueInfos)
         {
+            if (keyValueInfos == null) return;
             var hasUniqueKeys = keyValueInfos.Select(x => x.Key).Distinct().Count() == keyValueInfos.Count;
             if (!hasUniqueKeys) throw new OffersDomainException($"Two {nameof(KeyValueInfo)} cannot have the same key");
         }

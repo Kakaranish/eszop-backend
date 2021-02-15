@@ -17,9 +17,11 @@ namespace Carts.API.Domain
         public decimal PricePerItem { get; private set; }
         public int Quantity { get; private set; }
         public int AvailableStock { get; private set; }
+        public string ImageUri { get; private set; }
         [NotMapped] public decimal TotalPrice => PricePerItem * Quantity;
 
-        public CartItem(Guid cartId, Guid offerId, Guid sellerId, string offerName, decimal pricePerItem, int quantity, int availableStock)
+        public CartItem(Guid cartId, Guid offerId, Guid sellerId, string offerName, decimal pricePerItem, 
+            int quantity, int availableStock, string imageUri)
         {
             SetCartId(cartId);
             SetOfferId(offerId);
@@ -28,6 +30,7 @@ namespace Carts.API.Domain
             SetPricePerItem(pricePerItem);
             AvailableStock = availableStock;
             SetQuantity(quantity);
+            SetImageUri(imageUri);
             
             CreatedAt = DateTime.UtcNow;
             UpdatedAt = CreatedAt;
@@ -83,6 +86,12 @@ namespace Carts.API.Domain
             UpdatedAt = DateTime.UtcNow;
         }
 
+        public void SetImageUri(string imageUri)
+        {
+            ValidateImageUri(imageUri);
+            ImageUri = imageUri;
+        }
+
         #region Validation
 
         private static void ValidateCartId(Guid cartId)
@@ -117,6 +126,14 @@ namespace Carts.API.Domain
             var idValidator = new IdValidator();
             var result = idValidator.Validate(id);
             if (!result.IsValid) throw new CartsDomainException($"'{paramName}' is invalid id");
+        }
+
+        private static void ValidateImageUri(string imageUri)
+        {
+            if (string.IsNullOrWhiteSpace(imageUri))
+                throw new CartsDomainException($"{nameof(imageUri)} cannot be null or empty");
+            if (!Uri.IsWellFormedUriString(imageUri, UriKind.Absolute))
+                throw new CartsDomainException($"{nameof(imageUri)} is not well formed uri");
         }
 
         #endregion

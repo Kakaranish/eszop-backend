@@ -18,7 +18,9 @@ namespace Carts.API
                 SellerId = item.SellerId,
                 OfferName = item.OfferName,
                 Quantity = item.Quantity,
-                PricePerItem = item.PricePerItem
+                PricePerItem = item.PricePerItem,
+                AvailableStock = item.AvailableStock,
+                ImageUri = item.ImageUri
             }).ToList() ?? new List<CartItemDto>();
 
             return new CartDto

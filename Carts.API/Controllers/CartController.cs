@@ -50,6 +50,7 @@ namespace Carts.API.Controllers
         }
 
         [HttpPut("item")]
+        [JwtAuthorize]
         public async Task<IActionResult> UpdateCartItemQuantity(UpdateCartItemQuantityCommand request)
         {
             await _mediator.Send(request);

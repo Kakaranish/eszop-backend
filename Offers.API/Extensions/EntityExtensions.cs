@@ -36,7 +36,10 @@ namespace Offers.API.Extensions
 
             return new ImageInfoDto
             {
-                Uri = imageInfo.Uri
+                Id = imageInfo.Id,
+                Uri = imageInfo.Uri,
+                SortId = imageInfo.SortId,
+                IsMain = imageInfo.IsMain
             };
         }
 

@@ -1,3 +1,4 @@
+using Carts.API.Application.Dto;
 using Carts.API.DataAccess.Repositories;
 using Carts.API.Domain;
 using Common.Extensions;
@@ -8,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System;
+using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -48,31 +50,24 @@ namespace Carts.API.Application.Commands.AddToCart
             }
 
             var userId = _httpContext.User.Claims.ToTokenPayload().UserClaims.Id;
-            if (userId == offerDto.OwnerId)
-            {
-                throw new CartsDomainException("Buying from himself/herself is illegal");
-            }
+            //if (userId == offerDto.OwnerId)
+            //{
+            //    throw new CartsDomainException("Buying from himself/herself is illegal");
+            //}
 
             var cart = await _cartRepository.GetOrCreateByUserIdAsync(userId);
+
+            var imageUri = offerDto.Images.FirstOrDefault(x => x.IsMain)?.Uri;
             var cartItem = new CartItem(cart.Id, Guid.Parse(request.OfferId), userId,
-                offerDto.Name, offerDto.Price, request.Quantity, offerDto.AvailableStock);
+                offerDto.Name, offerDto.Price, request.Quantity, offerDto.AvailableStock, imageUri);
             cart.AddCartItem(cartItem);
-            
+
             _cartRepository.Update(cart);
             await _cartRepository.UnitOfWork.SaveChangesAndDispatchDomainEventsAsync(cancellationToken);
 
             _logger.LogInformation($"Added {request.OfferId} offer to cart {cart.Id} as cart item {cartItem.Id}");
-            
-            return cartItem.Id;
-        }
 
-        private class OfferDto
-        {
-            public Guid Id { get; init; }
-            public Guid OwnerId { get; init; }
-            public string Name { get; init; }
-            public decimal Price { get; init; }
-            public int AvailableStock { get; init; }
+            return cartItem.Id;
         }
     }
 }
