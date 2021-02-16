@@ -7,9 +7,7 @@ Content-Type: application/json
 
 {
     "email": "user@mail.com",
-    "password": "Test123",
-    "firstName": "SomeFirstName",
-    "lastName": "SomeLastName"
+    "password": "Test1234"
 }
 
 ### Sign in
@@ -19,7 +17,7 @@ Content-Type: application/json
 
 {
     "email": "user@mail.com",
-    "password": "Test123"
+    "password": "Test1234"
 }
 
 ### Admin sign-in
