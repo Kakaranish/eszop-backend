@@ -3,9 +3,9 @@ using Carts.API.Application.Commands.ClearCart;
 using Carts.API.Application.Commands.FinalizeCart;
 using Carts.API.Application.Commands.RemoveFromCart;
 using Carts.API.Application.Commands.UpdateCartItemQuantity;
+using Carts.API.Application.Dto;
 using Carts.API.Application.Queries.GetOrCreateCart;
 using Common.Authentication;
-using Common.Dto;
 using Common.Types;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -34,10 +34,9 @@ namespace Carts.API.Controllers
 
         [HttpPost("item")]
         [JwtAuthorize]
-        public async Task<IActionResult> AddToCart(AddToCartCommand request)
+        public async Task<CartItemDto> AddToCart(AddToCartCommand request)
         {
-            var cartItemId = await _mediator.Send(request);
-            return Ok(new { CartItemId = cartItemId });
+            return await _mediator.Send(request);
         }
 
         [HttpDelete("item/{cartItemId}")]

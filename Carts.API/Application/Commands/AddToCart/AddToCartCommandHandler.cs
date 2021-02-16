@@ -1,6 +1,7 @@
 using Carts.API.Application.Dto;
 using Carts.API.DataAccess.Repositories;
 using Carts.API.Domain;
+using Carts.API.Extensions;
 using Common.Extensions;
 using Common.Types;
 using MediatR;
@@ -16,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace Carts.API.Application.Commands.AddToCart
 {
-    public class AddToCartCommandHandler : IRequestHandler<AddToCartCommand, Guid>
+    public class AddToCartCommandHandler : IRequestHandler<AddToCartCommand, CartItemDto>
     {
         private readonly ILogger<AddToCartCommandHandler> _logger;
         private readonly IHttpClientFactory _httpClientFactory;
@@ -36,7 +37,7 @@ namespace Carts.API.Application.Commands.AddToCart
             _cartRepository = cartRepository ?? throw new ArgumentNullException(nameof(cartRepository));
         }
 
-        public async Task<Guid> Handle(AddToCartCommand request, CancellationToken cancellationToken)
+        public async Task<CartItemDto> Handle(AddToCartCommand request, CancellationToken cancellationToken)
         {
             var uri = $"{_urlsConfig.Offers}/api/offers/{request.OfferId}";
             var httpClient = _httpClientFactory.CreateClient();
@@ -67,7 +68,7 @@ namespace Carts.API.Application.Commands.AddToCart
 
             _logger.LogInformation($"Added {request.OfferId} offer to cart {cart.Id} as cart item {cartItem.Id}");
 
-            return cartItem.Id;
+            return cartItem.ToDto();
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using Common.Dto;
+﻿using Carts.API.Application.Dto;
 using MediatR;
 
 namespace Carts.API.Application.Queries.GetOrCreateCart

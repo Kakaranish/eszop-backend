@@ -1,4 +1,6 @@
 ﻿using Carts.API.DataAccess.Repositories;
+using Carts.API.Domain;
+using Carts.API.Extensions;
 using Common.Dto;
 using Common.Extensions;
 using Common.Types;
@@ -13,7 +15,6 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Carts.API.Domain;
 
 namespace Carts.API.Application.Commands.FinalizeCart
 {
@@ -51,18 +52,18 @@ namespace Carts.API.Application.Commands.FinalizeCart
             var httpClient = _httpClientFactory.CreateClient();
             var accessToken = _httpContext.Request.Headers["Authorization"].ToString().Split(' ')[1];
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-            
+
             var uri = $"{_urlsConfig.Orders}/api/order";
             var content = new StringContent(JsonConvert.SerializeObject(cart.ToDto()), Encoding.UTF8, "application/json");
             var response = await httpClient.PostAsync(uri, content, cancellationToken);
             var responseContent = await response.Content.ReadAsStringAsync(cancellationToken);
             var orderCreatedDto = JsonConvert.DeserializeObject<OrderCreatedDto>(responseContent);
-            
+
             _logger.LogInformation($"Order {orderCreatedDto.OrderId} created from cart {cart.Id}");
-            
+
             _cartRepository.Remove(cart);
             await _cartRepository.UnitOfWork.SaveChangesAndDispatchDomainEventsAsync(cancellationToken);
-            
+
             _logger.LogInformation($"Removed cart {cart.Id}");
 
             return orderCreatedDto.OrderId;
