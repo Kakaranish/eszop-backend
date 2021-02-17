@@ -1,8 +1,14 @@
 @url = http://localhost:6000
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJUb2tlbklkIjoiMmZjMTczZjMtYmUzZS00ZGJiLWI2N2ItMWU1MzNiYjY2YTFmIiwiVXNlcklkIjoiODBlN2YxZDYtYjU1NC00ODA0LTdhMmUtMDhkOGQwNGVhNWMzIiwiRW1haWwiOiJ1c2VyQG1haWwuY29tIiwiUm9sZSI6InVzZXIiLCJleHAiOjE2NzMyNDE1NDgsImlzcyI6IklkZW50aXR5LkFQSSIsImF1ZCI6IklkZW50aXR5LkFQSS5BdWRpZW5jZSJ9.4Mr-EMB1Bw-feYnFJMlUyQ7LamDC2hyCQ3Fxp72SQC
+
+###
+
+GET {{url}}/api/profile-info HTTP/1.1
+Authorization: Bearer {{accessToken}}
 
 ### Invalid data #1
 
-PUT {{url}}/api/ProfileInfo HTTP/1.1
+PUT {{url}}/api/profile-info HTTP/1.1
 Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 
@@ -12,7 +18,7 @@ Content-Type: application/json
 
 ### Invalid data #2
 
-PUT {{url}}/api/ProfileInfo HTTP/1.1
+PUT {{url}}/api/profile-info HTTP/1.1
 Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 
@@ -22,7 +28,7 @@ Content-Type: application/json
 
 ### Invalid data #3
 
-PUT {{url}}/api/ProfileInfo HTTP/1.1
+PUT {{url}}/api/profile-info HTTP/1.1
 Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 
@@ -34,7 +40,7 @@ Content-Type: application/json
 
 ### Valid data #1
 
-PUT {{url}}/api/ProfileInfo HTTP/1.1
+PUT {{url}}/api/profile-info HTTP/1.1
 Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 
