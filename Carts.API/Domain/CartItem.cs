@@ -86,6 +86,18 @@ namespace Carts.API.Domain
             UpdatedAt = DateTime.UtcNow;
         }
 
+        public void SetAvailableStock(int availableStock)
+        {
+            ValidateAvailableStock(availableStock);
+            
+            if (availableStock < Quantity)
+            {
+                // TODO: Generate domain event
+            }
+
+            AvailableStock = availableStock;
+        }
+
         public void SetImageUri(string imageUri)
         {
             ValidateImageUri(imageUri);
@@ -126,6 +138,12 @@ namespace Carts.API.Domain
             var idValidator = new IdValidator();
             var result = idValidator.Validate(id);
             if (!result.IsValid) throw new CartsDomainException($"'{paramName}' is invalid id");
+        }
+        
+        private static void ValidateAvailableStock(int availableStock)
+        {
+            if (availableStock < 0)
+                throw new CartsDomainException($"{nameof(AvailableStock)} cannot be < 0");
         }
 
         private static void ValidateImageUri(string imageUri)

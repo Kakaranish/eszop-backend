@@ -11,13 +11,13 @@ namespace Orders.API.Application.Commands.CreateOrder
     {
         public Guid BuyerId { get; }
         public Guid SellerId { get; }
-        public IList<CartItemDto> CartItems { get; }
+        public IList<CreateOrderCartItemDto> CartItems { get; }
 
-        public CreateOrderCommand(CartDto cartDto)
+        public CreateOrderCommand(CreateOrderCartDto createOrderCartDto)
         {
-            BuyerId = cartDto.UserId;
-            SellerId = cartDto.SellerId;
-            CartItems = cartDto.CartItems;
+            BuyerId = createOrderCartDto.UserId;
+            SellerId = createOrderCartDto.SellerId;
+            CartItems = createOrderCartDto.CartItems;
         }
     }
 
@@ -34,7 +34,7 @@ namespace Orders.API.Application.Commands.CreateOrder
             RuleFor(x => x.CartItems)
                 .NotNull();
 
-            var cartItemValidator = new InlineValidator<CartItemDto>();
+            var cartItemValidator = new InlineValidator<CreateOrderCartItemDto>();
             cartItemValidator.RuleFor(x => x.OfferId)
                 .NotEqual(Guid.Empty);
             cartItemValidator.RuleFor(x => x.OfferName)

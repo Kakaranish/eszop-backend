@@ -25,9 +25,9 @@ namespace Orders.API.Controllers
 
         [HttpPost("")]
         [JwtAuthorize]
-        public async Task<OrderCreatedDto> Create(CartDto cartDto)
+        public async Task<OrderCreatedDto> Create(CreateOrderCartDto createOrderCartDto)
         {
-            var request = new CreateOrderCommand(cartDto);
+            var request = new CreateOrderCommand(createOrderCartDto);
             var orderId = await _mediator.Send(request);
             return new OrderCreatedDto { OrderId = orderId };
         }

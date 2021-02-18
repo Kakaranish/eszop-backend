@@ -1,6 +1,5 @@
 ﻿using Carts.API.DataAccess.Repositories;
 using Carts.API.Domain;
-using Carts.API.Extensions;
 using Common.Dto;
 using Common.Extensions;
 using Common.Types;
@@ -10,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -54,7 +54,7 @@ namespace Carts.API.Application.Commands.FinalizeCart
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 
             var uri = $"{_urlsConfig.Orders}/api/order";
-            var content = new StringContent(JsonConvert.SerializeObject(cart.ToDto()), Encoding.UTF8, "application/json");
+            var content = new StringContent(JsonConvert.SerializeObject(ToCreateOrderCartDto(cart)), Encoding.UTF8, "application/json");
             var response = await httpClient.PostAsync(uri, content, cancellationToken);
             var responseContent = await response.Content.ReadAsStringAsync(cancellationToken);
             var orderCreatedDto = JsonConvert.DeserializeObject<OrderCreatedDto>(responseContent);
@@ -67,6 +67,28 @@ namespace Carts.API.Application.Commands.FinalizeCart
             _logger.LogInformation($"Removed cart {cart.Id}");
 
             return orderCreatedDto.OrderId;
+        }
+
+        private static CreateOrderCartDto ToCreateOrderCartDto(Cart cart)
+        {
+            return new CreateOrderCartDto
+            {
+                Id = cart.Id,
+                UserId = cart.UserId,
+                SellerId = cart.CartItems.First().SellerId,
+                CartItems = cart.CartItems.Select(x => new CreateOrderCartItemDto
+                {
+                    Id = x.Id,
+                    CartId = x.CartId,
+                    SellerId = x.SellerId,
+                    OfferId = x.OfferId,
+                    OfferName = x.OfferName,
+                    AvailableStock = x.AvailableStock,
+                    Quantity = x.Quantity,
+                    PricePerItem = x.PricePerItem,
+                    ImageUri = x.ImageUri
+                }).ToList()
+            };
         }
     }
 }

@@ -31,7 +31,7 @@ namespace Carts.API.DataAccess.Repositories
                 .ForEachAsync(cartItem =>
                 {
                     if (@event.Price?.Changed ?? false) cartItem.SetPricePerItem((decimal)@event.Price?.NewValue.GetValueOrDefault());
-                    if (@event.AvailableStock?.Changed ?? false) cartItem.SetQuantity((int)@event.AvailableStock?.NewValue.GetValueOrDefault());
+                    if (@event.AvailableStock?.Changed ?? false) cartItem.SetAvailableStock((int)@event.AvailableStock?.NewValue.GetValueOrDefault());
                     if (@event.Name?.Changed ?? false) cartItem.SetOfferName(@event.Name.NewValue);
                 });
         }

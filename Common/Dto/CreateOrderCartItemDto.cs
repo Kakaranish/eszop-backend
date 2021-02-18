@@ -2,7 +2,7 @@
 
 namespace Common.Dto
 {
-    public class CartItemDto
+    public class CreateOrderCartItemDto
     {
         public Guid Id { get; set; }
         public Guid OfferId { get; init; }
