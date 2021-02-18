@@ -7,6 +7,7 @@ using Orders.API.Application.Commands.CancelOrder;
 using Orders.API.Application.Commands.CreateOrder;
 using Orders.API.Application.Commands.GetBankTransferDetails;
 using Orders.API.Application.Dto;
+using Orders.API.Application.Queries;
 using System;
 using System.Threading.Tasks;
 
@@ -14,13 +15,21 @@ namespace Orders.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]/")]
-    public class OrderController : BaseController
+    public class OrdersController : BaseController
     {
         private readonly IMediator _mediator;
 
-        public OrderController(IMediator mediator)
+        public OrdersController(IMediator mediator)
         {
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+        }
+
+        [HttpGet("")]
+        [JwtAuthorize]
+        public async Task<Pagination<OrderPreviewDto>> GetAllByUserId([FromQuery] BasicPaginationFilter filter)
+        {
+            var query = new GetOrdersQuery { Filter = filter };
+            return await _mediator.Send(query);
         }
 
         [HttpPost("")]

@@ -1,7 +1,10 @@
 @url = http://localhost:8000
+@accessToken = 
+@orderId = 
+
 ###
 
-POST {{url}}/api/order/cancel HTTP/1.1
+POST {{url}}/api/orders/cancel HTTP/1.1
 Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 
@@ -11,5 +14,5 @@ Content-Type: application/json
 
 ###
 
-GET {{url}}/api/order/{{orderId}}/transfer/details HTTP/1.1
+GET {{url}}/api/orders/{{orderId}}/transfer/details HTTP/1.1
 Authorization: Bearer {{accessToken}}

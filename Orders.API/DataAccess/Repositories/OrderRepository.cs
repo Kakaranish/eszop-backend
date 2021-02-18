@@ -1,7 +1,10 @@
 ﻿using Common.DataAccess;
+using Common.Extensions;
+using Common.Types;
 using Microsoft.EntityFrameworkCore;
 using Orders.API.Domain;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Orders.API.DataAccess.Repositories
@@ -20,6 +23,17 @@ namespace Orders.API.DataAccess.Repositories
         public async Task<Order> GetByIdAsync(Guid orderId)
         {
             return await _appDbContext.Orders.FirstOrDefaultAsync(x => x.Id == orderId);
+        }
+
+        public async Task<Pagination<Order>> GetAllByUserIdAsync(Guid userId, BasicPaginationFilter filter)
+        {
+            var orders = _appDbContext.Orders
+                .AsQueryable()
+                .Where(x => x.BuyerId == userId)
+                .Include(x => x.OrderItems);
+            var pageDetails = new PageCriteria(filter.PageIndex, filter.PageSize);
+
+            return await orders.PaginateAsync(pageDetails);
         }
 
         public void Add(Order offer)
