@@ -1,9 +1,9 @@
-﻿using MediatR;
-using System;
-using System.Collections.Generic;
-using Common.Dto;
+﻿using Common.Dto;
 using Common.Extensions;
 using FluentValidation;
+using MediatR;
+using System;
+using System.Collections.Generic;
 
 namespace Orders.API.Application.Commands.CreateOrder
 {
@@ -44,6 +44,9 @@ namespace Orders.API.Application.Commands.CreateOrder
                 .GreaterThan(0);
             cartItemValidator.RuleFor(x => x.PricePerItem)
                 .GreaterThan(0);
+            cartItemValidator.RuleFor(x => x.ImageUri)
+                .Must(x => !string.IsNullOrWhiteSpace(x) && Uri.IsWellFormedUriString(x, UriKind.Absolute))
+                .WithMessage("Invalid uri");
 
             RuleForEach(x => x.CartItems)
                 .SetValidator(cartItemValidator);

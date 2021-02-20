@@ -31,7 +31,8 @@ namespace Orders.API.Extensions
                 OfferId = orderItem.OfferId,
                 OfferName = orderItem.OfferName,
                 PricePerItem = orderItem.PricePerItem,
-                Quantity = orderItem.Quantity
+                Quantity = orderItem.Quantity,
+                ImageUri = orderItem.ImageUri
             };
         }
     }

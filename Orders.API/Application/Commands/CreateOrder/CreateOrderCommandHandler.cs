@@ -24,7 +24,7 @@ namespace Orders.API.Application.Commands.CreateOrder
         public async Task<Guid> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
         {
             var orderItems = request.CartItems.Select(item => new OrderItem(
-                item.OfferId, item.OfferName, item.Quantity, item.PricePerItem)).ToList();
+                item.OfferId, item.OfferName, item.Quantity, item.PricePerItem, item.ImageUri)).ToList();
             var order = new Order(request.BuyerId, request.SellerId, orderItems);
 
             _orderRepository.Add(order);

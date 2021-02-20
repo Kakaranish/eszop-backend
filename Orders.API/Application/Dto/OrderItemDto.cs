@@ -9,5 +9,6 @@ namespace Orders.API.Application.Dto
         public string OfferName { get; init; }
         public int Quantity { get; init; }
         public decimal PricePerItem { get; init; }
+        public string ImageUri { get; init; }
     }
 }
