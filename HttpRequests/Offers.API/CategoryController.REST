@@ -1,15 +1,16 @@
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJUb2tlbklkIjoiM2ZlNTc5NzAtYzczYi00MTFkLWE5MWQtNjNhY2Q4ZDk1ZjM5IiwiVXNlcklkIjoiOTUzZTkyMmQtYjRiZC00ZTA5LTllNjctNDNiZWViZDU5ZjM2IiwiRW1haWwiOiJhZG1pbkBtYWlsLmNvbSIsIlJvbGUiOiJhZG1pbiIsImV4cCI6MTY3MzI0MTM4NiwiaXNzIjoiSWRlbnRpdHkuQVBJIiwiYXVkIjoiSWRlbnRpdHkuQVBJLkF1ZGllbmNlIn0.I1PcLFEcW_1bH6idHELq0prvsQ-20rG7r3k_sCrnY0M
 @url = http://localhost:5000
 
 ### Get all
 
-GET {{url}}/api/category HTTP/1.1
+GET {{url}}/api/categories HTTP/1.1
 
 ###
 
-POST {{url}}/api/category HTTP/1.1
+POST {{url}}/api/categories HTTP/1.1
 Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 
 {
-    "Name": "TestCategory"
+    "Name": "Other"
 }

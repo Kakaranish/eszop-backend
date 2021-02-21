@@ -53,7 +53,7 @@ namespace Carts.API.Application.Commands.FinalizeCart
             var accessToken = _httpContext.Request.Headers["Authorization"].ToString().Split(' ')[1];
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 
-            var uri = $"{_urlsConfig.Orders}/api/order";
+            var uri = $"{_urlsConfig.Orders}/api/orders";
             var content = new StringContent(JsonConvert.SerializeObject(ToCreateOrderCartDto(cart)), Encoding.UTF8, "application/json");
             var response = await httpClient.PostAsync(uri, content, cancellationToken);
             var responseContent = await response.Content.ReadAsStringAsync(cancellationToken);

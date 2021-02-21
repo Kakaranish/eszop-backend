@@ -1,5 +1,11 @@
 @url = http://localhost:7000
 
+@user1 = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJUb2tlbklkIjoiODgxZGZlNDQtYjdkYy00MDUyLTkwYTktNTYzNjIzZWFiNDU0IiwiVXNlcklkIjoiODBlN2YxZDYtYjU1NC00ODA0LTdhMmUtMDhkOGQwNGVhNWMzIiwiRW1haWwiOiJ1c2VyQG1haWwuY29tIiwiUm9sZSI6InVzZXIiLCJleHAiOjE2MTQ4NTgxNjUsImlzcyI6IklkZW50aXR5LkFQSSIsImF1ZCI6IklkZW50aXR5LkFQSS5BdWRpZW5jZSJ9.p8tSPgTXW3GyJZcIpeBcj7i-JFoB2BLzurSLptH0LV4
+@user2 = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJUb2tlbklkIjoiYWM5NGM4MjQtOGU2ZS00MWZhLWFjY2UtNzc2MTYwOTJmNDliIiwiVXNlcklkIjoiNmMyNjQ2MmYtNjhiMC00YWRlLTYzNjQtMDhkOGQyYmYyODg1IiwiRW1haWwiOiJ1c2VyMkBtYWlsLmNvbSIsIlJvbGUiOiJ1c2VyIiwiZXhwIjoxNjE0ODU4MjU3LCJpc3MiOiJJZGVudGl0eS5BUEkiLCJhdWQiOiJJZGVudGl0eS5BUEkuQXVkaWVuY2UifQ.aZwtFo_5MrPMxY902PDgB-rsOFXtGQdPclDlLnNYx0s
+@accessToken = {{user2}}
+
+@offerId = 9b511b74-ab58-4fe7-0666-08d8d04fbe9c
+
 ###
 
 GET {{url}}/api/cart HTTP/1.1
@@ -13,21 +19,22 @@ Content-Type: application/json
 
 {
     "OfferId": "{{offerId}}",
-    "Quantity": 5
+    "Quantity": 3
 }
 
 ###
 
-@cartItemId = 
+@cartItemId = 825cbb32-16e0-46b4-338c-08d8d419841e
 
 ###
+
 PUT {{url}}/api/cart/item HTTP/1.1
 Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 
 {
     "CartItemId": "{{cartItemId}}",
-    "Quantity": 2222
+    "Quantity": 3
 }
 
 ###

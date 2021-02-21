@@ -1,6 +1,6 @@
-﻿using System.Linq;
-using Orders.API.Application.Dto;
+﻿using Orders.API.Application.Dto;
 using Orders.API.Domain;
+using System.Linq;
 
 namespace Orders.API.Extensions
 {
@@ -15,12 +15,28 @@ namespace Orders.API.Extensions
                 Id = order.Id,
                 CreatedAt = order.CreatedAt,
                 SellerId = order.SellerId,
-                OrderState = order.OrderState,
+                OrderState = order.OrderState.Name,
                 TotalPrice = order.OrderItems.Sum(x => x.TotalPrice),
                 OrderItems = order.OrderItems.Select(x => x.ToDto()).ToList()
             };
         }
-        
+
+        public static OrderFullViewDto ToFullViewDto(this Order order)
+        {
+            if (order == null) return null;
+
+            return new OrderFullViewDto
+            {
+                Id = order.Id,
+                CreatedAt = order.CreatedAt,
+                SellerId = order.SellerId,
+                OrderState = order.OrderState.Name,
+                TotalPrice = order.OrderItems.Sum(x => x.TotalPrice),
+                OrderItems = order.OrderItems.Select(x => x.ToDto()).ToList(),
+                DeliveryAddress = order.DeliveryAddress.ToDto()
+            };
+        }
+
         public static OrderItemDto ToDto(this OrderItem orderItem)
         {
             if (orderItem == null) return null;
@@ -33,6 +49,23 @@ namespace Orders.API.Extensions
                 PricePerItem = orderItem.PricePerItem,
                 Quantity = orderItem.Quantity,
                 ImageUri = orderItem.ImageUri
+            };
+        }
+
+        public static DeliveryAddressDto ToDto(this DeliveryAddress deliveryAddress)
+        {
+            if (deliveryAddress == null) return null;
+
+            return new DeliveryAddressDto
+            {
+                Id = deliveryAddress.Id,
+                FirstName = deliveryAddress.FirstName,
+                LastName = deliveryAddress.LastName,
+                PhoneNumber = deliveryAddress.PhoneNumber,
+                Country = deliveryAddress.Country,
+                City = deliveryAddress.City,
+                Street = deliveryAddress.Street,
+                ZipCode = deliveryAddress.ZipCode
             };
         }
     }

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Orders.API.Application.Commands.CancelOrder;
 using Orders.API.Application.Commands.CreateOrder;
 using Orders.API.Application.Commands.GetBankTransferDetails;
+using Orders.API.Application.Commands.UpdateDeliveryAddress;
 using Orders.API.Application.Dto;
 using Orders.API.Application.Queries;
 using System;
@@ -39,6 +40,14 @@ namespace Orders.API.Controllers
             var request = new CreateOrderCommand(createOrderCartDto);
             var orderId = await _mediator.Send(request);
             return new OrderCreatedDto { OrderId = orderId };
+        }
+
+        [HttpPut("delivery")]
+        [JwtAuthorize]
+        public async Task<IActionResult> UpdateDeliveryAddress(UpdateDeliveryAddressCommand request)
+        {
+            await _mediator.Send(request);
+            return Ok();
         }
 
         [HttpPost("cancel")]

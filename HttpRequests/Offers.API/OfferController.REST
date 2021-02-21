@@ -5,6 +5,10 @@
 
 ###
 
+GET {{url}}/api/offers HTTP/1.1
+
+###
+
 GET {{url}}/api/offers?fromPrice=48&toPrice=54&pageSize=2&pageIndex=1 HTTP/1.1
 
 ### 
