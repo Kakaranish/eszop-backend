@@ -38,6 +38,7 @@ namespace Offers.API.Domain
         public IReadOnlyCollection<KeyValueInfo> KeyValueInfos => _keyValueInfos;
 
         [NotMapped] public bool IsPublished => PublishedAt != null;
+        [NotMapped] public bool IsDraft => PublishedAt == null;
 
         protected Offer()
         {

@@ -6,6 +6,7 @@ using Offers.API.Application.Commands.CreateOfferDraftOne;
 using Offers.API.Application.Commands.EndOffer;
 using Offers.API.Application.Commands.PublishOffer;
 using Offers.API.Application.Commands.RemoveOffer;
+using Offers.API.Application.Commands.RemoveOfferDraft;
 using Offers.API.Application.Commands.UpdateOfferDraftOne;
 using Offers.API.Application.Commands.UpdateOfferDraftTwo;
 using Offers.API.Application.Dto;
@@ -87,6 +88,14 @@ namespace Offers.API.Controllers
         [HttpPost("end")]
         [JwtAuthorize]
         public async Task<IActionResult> End(EndOfferCommand command)
+        {
+            await _mediator.Send(command);
+            return Ok();
+        }
+
+        [HttpDelete("draft")]
+        [JwtAuthorize]
+        public async Task<IActionResult> RemoveDraft(RemoveOfferDraftCommand command)
         {
             await _mediator.Send(command);
             return Ok();

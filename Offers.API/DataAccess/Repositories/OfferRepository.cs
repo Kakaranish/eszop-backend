@@ -4,11 +4,10 @@ using Common.Types;
 using Microsoft.EntityFrameworkCore;
 using Offers.API.Application.Types;
 using Offers.API.Domain;
+using Offers.API.Extensions;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Offers.API.Extensions;
 
 namespace Offers.API.DataAccess.Repositories
 {
@@ -43,7 +42,7 @@ namespace Offers.API.DataAccess.Repositories
                 .ApplyFilter(filter)
                 .OrderByDescending(x => x.CreatedAt)
                 .Include(x => x.Category);
-            
+
             var pageDetails = new PageCriteria(filter.PageIndex, filter.PageSize);
 
             return await offers.PaginateAsync(pageDetails);
@@ -74,6 +73,11 @@ namespace Offers.API.DataAccess.Repositories
         public void Update(Offer offer)
         {
             _appDbContext.Update(offer);
+        }
+
+        public void Remove(Offer offer)
+        {
+            _appDbContext.Remove(offer);
         }
     }
 }

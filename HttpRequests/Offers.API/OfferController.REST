@@ -59,6 +59,16 @@ Content-Type: application/json
 
 ###
 
+DELETE {{url}}/api/offers/draft HTTP/1.1
+Authorization: Bearer {{accessToken}}
+Content-Type:  application/json
+
+{
+    "OfferId": "{{offerId}}"
+}
+
+###
+
 DELETE  {{url}}/api/offers HTTP/1.1
 Authorization: Bearer {{accessToken}}
 Content-Type:  application/json

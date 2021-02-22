@@ -15,5 +15,6 @@ namespace Offers.API.DataAccess.Repositories
         Task<Offer> GetByIdAsync(Guid offerId);
         Task AddAsync(Offer product);
         void Update(Offer offer);
+        void Remove(Offer offer);
     }
 }
