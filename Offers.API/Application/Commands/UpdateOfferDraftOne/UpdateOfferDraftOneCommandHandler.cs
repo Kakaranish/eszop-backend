@@ -1,10 +1,6 @@
-﻿using Common.EventBus;
-using Common.EventBus.IntegrationEvents;
-using Common.Extensions;
-using Common.Types;
+﻿using Common.Extensions;
 using MediatR;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Offers.API.Application.Types;
 using Offers.API.DataAccess.Repositories;
@@ -22,62 +18,50 @@ namespace Offers.API.Application.Commands.UpdateOfferDraftOne
 {
     public class UpdateOfferDraftOneCommandHandler : IRequestHandler<UpdateOfferDraftOneCommand>
     {
-        private readonly ILogger<UpdateOfferDraftOneCommandHandler> _logger;
         private readonly IOfferRepository _offerRepository;
         private readonly HttpContext _httpContext;
-        private readonly IEventBus _eventBus;
         private readonly IImageStorage _imageStorage;
+        private readonly ICategoryRepository _categoryRepository;
 
-        public UpdateOfferDraftOneCommandHandler(ILogger<UpdateOfferDraftOneCommandHandler> logger,
-            IHttpContextAccessor httpContextAccessor, IOfferRepository offerRepository, IEventBus eventBus,
-            IImageStorage imageStorage)
+        public UpdateOfferDraftOneCommandHandler(IHttpContextAccessor httpContextAccessor, IOfferRepository offerRepository,
+            IImageStorage imageStorage, ICategoryRepository categoryRepository)
         {
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _httpContext = httpContextAccessor.HttpContext ??
                            throw new ArgumentNullException(nameof(httpContextAccessor.HttpContext));
             _offerRepository = offerRepository ?? throw new ArgumentNullException(nameof(offerRepository));
-            _eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
             _imageStorage = imageStorage ?? throw new ArgumentNullException(nameof(imageStorage));
+            _categoryRepository = categoryRepository ?? throw new ArgumentNullException(nameof(categoryRepository));
         }
 
         public async Task<Unit> Handle(UpdateOfferDraftOneCommand request, CancellationToken cancellationToken)
         {
             var userId = _httpContext.User.Claims.ToTokenPayload().UserClaims.Id;
             var offer = await _offerRepository.GetByIdAsync(Guid.Parse(request.OfferId));
-            if (offer is null || offer.OwnerId != userId)
-            {
-                var msg = $"Offer {request.OfferId} not found";
-                _logger.LogError(msg);
-                throw new OffersDomainException(msg);
-            }
-
-            var @event = new OfferChangedIntegrationEvent
-            {
-                OfferId = offer.Id,
-                Name = new ChangeState<string>(offer.Name, request.Name),
-                Description = new ChangeState<string>(offer.Description, request.Description),
-                Price = new ChangeState<decimal?>(offer.Price, request.Price),
-                AvailableStock = new ChangeState<int?>(offer.AvailableStock, request.AvailableStock)
-            };
+            if (offer == null || offer.OwnerId != userId)
+                throw new OffersDomainException($"Offer {request.OfferId} not found");
 
             var keyValueInfos = ExtractKeyValueInfos(request);
             offer.SetKeyValueInfos(keyValueInfos);
 
             await ProcessOfferImages(request, offer);
 
-            if (@event.Name.Changed) offer.SetName(request.Name);
-            if (@event.Description.Changed) offer.SetDescription(request.Description);
-            if (@event.Price.Changed) offer.SetPrice(request.Price.Value);
+            if (request.Name != null) offer.SetName(request.Name);
+            if (request.Description != null) offer.SetDescription(request.Description);
+            if (request.Price != null) offer.SetPrice(request.Price.Value);
+            if (request.TotalStock.HasValue) offer.SetTotalStock(request.TotalStock.Value);
+            if (request.CategoryId != null)
+            {
+                var categoryId = Guid.Parse(request.CategoryId);
+                if (categoryId != offer.Category.Id)
+                {
+                    var category = await _categoryRepository.GetByIdAsync(categoryId);
+                    if (category == null) throw new OffersDomainException($"There is no category with id {categoryId}");
+                    offer.SetCategory(category);
+                }
+            }
 
             _offerRepository.Update(offer);
-            var shouldEventBePublished = await _offerRepository.UnitOfWork
-                .SaveChangesAndDispatchDomainEventsAsync(cancellationToken);
-
-            if (shouldEventBePublished)
-            {
-                await _eventBus.PublishAsync(@event);
-                _logger.LogInformation($"Published {nameof(OfferChangedIntegrationEvent)} integration event");
-            }
+            await _offerRepository.UnitOfWork.SaveChangesAndDispatchDomainEventsAsync(cancellationToken);
 
             return await Unit.Task;
         }

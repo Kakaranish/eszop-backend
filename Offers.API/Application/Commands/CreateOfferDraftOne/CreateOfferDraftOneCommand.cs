@@ -39,7 +39,7 @@ namespace Offers.API.Application.Commands.CreateOfferDraftOne
                 .SetValidator(new TotalStockValidator());
 
             RuleFor(x => x.CategoryId)
-                .IsGuid();
+                .IsNotEmptyGuid();
 
             RuleFor(x => x.Images)
                 .Must(x => x.Count > 0)

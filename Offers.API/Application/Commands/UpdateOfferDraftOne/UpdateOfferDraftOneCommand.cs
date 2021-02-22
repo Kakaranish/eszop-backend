@@ -14,7 +14,8 @@ namespace Offers.API.Application.Commands.UpdateOfferDraftOne
         public string Name { get; init; }
         public string Description { get; init; }
         public decimal? Price { get; init; }
-        public int? AvailableStock { get; init; }
+        public int? TotalStock { get; init; }
+        public string CategoryId { get; init; }
         public IList<IFormFile> Images { get; init; }
         public string ImagesMetadata { get; init; }
         public string KeyValueInfos { get; init; }
@@ -29,11 +30,11 @@ namespace Offers.API.Application.Commands.UpdateOfferDraftOne
 
             RuleFor(x => x.Name)
                 .SetValidator(new OfferNameValidator())
-                .When(x => x.Name is not null);
+                .When(x => x.Name != null);
 
             RuleFor(x => x.Description)
                 .SetValidator(new OfferDescriptionValidator())
-                .When(x => x.Description is not null);
+                .When(x => x.Description != null);
 
             RuleFor(x => x.Price)
                 .Must(price =>
@@ -42,11 +43,15 @@ namespace Offers.API.Application.Commands.UpdateOfferDraftOne
                     var validator = new OfferPriceValidator();
                     return validator.Validate(price.Value).IsValid;
                 })
-                .When(x => x.Price is not null);
+                .When(x => x.Price != null);
 
-            RuleFor(x => x.AvailableStock)
+            RuleFor(x => x.TotalStock)
                 .GreaterThanOrEqualTo(0)
-                .When(x => x.AvailableStock is not null);
+                .When(x => x.TotalStock != null);
+
+            RuleFor(x => x.CategoryId)
+                .IsNotEmptyGuid()
+                .When(x => x.CategoryId != null);
 
             RuleFor(x => x.ImagesMetadata)
                 .NotEmpty();
