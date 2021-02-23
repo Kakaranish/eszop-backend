@@ -18,5 +18,23 @@ namespace Identity.API.Extensions
                 DateOfBirth = profileInfo.DateOfBirth
             };
         }
+
+        public static DeliveryAddressDto ToDto(this DeliveryAddress deliveryAddress)
+        {
+            if (deliveryAddress == null) return null;
+
+            return new DeliveryAddressDto
+            {
+                Id = deliveryAddress.Id,
+                UserId = deliveryAddress.UserId,
+                FirstName = deliveryAddress.FirstName,
+                LastName = deliveryAddress.LastName,
+                PhoneNumber = deliveryAddress.PhoneNumber,
+                Country = deliveryAddress.Country,
+                City = deliveryAddress.City,
+                ZipCode = deliveryAddress.ZipCode,
+                Street = deliveryAddress.Street
+            };
+        }
     }
 }

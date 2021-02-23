@@ -1,8 +1,14 @@
 @url = http://localhost:6000
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJUb2tlbklkIjoiZTVmNDkxMWQtNTIxYy00MDgzLWE2N2ItZGU1ZDIyYjk0OGEwIiwiVXNlcklkIjoiZGUzNmY0ZDItNDRkNi00ZDhhLTJlMTAtMDhkOGQ3NTk4ODQzIiwiRW1haWwiOiJ1c2VyM0BtYWlsLmNvbSIsIlJvbGUiOiJ1c2VyIiwiZXhwIjoxNjE1MjI0NjEzLCJpc3MiOiJJZGVudGl0eS5BUEkiLCJhdWQiOiJJZGVudGl0eS5BUEkuQXVkaWVuY2UifQ.a2h7uuUUqEw50qUJjRNQfFKXF_BZtBuD59n6bCUNaxY
+
+###
+
+GET {{url}}/api/delivery-addresses HTTP/1.1
+Authorization: Bearer {{accessToken}}
 
 ### Create
 
-POST {{url}}/api/address HTTP/1.1
+POST {{url}}/api/delivery-addresses HTTP/1.1
 Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 
@@ -16,9 +22,26 @@ Content-Type: application/json
     "Street": "Jana Pawła II 37a/21"
 }
 
+### Create2
+
+POST {{url}}/api/delivery-addresses HTTP/1.1
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+    "FirstName": "Jan",
+    "LastName": "Ryba-Okoń",
+    "PhoneNumber": "+48 987 654 321",
+    "Country": "Poland",
+    "City": "Krakow",
+    "ZipCode": "21-370",
+    "Street": "Jana Pawła II 37a/21"
+}
+
+
 ### Invalid update
 
-PUT {{url}}/api/address HTTP/1.1
+PUT {{url}}/api/delivery-addresses HTTP/1.1
 Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 
@@ -31,7 +54,7 @@ Content-Type: application/json
 
 ### Update
 
-PUT {{url}}/api/address HTTP/1.1
+PUT {{url}}/api/delivery-addresses HTTP/1.1
 Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 
@@ -44,7 +67,7 @@ Content-Type: application/json
 
 ### Remove
 
-DELETE {{url}}/api/address HTTP/1.1
+DELETE {{url}}/api/delivery-addresses HTTP/1.1
 Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 
@@ -54,7 +77,7 @@ Content-Type: application/json
 
 ### Set primary delivery address
 
-POST {{url}}/api/address/set/primary HTTP/1.1
+POST {{url}}/api/delivery-addresses/set/primary HTTP/1.1
 Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 
