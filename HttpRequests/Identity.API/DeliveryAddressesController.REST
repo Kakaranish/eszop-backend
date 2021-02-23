@@ -1,12 +1,13 @@
 @url = http://localhost:6000
 @accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJUb2tlbklkIjoiZTVmNDkxMWQtNTIxYy00MDgzLWE2N2ItZGU1ZDIyYjk0OGEwIiwiVXNlcklkIjoiZGUzNmY0ZDItNDRkNi00ZDhhLTJlMTAtMDhkOGQ3NTk4ODQzIiwiRW1haWwiOiJ1c2VyM0BtYWlsLmNvbSIsIlJvbGUiOiJ1c2VyIiwiZXhwIjoxNjE1MjI0NjEzLCJpc3MiOiJJZGVudGl0eS5BUEkiLCJhdWQiOiJJZGVudGl0eS5BUEkuQXVkaWVuY2UifQ.a2h7uuUUqEw50qUJjRNQfFKXF_BZtBuD59n6bCUNaxY
+@deliveryAddressId = 48f8d3b1-9880-4f44-b9da-f4a5b3bb8915
 
 ###
 
 GET {{url}}/api/delivery-addresses HTTP/1.1
 Authorization: Bearer {{accessToken}}
 
-### Create
+### Create 1
 
 POST {{url}}/api/delivery-addresses HTTP/1.1
 Authorization: Bearer {{accessToken}}
@@ -19,10 +20,11 @@ Content-Type: application/json
     "Country": "Poland",
     "City": "Poznań",
     "ZipCode": "21-370",
-    "Street": "Jana Pawła II 37a/21"
+    "Street": "Jana Pawła II 37a/21",
+    "IsPrimary": true
 }
 
-### Create2
+### Create 2
 
 POST {{url}}/api/delivery-addresses HTTP/1.1
 Authorization: Bearer {{accessToken}}
@@ -35,7 +37,8 @@ Content-Type: application/json
     "Country": "Poland",
     "City": "Krakow",
     "ZipCode": "21-370",
-    "Street": "Jana Pawła II 37a/21"
+    "Street": "Jana Pawła II 37a/21",
+    "IsPrimary": true
 }
 
 
@@ -47,9 +50,8 @@ Content-Type: application/json
 
 {
     "DeliveryAddressId": "{{deliveryAddressId}}",
-    "LastName": "Ryba-Oko12ńń",
-    "PhoneNumber": "+48 123456sa789",
-    "Street": "Jana Pawła II 37a/22"
+    "Street": "Jana Pawła II 37a/22",
+    "IsPrimary": true
 }
 
 ### Update
@@ -68,16 +70,6 @@ Content-Type: application/json
 ### Remove
 
 DELETE {{url}}/api/delivery-addresses HTTP/1.1
-Authorization: Bearer {{accessToken}}
-Content-Type: application/json
-
-{
-    "DeliveryAddressId": "{{deliveryAddressId}}"
-}
-
-### Set primary delivery address
-
-POST {{url}}/api/delivery-addresses/set/primary HTTP/1.1
 Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 

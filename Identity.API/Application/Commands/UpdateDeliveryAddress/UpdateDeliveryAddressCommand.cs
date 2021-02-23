@@ -1,7 +1,6 @@
 ﻿using Common.Extensions;
 using Common.Validators;
 using FluentValidation;
-using Identity.API.Domain.CommonValidators;
 using MediatR;
 
 namespace Identity.API.Application.Commands.UpdateDeliveryAddress
@@ -16,6 +15,7 @@ namespace Identity.API.Application.Commands.UpdateDeliveryAddress
         public string City { get; init; }
         public string ZipCode { get; init; }
         public string Street { get; init; }
+        public bool IsPrimary { get; init; }
     }
 
     public class UpdateDeliveryAddressCommandValidator : AbstractValidator<UpdateDeliveryAddressCommand>
@@ -24,7 +24,7 @@ namespace Identity.API.Application.Commands.UpdateDeliveryAddress
         {
             RuleFor(x => x.DeliveryAddressId)
                 .IsGuid();
-            
+
             RuleFor(x => x.FirstName)
                 .SetValidator(new FirstNameValidator())
                 .When(x => x.FirstName is not null);

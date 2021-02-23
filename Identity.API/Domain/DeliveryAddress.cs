@@ -1,25 +1,30 @@
-﻿using Common.Domain;
-using Common.Validators;
+﻿using Common.Validators;
+using Newtonsoft.Json;
 using System;
 
 namespace Identity.API.Domain
 {
-    public class DeliveryAddress : EntityBase, IAggregateRoot
+    public class DeliveryAddress
     {
-        public Guid UserId { get; private set; }
-        public virtual User User { get; private set; }
-        public string FirstName { get; private set; }
-        public string LastName { get; private set; }
-        public string PhoneNumber { get; private set; }
-        public string Country { get; private set; }
-        public string City { get; private set; }
-        public string ZipCode { get; private set; }
-        public string Street { get; private set; }
+        [JsonProperty] public Guid Id { get; private set; }
+        [JsonProperty] public string FirstName { get; private set; }
+        [JsonProperty] public string LastName { get; private set; }
+        [JsonProperty] public string PhoneNumber { get; private set; }
+        [JsonProperty] public string Country { get; private set; }
+        [JsonProperty] public string City { get; private set; }
+        [JsonProperty] public string ZipCode { get; private set; }
+        [JsonProperty] public string Street { get; private set; }
+        [JsonProperty] public bool IsPrimary { get; private set; }
 
-        public DeliveryAddress(Guid userId, string firstName, string lastName, string phoneNumber, string country,
-            string city, string zipCode, string street)
+        [JsonConstructor]
+        protected DeliveryAddress()
         {
-            SetUserId(userId);
+        }
+
+        public DeliveryAddress(string firstName, string lastName, string phoneNumber, string country,
+            string city, string zipCode, string street, bool isPrimary)
+        {
+            Id = Guid.NewGuid();
             SetFirstName(firstName);
             SetLastName(lastName);
             SetPhoneNumber(phoneNumber);
@@ -27,12 +32,7 @@ namespace Identity.API.Domain
             SetCity(city);
             SetZipCode(zipCode);
             SetStreet(street);
-        }
-
-        public void SetUserId(Guid userId)
-        {
-            ValidateUserId(userId);
-            UserId = userId;
+            SetIsPrimary(isPrimary);
         }
 
         public void SetFirstName(string firstName)
@@ -77,14 +77,12 @@ namespace Identity.API.Domain
             PhoneNumber = phoneNumber;
         }
 
-        #region Validation
-
-        private static void ValidateUserId(Guid userId)
+        public void SetIsPrimary(bool isPrimary)
         {
-            var validator = new IdValidator();
-            var result = validator.Validate(userId);
-            if (!result.IsValid) throw new IdentityDomainException(nameof(userId));
+            IsPrimary = isPrimary;
         }
+
+        #region Validation
 
         private static void ValidateFirstName(string firstName)
         {

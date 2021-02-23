@@ -14,7 +14,7 @@ namespace Identity.API.Application.Commands.RemoveDeliveryAddress
         public RemoveDeliveryAddressCommandValidator()
         {
             RuleFor(x => x.DeliveryAddressId)
-                .IsGuid();
+                .IsNotEmptyGuid();
         }
     }
 }

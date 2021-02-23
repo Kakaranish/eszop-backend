@@ -26,14 +26,14 @@ namespace Identity.API.Extensions
             return new DeliveryAddressDto
             {
                 Id = deliveryAddress.Id,
-                UserId = deliveryAddress.UserId,
                 FirstName = deliveryAddress.FirstName,
                 LastName = deliveryAddress.LastName,
                 PhoneNumber = deliveryAddress.PhoneNumber,
                 Country = deliveryAddress.Country,
                 City = deliveryAddress.City,
                 ZipCode = deliveryAddress.ZipCode,
-                Street = deliveryAddress.Street
+                Street = deliveryAddress.Street,
+                IsPrimary = deliveryAddress.IsPrimary
             };
         }
     }

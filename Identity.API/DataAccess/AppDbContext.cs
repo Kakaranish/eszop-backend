@@ -3,7 +3,9 @@ using Common.Extensions;
 using Identity.API.Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -17,7 +19,6 @@ namespace Identity.API.DataAccess
         public DbSet<User> Users { get; private set; }
         public DbSet<RefreshToken> RefreshTokens { get; private set; }
         public DbSet<ProfileInfo> ProfileInfos { get; private set; }
-        public DbSet<DeliveryAddress> DeliveryAddresses { get; private set; }
         public DbSet<SellerInfo> SellerInfos { get; private set; }
 
         public AppDbContext(DbContextOptions options, IServiceProvider serviceProvider, IMediator mediator)
@@ -37,17 +38,15 @@ namespace Identity.API.DataAccess
                 .Property(x => x.Role)
                 .HasConversion(x => x.Name, x => Role.Parse(x));
             modelBuilder.Entity<User>()
-                .HasOne(x => x.PrimaryDeliveryAddress)
-                .WithOne(x => x.User)
-                .HasForeignKey<User>(x => x.PrimaryDeliveryAddressId);
+                .Property(x => x.DeliveryAddresses)
+                .HasConversion(
+                    x => x == null ? null : JsonConvert.SerializeObject(x),
+                    x => x == null ? null : JsonConvert.DeserializeObject<List<DeliveryAddress>>(x));
 
             modelBuilder.Entity<RefreshToken>()
                 .HasKey(x => x.Id);
 
             modelBuilder.Entity<ProfileInfo>()
-                .HasKey(x => x.Id);
-
-            modelBuilder.Entity<DeliveryAddress>()
                 .HasKey(x => x.Id);
 
             modelBuilder.Entity<SellerInfo>()

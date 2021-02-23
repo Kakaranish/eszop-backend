@@ -1,8 +1,7 @@
-﻿using FluentValidation;
-using Identity.API.Domain.CommonValidators;
+﻿using Common.Validators;
+using FluentValidation;
 using MediatR;
 using System;
-using Common.Validators;
 
 namespace Identity.API.Application.Commands.CreateDeliveryAddress
 {
@@ -15,6 +14,7 @@ namespace Identity.API.Application.Commands.CreateDeliveryAddress
         public string City { get; init; }
         public string ZipCode { get; init; }
         public string Street { get; init; }
+        public bool IsPrimary { get; set; }
     }
 
     public class CreateDeliveryAddressCommandValidator : AbstractValidator<CreateDeliveryAddressCommand>

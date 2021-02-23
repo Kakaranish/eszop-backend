@@ -1,6 +1,7 @@
 ﻿using Common.Extensions;
 using Identity.API.Application.Dto;
 using Identity.API.DataAccess.Repositories;
+using Identity.API.Domain;
 using Identity.API.Extensions;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -14,23 +15,24 @@ namespace Identity.API.Application.Queries.GetDeliveryAddresses
 {
     public class GetDeliveryAddressesQueryHandler : IRequestHandler<GetDeliveryAddressesQuery, IList<DeliveryAddressDto>>
     {
-        private readonly IDeliveryAddressRepository _deliveryAddressRepository;
+        private readonly IUserRepository _userRepository;
         private readonly HttpContext _httpContext;
 
-        public GetDeliveryAddressesQueryHandler(IDeliveryAddressRepository deliveryAddressRepository,
-            IHttpContextAccessor httpContextAccessor)
+        public GetDeliveryAddressesQueryHandler(IHttpContextAccessor httpContextAccessor, IUserRepository userRepository)
         {
-            _deliveryAddressRepository = deliveryAddressRepository ?? throw new ArgumentNullException(nameof(deliveryAddressRepository));
             _httpContext = httpContextAccessor.HttpContext ??
                            throw new ArgumentNullException(nameof(httpContextAccessor.HttpContext));
+            _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
         }
 
         public async Task<IList<DeliveryAddressDto>> Handle(GetDeliveryAddressesQuery request, CancellationToken cancellationToken)
         {
             var userId = _httpContext.User.Claims.ToTokenPayload().UserClaims.Id;
-            var deliveryAddresses = await _deliveryAddressRepository.GetByUserId(userId);
+            var user = await _userRepository.GetByIdAsync(userId);
+            if (user == null) throw new IdentityDomainException("There is no such user");
 
-            return deliveryAddresses.Select(x => x.ToDto()).ToList();
+            return user.DeliveryAddresses?.Select(x => x.ToDto()).ToList()
+                                    ?? new List<DeliveryAddressDto>();
         }
     }
 }

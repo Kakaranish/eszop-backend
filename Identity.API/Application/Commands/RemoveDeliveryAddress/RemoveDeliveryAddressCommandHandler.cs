@@ -11,33 +11,28 @@ namespace Identity.API.Application.Commands.RemoveDeliveryAddress
 {
     public class RemoveDeliveryAddressCommandHandler : IRequestHandler<RemoveDeliveryAddressCommand>
     {
-        private readonly IDeliveryAddressRepository _deliveryAddressRepository;
         private readonly HttpContext _httpContext;
+        private readonly IUserRepository _userRepository;
 
-        public RemoveDeliveryAddressCommandHandler(IHttpContextAccessor httpContextAccessor,
-            IDeliveryAddressRepository deliveryAddressRepository)
+        public RemoveDeliveryAddressCommandHandler(IHttpContextAccessor httpContextAccessor, IUserRepository userRepository)
         {
             _httpContext = httpContextAccessor.HttpContext ??
                            throw new ArgumentNullException(nameof(httpContextAccessor.HttpContext));
-            _deliveryAddressRepository = deliveryAddressRepository ??
-                                         throw new ArgumentNullException(nameof(deliveryAddressRepository));
+            _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
         }
 
         public async Task<Unit> Handle(RemoveDeliveryAddressCommand request, CancellationToken cancellationToken)
         {
             var userId = _httpContext.User.Claims.ToTokenPayload().UserClaims.Id;
             var deliveryAddressId = Guid.Parse(request.DeliveryAddressId);
-            var deliveryAddress = await _deliveryAddressRepository.GetById(deliveryAddressId);
 
-            if (deliveryAddress == null || deliveryAddress.UserId != userId)
-                throw new IdentityDomainException($"There is no {deliveryAddressId} delivery address");
+            var user = await _userRepository.GetByIdAsync(userId);
+            if (user == null) throw new IdentityDomainException("There is no such user");
 
-            if (deliveryAddress.User.PrimaryDeliveryAddressId == deliveryAddressId)
-                deliveryAddress.User.RemovePrimaryDeliveryAddress();
+            user.RemoveDeliveryAddress(deliveryAddressId);
 
-            _deliveryAddressRepository.Remove(deliveryAddress);
-
-            await _deliveryAddressRepository.UnitOfWork.SaveChangesAndDispatchDomainEventsAsync(cancellationToken);
+            _userRepository.Update(user);
+            await _userRepository.UnitOfWork.SaveChangesAndDispatchDomainEventsAsync(cancellationToken);
 
             return await Unit.Task;
         }

@@ -5,6 +5,7 @@ using Identity.API.Application.DomainEvents.UserLocked;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 
 namespace Identity.API.Domain
 {
@@ -20,10 +21,9 @@ namespace Identity.API.Domain
         public HashedPassword HashedPassword { get; private set; }
         public Role Role { get; private set; }
         public virtual ProfileInfo ProfileInfo { get; private set; }
-        public virtual IReadOnlyCollection<DeliveryAddress> DeliveryAddresses =>
+        public IReadOnlyCollection<DeliveryAddress> DeliveryAddresses => 
             _deliveryAddresses ?? new List<DeliveryAddress>();
         public Guid? PrimaryDeliveryAddressId { get; private set; }
-        public virtual DeliveryAddress PrimaryDeliveryAddress { get; set; }
         public virtual SellerInfo SellerInfo { get; private set; }
         [NotMapped] public bool IsLocked => LockedUntil != null && LockedUntil > DateTime.UtcNow;
 
@@ -50,22 +50,44 @@ namespace Identity.API.Domain
             UpdatedAt = DateTime.UtcNow;
         }
 
-        public void SetPrimaryDeliveryAddress(DeliveryAddress deliveryAddress)
+        public void AddDeliveryAddress(DeliveryAddress deliveryAddress)
         {
-            ValidatePrimaryDeliveryAddress(deliveryAddress);
+            if (deliveryAddress == null) throw new IdentityDomainException($"{nameof(deliveryAddress)} cannot be null");
 
-            PrimaryDeliveryAddress = deliveryAddress;
-            PrimaryDeliveryAddressId = deliveryAddress.Id;
+            _deliveryAddresses ??= new List<DeliveryAddress>();
+            if(deliveryAddress.IsPrimary) _deliveryAddresses.ForEach(address => address.SetIsPrimary(false));
+
+            _deliveryAddresses.Add(deliveryAddress);
+            
+            UpdatedAt = DateTime.UtcNow;
+        }
+
+        public void RemoveDeliveryAddress(Guid deliveryAddressId)
+        {
+            if (deliveryAddressId == Guid.Empty)
+                throw new IdentityDomainException($"'{nameof(deliveryAddressId)}' cannot be empty guid");
+
+            var toRemove = _deliveryAddresses?.FirstOrDefault(x => x.Id == deliveryAddressId);
+            if (toRemove == null)
+                throw new IdentityDomainException($"There is no delivery address {deliveryAddressId} to remove");
+
+            _deliveryAddresses.Remove(toRemove);
 
             UpdatedAt = DateTime.UtcNow;
         }
 
-        public void RemovePrimaryDeliveryAddress()
+        public void SetPrimaryDeliveryAddress(Guid deliveryAddressId)
         {
-            if (PrimaryDeliveryAddressId == null) return;
+            if (deliveryAddressId == Guid.Empty)
+                throw new IdentityDomainException($"'{nameof(deliveryAddressId)}' cannot be empty guid");
 
-            PrimaryDeliveryAddressId = null;
-            PrimaryDeliveryAddress = null;
+            if(_deliveryAddresses == null || _deliveryAddresses.Count == 0)
+                throw new IdentityDomainException("There is no delivery address yet");
+
+            foreach (var deliveryAddress in _deliveryAddresses)
+            {
+                deliveryAddress.SetIsPrimary(deliveryAddress.Id == deliveryAddressId);
+            }
 
             UpdatedAt = DateTime.UtcNow;
         }
@@ -107,12 +129,6 @@ namespace Identity.API.Domain
             var validator = new EmailValidator();
             var result = validator.Validate(email);
             if (!result.IsValid) throw new IdentityDomainException(nameof(email));
-        }
-
-        private void ValidatePrimaryDeliveryAddress(DeliveryAddress deliveryAddress)
-        {
-            if (deliveryAddress == null || Id != deliveryAddress.UserId)
-                throw new IdentityDomainException(nameof(deliveryAddress));
         }
 
         #endregion

@@ -11,26 +11,29 @@ namespace Identity.API.Application.Commands.CreateDeliveryAddress
 {
     public class CreateDeliveryAddressCommandHandler : IRequestHandler<CreateDeliveryAddressCommand, Guid>
     {
-        private readonly IDeliveryAddressRepository _deliveryAddressRepository;
+        private readonly IUserRepository _userRepository;
         private readonly HttpContext _httpContext;
 
-        public CreateDeliveryAddressCommandHandler(IHttpContextAccessor httpContextAccessor,
-            IDeliveryAddressRepository deliveryAddressRepository)
+        public CreateDeliveryAddressCommandHandler(IHttpContextAccessor httpContextAccessor, IUserRepository userRepository)
         {
             _httpContext = httpContextAccessor.HttpContext ??
                            throw new ArgumentNullException(nameof(httpContextAccessor.HttpContext));
-            _deliveryAddressRepository = deliveryAddressRepository ??
-                                         throw new ArgumentNullException(nameof(deliveryAddressRepository));
+            _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
         }
 
         public async Task<Guid> Handle(CreateDeliveryAddressCommand request, CancellationToken cancellationToken)
         {
             var userId = _httpContext.User.Claims.ToTokenPayload().UserClaims.Id;
-            var deliveryAddress = new DeliveryAddress(userId, request.FirstName, request.LastName,
-                request.PhoneNumber, request.Country, request.City, request.ZipCode, request.Street);
+            var user = await _userRepository.GetByIdAsync(userId);
+            if (user == null) throw new IdentityDomainException("There is no such user");
 
-            _deliveryAddressRepository.Add(deliveryAddress);
-            await _deliveryAddressRepository.UnitOfWork.SaveChangesAndDispatchDomainEventsAsync(cancellationToken);
+            var deliveryAddress = new DeliveryAddress(request.FirstName, request.LastName,
+                request.PhoneNumber, request.Country, request.City, request.ZipCode, request.Street, request.IsPrimary);
+
+            user.AddDeliveryAddress(deliveryAddress);
+            
+            _userRepository.Update(user);
+            await _userRepository.UnitOfWork.SaveChangesAndDispatchDomainEventsAsync(cancellationToken);
 
             return deliveryAddress.Id;
         }

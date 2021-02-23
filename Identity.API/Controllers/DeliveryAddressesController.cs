@@ -2,7 +2,6 @@
 using Common.Types;
 using Identity.API.Application.Commands.CreateDeliveryAddress;
 using Identity.API.Application.Commands.RemoveDeliveryAddress;
-using Identity.API.Application.Commands.SetPrimaryDeliveryAddress;
 using Identity.API.Application.Commands.UpdateDeliveryAddress;
 using Identity.API.Application.Dto;
 using Identity.API.Application.Queries.GetDeliveryAddresses;
@@ -51,14 +50,6 @@ namespace Identity.API.Controllers
         [HttpDelete("")]
         [JwtAuthorize]
         public async Task<IActionResult> Remove(RemoveDeliveryAddressCommand request)
-        {
-            await _mediator.Send(request);
-            return Ok();
-        }
-
-        [HttpPost("set/primary")]
-        [JwtAuthorize]
-        public async Task<IActionResult> SetPrimary(SetPrimaryDeliveryAddressCommand request)
         {
             await _mediator.Send(request);
             return Ok();
