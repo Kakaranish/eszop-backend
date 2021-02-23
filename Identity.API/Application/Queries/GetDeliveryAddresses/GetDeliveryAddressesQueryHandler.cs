@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Identity.API.Application.Queries.GetDeliveryAddresses
 {
-    public class GetDeliveryAddressesQueryHandler : IRequestHandler<GetDeliveryAddressesQuery, IList<DeliveryAddressDto>>
+    public class GetDeliveryAddressesQueryHandler : IRequestHandler<GetDeliveryAddressesQuery, GetDeliveryAddressesResponse>
     {
         private readonly IUserRepository _userRepository;
         private readonly HttpContext _httpContext;
@@ -25,14 +25,19 @@ namespace Identity.API.Application.Queries.GetDeliveryAddresses
             _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
         }
 
-        public async Task<IList<DeliveryAddressDto>> Handle(GetDeliveryAddressesQuery request, CancellationToken cancellationToken)
+        public async Task<GetDeliveryAddressesResponse> Handle(GetDeliveryAddressesQuery request, CancellationToken cancellationToken)
         {
             var userId = _httpContext.User.Claims.ToTokenPayload().UserClaims.Id;
             var user = await _userRepository.GetByIdAsync(userId);
             if (user == null) throw new IdentityDomainException("There is no such user");
 
-            return user.DeliveryAddresses?.Select(x => x.ToDto()).ToList()
-                                    ?? new List<DeliveryAddressDto>();
+            var deliveryAddresses = user.DeliveryAddresses?.Select(x => x.ToDto()).ToList();
+
+            return new GetDeliveryAddressesResponse
+            {
+                DeliveryAddresses = deliveryAddresses ?? new List<DeliveryAddressDto>(),
+                PrimaryDeliveryAddress = user.PrimaryDeliveryAddressId
+            };
         }
     }
 }

@@ -14,7 +14,6 @@ namespace Identity.API.Domain
         [JsonProperty] public string City { get; private set; }
         [JsonProperty] public string ZipCode { get; private set; }
         [JsonProperty] public string Street { get; private set; }
-        [JsonProperty] public bool IsPrimary { get; private set; }
 
         [JsonConstructor]
         protected DeliveryAddress()
@@ -22,7 +21,7 @@ namespace Identity.API.Domain
         }
 
         public DeliveryAddress(string firstName, string lastName, string phoneNumber, string country,
-            string city, string zipCode, string street, bool isPrimary)
+            string city, string zipCode, string street)
         {
             Id = Guid.NewGuid();
             SetFirstName(firstName);
@@ -32,7 +31,6 @@ namespace Identity.API.Domain
             SetCity(city);
             SetZipCode(zipCode);
             SetStreet(street);
-            SetIsPrimary(isPrimary);
         }
 
         public void SetFirstName(string firstName)
@@ -75,11 +73,6 @@ namespace Identity.API.Domain
         {
             ValidatePhoneNumber(phoneNumber);
             PhoneNumber = phoneNumber;
-        }
-
-        public void SetIsPrimary(bool isPrimary)
-        {
-            IsPrimary = isPrimary;
         }
 
         #region Validation

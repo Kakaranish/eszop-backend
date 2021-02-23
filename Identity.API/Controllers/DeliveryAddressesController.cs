@@ -3,12 +3,10 @@ using Common.Types;
 using Identity.API.Application.Commands.CreateDeliveryAddress;
 using Identity.API.Application.Commands.RemoveDeliveryAddress;
 using Identity.API.Application.Commands.UpdateDeliveryAddress;
-using Identity.API.Application.Dto;
 using Identity.API.Application.Queries.GetDeliveryAddresses;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Identity.API.Controllers
@@ -26,7 +24,7 @@ namespace Identity.API.Controllers
 
         [HttpGet("")]
         [JwtAuthorize]
-        public async Task<IList<DeliveryAddressDto>> GetAll()
+        public async Task<GetDeliveryAddressesResponse> GetAll()
         {
             var query = new GetDeliveryAddressesQuery();
             return await _mediator.Send(query);

@@ -30,6 +30,7 @@ namespace Identity.API.Application.Commands.RemoveDeliveryAddress
             if (user == null) throw new IdentityDomainException("There is no such user");
 
             user.RemoveDeliveryAddress(deliveryAddressId);
+            user.UnsetPrimaryDeliveryAddress();
 
             _userRepository.Update(user);
             await _userRepository.UnitOfWork.SaveChangesAndDispatchDomainEventsAsync(cancellationToken);

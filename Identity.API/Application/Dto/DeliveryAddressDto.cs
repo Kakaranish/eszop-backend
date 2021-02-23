@@ -12,6 +12,5 @@ namespace Identity.API.Application.Dto
         public string City { get; init; }
         public string ZipCode { get; init; }
         public string Street { get; init; }
-        public bool IsPrimary { get; init; }
     }
 }

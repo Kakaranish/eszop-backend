@@ -1,10 +1,8 @@
-﻿using Identity.API.Application.Dto;
-using MediatR;
-using System.Collections.Generic;
+﻿using MediatR;
 
 namespace Identity.API.Application.Queries.GetDeliveryAddresses
 {
-    public class GetDeliveryAddressesQuery : IRequest<IList<DeliveryAddressDto>>
+    public class GetDeliveryAddressesQuery : IRequest<GetDeliveryAddressesResponse>
     {
     }
 }

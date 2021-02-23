@@ -28,10 +28,10 @@ namespace Identity.API.Application.Commands.CreateDeliveryAddress
             if (user == null) throw new IdentityDomainException("There is no such user");
 
             var deliveryAddress = new DeliveryAddress(request.FirstName, request.LastName,
-                request.PhoneNumber, request.Country, request.City, request.ZipCode, request.Street, request.IsPrimary);
-
+                request.PhoneNumber, request.Country, request.City, request.ZipCode, request.Street);
             user.AddDeliveryAddress(deliveryAddress);
-            
+            if (request.IsPrimary) user.SetPrimaryDeliveryAddress(deliveryAddress.Id);
+
             _userRepository.Update(user);
             await _userRepository.UnitOfWork.SaveChangesAndDispatchDomainEventsAsync(cancellationToken);
 

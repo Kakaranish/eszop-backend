@@ -1,6 +1,6 @@
 @url = http://localhost:6000
 @accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJUb2tlbklkIjoiZTVmNDkxMWQtNTIxYy00MDgzLWE2N2ItZGU1ZDIyYjk0OGEwIiwiVXNlcklkIjoiZGUzNmY0ZDItNDRkNi00ZDhhLTJlMTAtMDhkOGQ3NTk4ODQzIiwiRW1haWwiOiJ1c2VyM0BtYWlsLmNvbSIsIlJvbGUiOiJ1c2VyIiwiZXhwIjoxNjE1MjI0NjEzLCJpc3MiOiJJZGVudGl0eS5BUEkiLCJhdWQiOiJJZGVudGl0eS5BUEkuQXVkaWVuY2UifQ.a2h7uuUUqEw50qUJjRNQfFKXF_BZtBuD59n6bCUNaxY
-@deliveryAddressId = 48f8d3b1-9880-4f44-b9da-f4a5b3bb8915
+@deliveryAddressId = a322294a-53b8-47d1-ab5c-9c9f06ae11d2
 
 ###
 
@@ -42,7 +42,7 @@ Content-Type: application/json
 }
 
 
-### Invalid update
+### Update 1
 
 PUT {{url}}/api/delivery-addresses HTTP/1.1
 Authorization: Bearer {{accessToken}}
@@ -54,7 +54,7 @@ Content-Type: application/json
     "IsPrimary": true
 }
 
-### Update
+### Update 2
 
 PUT {{url}}/api/delivery-addresses HTTP/1.1
 Authorization: Bearer {{accessToken}}

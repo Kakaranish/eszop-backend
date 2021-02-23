@@ -33,7 +33,6 @@ namespace Identity.API.Extensions
                 City = deliveryAddress.City,
                 ZipCode = deliveryAddress.ZipCode,
                 Street = deliveryAddress.Street,
-                IsPrimary = deliveryAddress.IsPrimary
             };
         }
     }
