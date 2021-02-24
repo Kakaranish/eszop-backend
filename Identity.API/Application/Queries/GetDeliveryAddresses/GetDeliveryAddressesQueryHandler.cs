@@ -36,7 +36,7 @@ namespace Identity.API.Application.Queries.GetDeliveryAddresses
             return new GetDeliveryAddressesResponse
             {
                 DeliveryAddresses = deliveryAddresses ?? new List<DeliveryAddressDto>(),
-                PrimaryDeliveryAddress = user.PrimaryDeliveryAddressId
+                PrimaryDeliveryAddressId = user.PrimaryDeliveryAddressId
             };
         }
     }

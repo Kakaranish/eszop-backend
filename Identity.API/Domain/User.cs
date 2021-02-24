@@ -82,6 +82,8 @@ namespace Identity.API.Domain
         public void UnsetPrimaryDeliveryAddress()
         {
             PrimaryDeliveryAddressId = null;
+            
+            UpdatedAt = DateTime.UtcNow;
         }
 
         public void SetLastLoginToNow()

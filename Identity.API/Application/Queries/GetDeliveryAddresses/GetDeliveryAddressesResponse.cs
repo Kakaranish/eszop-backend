@@ -7,6 +7,6 @@ namespace Identity.API.Application.Queries.GetDeliveryAddresses
     public class GetDeliveryAddressesResponse
     {
         public IList<DeliveryAddressDto> DeliveryAddresses { get; init; }
-        public Guid? PrimaryDeliveryAddress { get; init; }
+        public Guid? PrimaryDeliveryAddressId { get; init; }
     }
 }

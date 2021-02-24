@@ -42,7 +42,11 @@ namespace Identity.API.Application.Commands.UpdateDeliveryAddress
             if (request.ZipCode != null) deliveryAddress.SetZipCode(request.ZipCode);
             if (request.Street != null) deliveryAddress.SetStreet(request.Street);
 
-            if (request.IsPrimary) user.SetPrimaryDeliveryAddress(deliveryAddressId);
+
+            if (request.IsPrimary)
+                user.SetPrimaryDeliveryAddress(deliveryAddressId);
+            else if (!request.IsPrimary && user.PrimaryDeliveryAddressId == deliveryAddressId)
+                user.UnsetPrimaryDeliveryAddress();
 
             _userRepository.Update(user);
             await _userRepository.UnitOfWork.SaveChangesAndDispatchDomainEventsAsync(cancellationToken);

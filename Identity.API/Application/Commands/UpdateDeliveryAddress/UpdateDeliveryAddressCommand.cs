@@ -27,31 +27,31 @@ namespace Identity.API.Application.Commands.UpdateDeliveryAddress
 
             RuleFor(x => x.FirstName)
                 .SetValidator(new FirstNameValidator())
-                .When(x => x.FirstName is not null);
+                .When(x => x.FirstName != null);
 
             RuleFor(x => x.LastName)
                 .SetValidator(new LastNameValidator())
-                .When(x => x.LastName is not null);
+                .When(x => x.LastName != null);
 
             RuleFor(x => x.PhoneNumber)
                 .SetValidator(new PhoneNumberValidator())
-                .When(x => x.PhoneNumber is not null);
+                .When(x => x.PhoneNumber != null);
 
             RuleFor(x => x.Country)
                 .SetValidator(new CountryValidator())
-                .When(x => x.Country is not null);
+                .When(x => x.Country != null);
 
             RuleFor(x => x.City)
                 .SetValidator(new CityValidator())
-                .When(x => x.City is not null);
+                .When(x => x.City != null);
 
             RuleFor(x => x.ZipCode)
-                .SetValidator(new CityValidator())
-                .When(x => x.ZipCode is not null);
+                .SetValidator(new ZipCodeValidator())
+                .When(x => x.ZipCode != null);
 
             RuleFor(x => x.Street)
                 .SetValidator(new StreetValidator())
-                .When(x => x.Street is not null);
+                .When(x => x.Street != null);
         }
     }
 }
