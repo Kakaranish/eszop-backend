@@ -24,6 +24,7 @@ namespace Identity.API.Application.Queries.GetMe
 
             return Task.FromResult(new MeDto
             {
+                Id = userClaims.Id,
                 Email = userClaims.Email,
                 Role = userClaims.Role
             });
