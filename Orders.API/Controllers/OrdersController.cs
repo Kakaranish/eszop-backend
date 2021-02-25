@@ -9,7 +9,9 @@ using Orders.API.Application.Commands.GetBankTransferDetails;
 using Orders.API.Application.Commands.UpdateDeliveryAddress;
 using Orders.API.Application.Dto;
 using Orders.API.Application.Queries;
+using Orders.API.Application.Queries.GetAvailableDeliveryMethodsForOrder;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Orders.API.Controllers
@@ -40,6 +42,14 @@ namespace Orders.API.Controllers
             var request = new CreateOrderCommand(createOrderCartDto);
             var orderId = await _mediator.Send(request);
             return new OrderCreatedDto { OrderId = orderId };
+        }
+
+        [HttpGet("{orderId}/delivery-methods")]
+        [JwtAuthorize]
+        public async Task<IList<DeliveryMethodDto>> GetDeliveryMethodsForOrder(
+            [FromRoute] GetAvailableDeliveryMethodsForOrderQuery query)
+        {
+            return await _mediator.Send(query);
         }
 
         [HttpPut("delivery")]

@@ -6,6 +6,7 @@ using Offers.API.Application.Types;
 using Offers.API.Domain;
 using Offers.API.Extensions;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -22,18 +23,6 @@ namespace Offers.API.DataAccess.Repositories
             _appDbContext = appDbContext ?? throw new ArgumentNullException(nameof(appDbContext));
         }
 
-        public async Task<Pagination<Offer>> GetAllAsync(OfferFilter filter)
-        {
-            var offers = _appDbContext.Offers
-                .AsQueryable()
-                .ApplyFilter(filter)
-                .OrderByDescending(x => x.CreatedAt);
-
-            var pageDetails = new PageCriteria(filter.PageIndex, filter.PageSize);
-
-            return await offers.PaginateAsync(pageDetails);
-        }
-
         public async Task<Pagination<Offer>> GetAllActiveAsync(OfferFilter filter)
         {
             var offers = _appDbContext.Offers
@@ -48,9 +37,18 @@ namespace Offers.API.DataAccess.Repositories
             return await offers.PaginateAsync(pageDetails);
         }
 
+        public async Task<IList<Offer>> GetMultipleWithIds(IEnumerable<Guid> offerIds)
+        {
+            var offers = _appDbContext.Offers.AsQueryable()
+                .Where(x => offerIds.Contains(x.Id));
+
+            return await offers.ToListAsync();
+        }
+
         public async Task<Pagination<Offer>> GetByUserIdAsync(Guid userId, OfferFilter filter)
         {
             var offers = _appDbContext.Offers.AsQueryable()
+                .Where(x => x.OwnerId == userId)
                 .OrderByDescending(x => x.CreatedAt)
                 .ApplyFilter(filter);
 

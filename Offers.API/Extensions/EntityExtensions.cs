@@ -1,4 +1,5 @@
-﻿using Offers.API.Application.Dto;
+﻿using Common.Dto;
+using Offers.API.Application.Dto;
 using Offers.API.Domain;
 using System.Collections.Generic;
 using System.Linq;
@@ -108,6 +109,17 @@ namespace Offers.API.Extensions
                 AvailableStock = offer.AvailableStock,
                 Category = offer.Category.ToDto(),
                 MainImage = offer.Images?.FirstOrDefault(x => x.IsMain).ToDto()
+            };
+        }
+
+        public static DeliveryMethodDto ToDto(this DeliveryMethod deliveryMethod)
+        {
+            if (deliveryMethod == null) return null;
+
+            return new DeliveryMethodDto
+            {
+                Name = deliveryMethod.Name,
+                Price = deliveryMethod.Price
             };
         }
     }
