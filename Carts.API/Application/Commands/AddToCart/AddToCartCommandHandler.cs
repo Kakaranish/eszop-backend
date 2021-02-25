@@ -51,15 +51,15 @@ namespace Carts.API.Application.Commands.AddToCart
             }
 
             var userId = _httpContext.User.Claims.ToTokenPayload().UserClaims.Id;
-            //if (userId == offerDto.OwnerId)
-            //{
-            //    throw new CartsDomainException("Buying from himself/herself is illegal");
-            //}
+            if (userId == offerDto.OwnerId)
+            {
+                throw new CartsDomainException("Buying from himself/herself is illegal");
+            }
 
             var cart = await _cartRepository.GetOrCreateByUserIdAsync(userId);
 
             var imageUri = offerDto.Images.FirstOrDefault(x => x.IsMain)?.Uri;
-            var cartItem = new CartItem(cart.Id, Guid.Parse(request.OfferId), userId,
+            var cartItem = new CartItem(cart.Id, Guid.Parse(request.OfferId), offerDto.OwnerId,
                 offerDto.Name, offerDto.Price, request.Quantity, offerDto.AvailableStock, imageUri);
             cart.AddCartItem(cartItem);
 

@@ -27,7 +27,7 @@ namespace Carts.API.DataAccess.Repositories
         {
             var cart = await _appDbContext.Carts.Include(x => x.CartItems)
                 .FirstOrDefaultAsync(x => x.UserId == userId);
-            if (cart is not null) return cart;
+            if (cart != null) return cart;
 
             cart = new Cart(userId);
             await AddAsync(cart);

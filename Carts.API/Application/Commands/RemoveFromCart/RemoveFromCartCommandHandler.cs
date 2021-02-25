@@ -1,12 +1,12 @@
-﻿using MediatR;
+﻿using Carts.API.DataAccess.Repositories;
+using Carts.API.Domain;
+using Common.Extensions;
+using MediatR;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Carts.API.DataAccess.Repositories;
-using Carts.API.Domain;
-using Common.Extensions;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
 
 namespace Carts.API.Application.Commands.RemoveFromCart
 {
@@ -14,15 +14,17 @@ namespace Carts.API.Application.Commands.RemoveFromCart
     {
         private readonly ILogger<RemoveFromCartCommandHandler> _logger;
         private readonly ICartItemRepository _cartItemRepository;
+        private readonly ICartRepository _cartRepository;
         private readonly HttpContext _httpContext;
 
-        public RemoveFromCartCommandHandler(ILogger<RemoveFromCartCommandHandler> logger, 
-            ICartItemRepository cartItemRepository, IHttpContextAccessor httpContextAccessor)
+        public RemoveFromCartCommandHandler(ILogger<RemoveFromCartCommandHandler> logger,
+            ICartItemRepository cartItemRepository, IHttpContextAccessor httpContextAccessor, ICartRepository cartRepository)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _cartItemRepository = cartItemRepository ?? throw new ArgumentNullException(nameof(cartItemRepository));
             _httpContext = httpContextAccessor.HttpContext ??
                            throw new ArgumentNullException(nameof(httpContextAccessor.HttpContext));
+            _cartRepository = cartRepository ?? throw new ArgumentNullException(nameof(cartRepository));
         }
 
         public async Task<Unit> Handle(RemoveFromCartCommand request, CancellationToken cancellationToken)
@@ -31,16 +33,15 @@ namespace Carts.API.Application.Commands.RemoveFromCart
             var cartItemId = Guid.Parse(request.CartItemId);
             var cartItem = await _cartItemRepository.GetByIdAsync(cartItemId);
 
-            if (cartItem is null || userId != cartItem.SellerId)
-            {
+            var cart = await _cartRepository.GetOrCreateByUserIdAsync(userId);
+            if (cartItem == null || cartItem.CartId != cart.Id)
                 throw new CartsDomainException($"Cart item {cartItemId} not found");
-            }
 
             _cartItemRepository.Remove(cartItem);
             await _cartItemRepository.UnitOfWork.SaveChangesAndDispatchDomainEventsAsync(cancellationToken);
 
             _logger.LogInformation($"Removed cart item {cartItem.Id} from cart {cartItem.CartId}");
-            
+
             return await Unit.Task;
         }
     }
