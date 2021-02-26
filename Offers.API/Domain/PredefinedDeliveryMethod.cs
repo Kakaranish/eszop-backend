@@ -44,7 +44,7 @@ namespace Offers.API.Domain
 
         public void ValidatePrice(decimal? price)
         {
-            if (price != null && price < 0)
+            if (price < 0)
                 throw new OffersDomainException($"{nameof(Price)} cannot be less than 0");
         }
 

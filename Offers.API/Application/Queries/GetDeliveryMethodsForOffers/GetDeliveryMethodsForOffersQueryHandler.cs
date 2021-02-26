@@ -2,12 +2,12 @@
 using MediatR;
 using Offers.API.DataAccess.Repositories;
 using Offers.API.Domain;
+using Offers.API.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Offers.API.Extensions;
 
 namespace Offers.API.Application.Queries.GetDeliveryMethodsForOffers
 {

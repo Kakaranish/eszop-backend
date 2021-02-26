@@ -22,7 +22,6 @@ namespace Offers.API.Controllers
         }
 
         [HttpGet("offers")]
-        [JwtAuthorize]
         public Task<IList<DeliveryMethodDto>> GetForMultipleOffers([FromQuery] GetDeliveryMethodsForOffersQuery query)
         {
             return _mediator.Send(query);
