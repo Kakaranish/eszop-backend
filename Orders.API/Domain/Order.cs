@@ -18,7 +18,8 @@ namespace Orders.API.Domain
         public Guid SellerId { get; private set; }
         public OrderState OrderState { get; private set; }
         public virtual IReadOnlyCollection<OrderItem> OrderItems => _orderItems ?? new List<OrderItem>();
-        public virtual DeliveryAddress DeliveryAddress { get; set; }
+        public virtual DeliveryAddress DeliveryAddress { get; private set; }
+        public virtual DeliveryMethod DeliveryMethod { get; private set; }
 
         [NotMapped] public bool IsCancelled => OrderState?.IsCancellationState() ?? false;
         [NotMapped] public bool IsEditable => !IsCancelled && OrderState != OrderState.Shipped;
@@ -77,6 +78,14 @@ namespace Orders.API.Domain
             UpdatedAt = DateTime.UtcNow;
         }
 
+        public void SetDeliveryMethod(DeliveryMethod deliveryMethod)
+        {
+            ValidateDeliveryMethod(deliveryMethod);
+
+            DeliveryMethod = deliveryMethod;
+            UpdatedAt = DateTime.UtcNow;
+        }
+
         #region Validation
 
         private static void ValidateBuyerId(Guid buyerId)
@@ -111,8 +120,14 @@ namespace Orders.API.Domain
 
         private static void ValidateDeliveryAddress(DeliveryAddress deliveryAddress)
         {
-            if (deliveryAddress == null) 
+            if (deliveryAddress == null)
                 throw new OrdersDomainException($"'{nameof(deliveryAddress)}' cannot be null");
+        }
+
+        private static void ValidateDeliveryMethod(DeliveryMethod deliveryMethod)
+        {
+            if (deliveryMethod == null)
+                throw new OrdersDomainException($"'{nameof(deliveryMethod)}' cannot be null");
         }
 
         #endregion

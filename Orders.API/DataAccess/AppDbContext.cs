@@ -15,7 +15,8 @@ namespace Orders.API.DataAccess
 
         public DbSet<Order> Orders { get; private set; }
         public DbSet<OrderItem> OrderItems { get; private set; }
-        public DbSet<DeliveryAddress> DeliveryAddresses { get; set; }
+        public DbSet<DeliveryAddress> DeliveryAddresses { get; private set; }
+        public DbSet<DeliveryMethod> DeliveryMethods { get; private set; }
 
         public AppDbContext(DbContextOptions options, IMediator mediator) : base(options)
         {
@@ -38,6 +39,9 @@ namespace Orders.API.DataAccess
                 .HasColumnType("decimal(18,4)");
 
             modelBuilder.Entity<DeliveryAddress>()
+                .HasKey(x => x.Id);
+
+            modelBuilder.Entity<DeliveryMethod>()
                 .HasKey(x => x.Id);
         }
 
