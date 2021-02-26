@@ -3,9 +3,9 @@ using Common.Validators;
 using FluentValidation;
 using MediatR;
 
-namespace Orders.API.Application.Commands.UpdateDeliveryAddress
+namespace Orders.API.Application.Commands.UpdateDeliveryInfo
 {
-    public class UpdateDeliveryAddressCommand : IRequest
+    public class UpdateDeliveryInfoCommand : IRequest
     {
         public string OrderId { get; set; }
         public string FirstName { get; init; }
@@ -15,11 +15,12 @@ namespace Orders.API.Application.Commands.UpdateDeliveryAddress
         public string City { get; init; }
         public string ZipCode { get; init; }
         public string Street { get; init; }
+        public string DeliveryMethodName { get; init; }
     }
 
-    public class UpdateDeliveryAddressCommandValidator : AbstractValidator<UpdateDeliveryAddressCommand>
+    public class UpdateDeliveryInfoCommandValidator : AbstractValidator<UpdateDeliveryInfoCommand>
     {
-        public UpdateDeliveryAddressCommandValidator()
+        public UpdateDeliveryInfoCommandValidator()
         {
             RuleFor(x => x.OrderId)
                 .IsNotEmptyGuid();
@@ -37,6 +38,8 @@ namespace Orders.API.Application.Commands.UpdateDeliveryAddress
                 .SetValidator(new ZipCodeValidator());
             RuleFor(x => x.Street)
                 .SetValidator(new StreetValidator());
+            RuleFor(x => x.DeliveryMethodName)
+                .NotEmpty();
         }
     }
 }

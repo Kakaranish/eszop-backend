@@ -6,13 +6,13 @@ using Microsoft.AspNetCore.Mvc;
 using Orders.API.Application.Commands.CancelOrder;
 using Orders.API.Application.Commands.CreateOrder;
 using Orders.API.Application.Commands.GetBankTransferDetails;
-using Orders.API.Application.Commands.UpdateDeliveryAddress;
 using Orders.API.Application.Dto;
 using Orders.API.Application.Queries;
 using Orders.API.Application.Queries.GetAvailableDeliveryMethodsForOrder;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Orders.API.Application.Commands.UpdateDeliveryInfo;
 
 namespace Orders.API.Controllers
 {
@@ -52,10 +52,11 @@ namespace Orders.API.Controllers
             return await _mediator.Send(query);
         }
 
-        [HttpPut("delivery")]
+        [HttpPut("{orderId}/delivery-info")]
         [JwtAuthorize]
-        public async Task<IActionResult> UpdateDeliveryAddress(UpdateDeliveryAddressCommand request)
+        public async Task<IActionResult> UpdateDeliveryAddress(string orderId, UpdateDeliveryInfoCommand request)
         {
+            request.OrderId = orderId;
             await _mediator.Send(request);
             return Ok();
         }
