@@ -1,4 +1,4 @@
-﻿using Common.Authentication;
+using Common.Authentication;
 using Common.Dto;
 using Common.Types;
 using MediatR;
@@ -9,10 +9,12 @@ using Orders.API.Application.Commands.GetBankTransferDetails;
 using Orders.API.Application.Dto;
 using Orders.API.Application.Queries;
 using Orders.API.Application.Queries.GetAvailableDeliveryMethodsForOrder;
+using Orders.API.Application.Queries.GetDeliveryInfo;
+using Orders.API.Application.Queries.GetOrderSummary;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Orders.API.Application.Commands.UpdateDeliveryInfo;
+using DeliveryMethodDto = Common.Dto.DeliveryMethodDto;
 
 namespace Orders.API.Controllers
 {
@@ -48,6 +50,13 @@ namespace Orders.API.Controllers
         [JwtAuthorize]
         public async Task<IList<DeliveryMethodDto>> GetDeliveryMethodsForOrder(
             [FromRoute] GetAvailableDeliveryMethodsForOrderQuery query)
+        {
+            return await _mediator.Send(query);
+        }
+
+        [HttpGet("{orderId}/delivery-info")]
+        [JwtAuthorize]
+        public async Task<DeliveryInfoDto> GetDeliveryInfo([FromRoute] GetDeliveryInfoQuery query)
         {
             return await _mediator.Send(query);
         }

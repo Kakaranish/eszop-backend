@@ -21,11 +21,11 @@ namespace Orders.API.Extensions
             };
         }
 
-        public static OrderFullViewDto ToFullViewDto(this Order order)
+        public static OrderDto ToDto(this Order order)
         {
             if (order == null) return null;
 
-            return new OrderFullViewDto
+            return new OrderDto
             {
                 Id = order.Id,
                 CreatedAt = order.CreatedAt,
@@ -33,7 +33,8 @@ namespace Orders.API.Extensions
                 OrderState = order.OrderState.Name,
                 TotalPrice = order.OrderItems.Sum(x => x.TotalPrice),
                 OrderItems = order.OrderItems.Select(x => x.ToDto()).ToList(),
-                DeliveryAddress = order.DeliveryAddress.ToDto()
+                DeliveryAddress = order.DeliveryAddress.ToDto(),
+                DeliveryMethod = order.DeliveryMethod.ToDto()
             };
         }
 
@@ -66,6 +67,17 @@ namespace Orders.API.Extensions
                 City = deliveryAddress.City,
                 Street = deliveryAddress.Street,
                 ZipCode = deliveryAddress.ZipCode
+            };
+        }
+
+        public static DeliveryMethodDto ToDto(this DeliveryMethod deliveryMethod)
+        {
+            if (deliveryMethod == null) return null;
+
+            return new DeliveryMethodDto
+            {
+                Name = deliveryMethod.Name,
+                Price = deliveryMethod.Price
             };
         }
     }
