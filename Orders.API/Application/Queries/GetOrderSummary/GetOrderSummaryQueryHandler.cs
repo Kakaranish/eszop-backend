@@ -1,37 +1,38 @@
 ﻿using Common.Extensions;
-using Common.Types;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Orders.API.Application.Dto;
 using Orders.API.DataAccess.Repositories;
+using Orders.API.Domain;
 using Orders.API.Extensions;
 using System;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Orders.API.Application.Queries
+namespace Orders.API.Application.Queries.GetOrderSummary
 {
-    public class GetOrdersQueryHandler : IRequestHandler<GetOrdersQuery, Pagination<OrderPreviewDto>>
+    public class GetOrderSummaryQueryHandler : IRequestHandler<GetOrderSummaryQuery, OrderDto>
     {
         private readonly HttpContext _httpContext;
         private readonly IOrderRepository _orderRepository;
 
-        public GetOrdersQueryHandler(IHttpContextAccessor httpContextAccessor, IOrderRepository orderRepository)
+        public GetOrderSummaryQueryHandler(IHttpContextAccessor httpContextAccessor, IOrderRepository orderRepository)
         {
             _httpContext = httpContextAccessor.HttpContext ??
                            throw new ArgumentNullException(nameof(httpContextAccessor.HttpContext));
             _orderRepository = orderRepository ?? throw new ArgumentNullException(nameof(orderRepository));
         }
 
-        public async Task<Pagination<OrderPreviewDto>> Handle(GetOrdersQuery request, CancellationToken cancellationToken)
+        public async Task<OrderDto> Handle(GetOrderSummaryQuery request, CancellationToken cancellationToken)
         {
             var userId = _httpContext.User.Claims.ToTokenPayload().UserClaims.Id;
-            var ordersPagination = await _orderRepository.GetAllByUserIdAsync(userId, request.Filter);
-            var ordersPreviewDtoPagination = ordersPagination.Transform(
-                orders => orders.Select(order => order.ToPreviewDto()));
+            var orderId = Guid.Parse(request.OrderId);
 
-            return ordersPreviewDtoPagination;
+            var order = await _orderRepository.GetByIdAsync(orderId);
+            if (order == null || order.BuyerId != userId)
+                throw new OrdersDomainException($"There is no order with id {orderId}");
+
+            return order.ToDto();
         }
     }
 }

@@ -1,4 +1,4 @@
-using Common.Authentication;
+﻿using Common.Authentication;
 using Common.Dto;
 using Common.Types;
 using MediatR;
@@ -6,10 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 using Orders.API.Application.Commands.CancelOrder;
 using Orders.API.Application.Commands.CreateOrder;
 using Orders.API.Application.Commands.GetBankTransferDetails;
+using Orders.API.Application.Commands.UpdateDeliveryInfo;
 using Orders.API.Application.Dto;
-using Orders.API.Application.Queries;
 using Orders.API.Application.Queries.GetAvailableDeliveryMethodsForOrder;
 using Orders.API.Application.Queries.GetDeliveryInfo;
+using Orders.API.Application.Queries.GetOrders;
 using Orders.API.Application.Queries.GetOrderSummary;
 using System;
 using System.Collections.Generic;
@@ -29,7 +30,7 @@ namespace Orders.API.Controllers
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
-        [HttpGet("")]
+        [HttpGet("user")]
         [JwtAuthorize]
         public async Task<Pagination<OrderPreviewDto>> GetAllByUserId([FromQuery] BasicPaginationFilter filter)
         {
@@ -37,16 +38,14 @@ namespace Orders.API.Controllers
             return await _mediator.Send(query);
         }
 
-        [HttpPost("")]
+        [HttpGet("{orderId}")]
         [JwtAuthorize]
-        public async Task<OrderCreatedDto> Create(CreateOrderCartDto createOrderCartDto)
+        public async Task<OrderDto> GetOrderSummary([FromRoute] GetOrderSummaryQuery query)
         {
-            var request = new CreateOrderCommand(createOrderCartDto);
-            var orderId = await _mediator.Send(request);
-            return new OrderCreatedDto { OrderId = orderId };
+            return await _mediator.Send(query);
         }
 
-        [HttpGet("{orderId}/delivery-methods")]
+        [HttpGet("{orderId}/available-delivery-methods")]
         [JwtAuthorize]
         public async Task<IList<DeliveryMethodDto>> GetDeliveryMethodsForOrder(
             [FromRoute] GetAvailableDeliveryMethodsForOrderQuery query)
@@ -70,19 +69,28 @@ namespace Orders.API.Controllers
             return Ok();
         }
 
+        [HttpGet("{orderId}/transfer/details")]
+        [JwtAuthorize]
+        public async Task<BankTransferDetailsDto> GetBankTransferDetails([FromRoute] GetBankTransferDetailsCommand request)
+        {
+            return await _mediator.Send(request);
+        }
+
+        [HttpPost("")]
+        [JwtAuthorize]
+        public async Task<OrderCreatedDto> Create(CreateOrderCartDto createOrderCartDto)
+        {
+            var request = new CreateOrderCommand(createOrderCartDto);
+            var orderId = await _mediator.Send(request);
+            return new OrderCreatedDto { OrderId = orderId };
+        }
+
         [HttpPost("cancel")]
         [JwtAuthorize]
         public async Task<IActionResult> Cancel(CancelOrderCommand request)
         {
             await _mediator.Send(request);
             return Ok();
-        }
-
-        [HttpGet("{orderId}/transfer/details")]
-        [JwtAuthorize]
-        public async Task<BankTransferDetailsDto> GetBankTransferDetails([FromRoute] GetBankTransferDetailsCommand request)
-        {
-            return await _mediator.Send(request);
         }
     }
 }
