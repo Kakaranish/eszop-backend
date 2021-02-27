@@ -1,13 +1,13 @@
-﻿using Common.EventBus;
+﻿using Common.Domain;
+using Common.EventBus;
 using Common.EventBus.IntegrationEvents;
-using MediatR;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Offers.API.Application.DomainEvents.OfferBecameUnavailable
 {
-    public class OfferBecameUnavailableDomainEventHandler : INotificationHandler<OfferBecameUnavailableDomainEvent>
+    public class OfferBecameUnavailableDomainEventHandler : IDomainEventHandler<OfferBecameUnavailableDomainEvent>
     {
         private readonly IEventBus _eventBus;
 

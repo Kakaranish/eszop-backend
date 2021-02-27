@@ -1,13 +1,13 @@
-﻿using System;
-using MediatR;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using Common.Domain;
 using Common.EventBus;
 using Common.EventBus.IntegrationEvents;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Identity.API.Application.DomainEvents.UserLocked
 {
-    public class UserLockedDomainEventHandler : INotificationHandler<UserLockedDomainEvent>
+    public class UserLockedDomainEventHandler : IDomainEventHandler<UserLockedDomainEvent>
     {
         private readonly IEventBus _eventBus;
 

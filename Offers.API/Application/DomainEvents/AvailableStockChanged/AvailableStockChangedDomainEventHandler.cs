@@ -1,19 +1,19 @@
-﻿using Common.EventBus;
-using MediatR;
+﻿using Common.Domain;
+using Common.EventBus;
+using Common.EventBus.IntegrationEvents;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Common.EventBus.IntegrationEvents;
-using Microsoft.Extensions.Logging;
 
 namespace Offers.API.Application.DomainEvents.AvailableStockChanged
 {
-    public class AvailableStockChangedDomainEventHandler : INotificationHandler<AvailableStockChangedDomainEvent>
+    public class AvailableStockChangedDomainEventHandler : IDomainEventHandler<AvailableStockChangedDomainEvent>
     {
         private readonly ILogger<AvailableStockChangedDomainEventHandler> _logger;
         private readonly IEventBus _eventBus;
 
-        public AvailableStockChangedDomainEventHandler(ILogger<AvailableStockChangedDomainEventHandler> logger, 
+        public AvailableStockChangedDomainEventHandler(ILogger<AvailableStockChangedDomainEventHandler> logger,
             IEventBus eventBus)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
