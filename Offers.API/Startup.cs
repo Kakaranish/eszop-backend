@@ -19,6 +19,7 @@ using Offers.API.DataAccess.Repositories;
 using Offers.API.Domain;
 using Offers.API.Extensions;
 using Offers.API.Services;
+using Serilog;
 
 namespace Offers.API
 {
@@ -79,6 +80,8 @@ namespace Offers.API
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseSerilogRequestLogging();
 
             app.UseExceptionHandler("/error");
 

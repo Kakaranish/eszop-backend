@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
+using Serilog;
 
 namespace API.Gateway
 {
@@ -26,6 +27,7 @@ namespace API.Gateway
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseSerilogRequestLogging();
             app.UseCors();
             app.UseCookieTokenMiddleware();
             app.UseOcelot().Wait();

@@ -16,6 +16,7 @@ using Orders.API.Application.Services;
 using Orders.API.DataAccess;
 using Orders.API.DataAccess.Repositories;
 using Orders.API.Domain;
+using Serilog;
 
 namespace Orders.API
 {
@@ -71,6 +72,8 @@ namespace Orders.API
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseSerilogRequestLogging();
+            
             app.UseExceptionHandler("/error");
 
             app.UseRouting();

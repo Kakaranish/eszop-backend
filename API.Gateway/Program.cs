@@ -1,7 +1,9 @@
-using System.IO;
+using Common.Logging;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
+using Serilog;
+using System.IO;
 
 namespace API.Gateway
 {
@@ -9,13 +11,14 @@ namespace API.Gateway
     {
         public static void Main(string[] args)
         {
-            var host = CreateHostBuilder(args).Build();
-            
-            host.Run();
+            LogConfiguration.Configure();
+
+            CreateHostBuilder(args).Build().Run();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+                .UseSerilog()
                 .ConfigureAppConfiguration((context, builder) =>
                 {
                     builder
