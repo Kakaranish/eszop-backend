@@ -40,7 +40,7 @@ namespace Common.Authentication
 
             services.AddAuthorization(options => options.AddPolicy("Admin", builder =>
             {
-                builder.RequireClaim("Role", "admin");
+                builder.RequireClaim("Role", "ADMIN");
             }));
 
             services.AddSingleton<IAccessTokenDecoder, AccessTokenDecoder>();

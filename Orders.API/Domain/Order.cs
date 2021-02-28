@@ -1,4 +1,4 @@
-using Common.Domain;
+﻿using Common.Domain;
 using Common.Dto;
 using Common.Types;
 using Common.Validators;
@@ -85,6 +85,14 @@ namespace Orders.API.Domain
             UpdatedAt = DateTime.UtcNow;
         }
 
+        public void ChangeStateToInProgress()
+        {
+            ValidateChangeStateToInProgress();
+
+            OrderState = OrderState.InProgress;
+            UpdatedAt = DateTime.UtcNow;
+        }
+
         public void SetDeliveryAddress(DeliveryAddress deliveryAddress)
         {
             ValidateDeliveryAddress(deliveryAddress);
@@ -136,6 +144,14 @@ namespace Orders.API.Domain
                 throw new OrdersDomainException("Order is already completed");
         }
 
+        private void ValidateChangeStateToInProgress()
+        {
+            if (OrderState != OrderState.Started)
+                throw new OrdersDomainException("Invalid state transition");
+            if (DeliveryMethod == null)
+                throw new OrdersDomainException($"Order must have {nameof(DeliveryMethod)}");
+            if (DeliveryAddress == null)
+                throw new OrdersDomainException($"Order must have {nameof(DeliveryAddress)}");
         }
 
         private static void ValidateDeliveryAddress(DeliveryAddress deliveryAddress)

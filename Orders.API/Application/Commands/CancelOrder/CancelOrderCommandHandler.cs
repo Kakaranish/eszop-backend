@@ -35,7 +35,7 @@ namespace Orders.API.Application.Commands.CancelOrder
 
             if (userId == order.BuyerId) order.SetCancelled(OrderState.CancelledByBuyer);
             else if (userId == order.SellerId) order.SetCancelled(OrderState.CancelledBySeller);
-            else if (userRole.ToLowerInvariant() == "admin") order.SetCancelled(OrderState.Cancelled);
+            else if (userRole.ToUpperInvariant() == "ADMIN") order.SetCancelled(OrderState.Cancelled);
             else throw new NotFoundException();
 
             _orderRepository.Update(order);

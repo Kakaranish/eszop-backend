@@ -4,6 +4,7 @@ using Common.Types;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Orders.API.Application.Commands.CancelOrder;
+using Orders.API.Application.Commands.ConfirmOrder;
 using Orders.API.Application.Commands.CreateOrder;
 using Orders.API.Application.Commands.GetBankTransferDetails;
 using Orders.API.Application.Commands.UpdateDeliveryInfo;
@@ -88,6 +89,14 @@ namespace Orders.API.Controllers
         [HttpPost("{orderId}/cancel")]
         [JwtAuthorize]
         public async Task<IActionResult> Cancel([FromRoute] CancelOrderCommand request)
+        {
+            await _mediator.Send(request);
+            return Ok();
+        }
+
+        [HttpPost("{orderId}/confirm")]
+        [JwtAuthorize]
+        public async Task<IActionResult> Confirm([FromRoute] ConfirmOrderCommand request)
         {
             await _mediator.Send(request);
             return Ok();
