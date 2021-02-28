@@ -11,6 +11,10 @@ namespace Identity.API
         {
             LogConfiguration.Configure();
 
+            Log.Logger.Information("----------------------------------------");
+            Log.Logger.Information("---  Starting service  -----------------");
+            Log.Logger.Information("----------------------------------------");
+
             CreateHostBuilder(args).Build().Run();
         }
 

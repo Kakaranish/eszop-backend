@@ -11,7 +11,11 @@ namespace API.Gateway
     {
         public static void Main(string[] args)
         {
-            LogConfiguration.Configure();
+            LogConfiguration.Configure("Configuration/appsettings.json");
+
+            Log.Logger.Information("----------------------------------------");
+            Log.Logger.Information("---  Starting service  -----------------");
+            Log.Logger.Information("----------------------------------------");
 
             CreateHostBuilder(args).Build().Run();
         }

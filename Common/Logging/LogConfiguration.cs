@@ -1,4 +1,5 @@
-﻿using Serilog;
+﻿using Microsoft.Extensions.Configuration;
+using Serilog;
 using Serilog.Events;
 using System;
 using System.IO;
@@ -8,9 +9,19 @@ namespace Common.Logging
 {
     public static class LogConfiguration
     {
-        public static void Configure(string logDir = null)
+        public static void Configure()
         {
-            var logPath = GetLogPath(logDir);
+            Configure("appsettings.json");
+        }
+
+        public static void Configure(string appSettingsPath)
+        {
+            var configuration = new ConfigurationBuilder()
+                .AddJsonFile(appSettingsPath)
+                .Build();
+
+            var logsDir = configuration.GetValue<string>("LogsDir");
+            var logPath = GetLogPath(logsDir);
 
             Log.Logger = new LoggerConfiguration()
                 .Enrich.WithMachineName()
@@ -18,7 +29,9 @@ namespace Common.Logging
                 .WriteTo.Console(
                     outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u4}] {Message:lj}{NewLine}{Exception}",
                     restrictedToMinimumLevel: LogEventLevel.Information)
-                .WriteTo.File(logPath, rollingInterval: RollingInterval.Day)
+                .WriteTo.File(logPath,
+                    outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u4}] {Message:lj}{NewLine}{Exception}",
+                    rollingInterval: RollingInterval.Day)
                 .CreateLogger();
         }
 
