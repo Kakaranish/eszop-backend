@@ -6,7 +6,7 @@ namespace Orders.API.Application.Commands.CancelOrder
 {
     public class CancelOrderCommand : IRequest
     {
-        public string OrderId { get; set; }
+        public string OrderId { get; init; }
     }
 
     public class CancelOrderCommandValidator : AbstractValidator<CancelOrderCommand>
@@ -14,7 +14,7 @@ namespace Orders.API.Application.Commands.CancelOrder
         public CancelOrderCommandValidator()
         {
             RuleFor(x => x.OrderId)
-                .IsGuid();
+                .IsNotEmptyGuid();
         }
     }
 }

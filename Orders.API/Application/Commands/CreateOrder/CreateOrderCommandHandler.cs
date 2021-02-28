@@ -1,6 +1,9 @@
-﻿using Common.EventBus;
+﻿using Common.Dto;
+using Common.EventBus;
 using Common.EventBus.IntegrationEvents;
+using Common.Extensions;
 using MediatR;
+using Microsoft.Extensions.Logging;
 using Orders.API.DataAccess.Repositories;
 using Orders.API.Domain;
 using System;
@@ -14,11 +17,14 @@ namespace Orders.API.Application.Commands.CreateOrder
     {
         private readonly IOrderRepository _orderRepository;
         private readonly IEventBus _eventBus;
+        private readonly ILogger<CreateOrderCommandHandler> _logger;
 
-        public CreateOrderCommandHandler(IOrderRepository orderRepository, IEventBus eventBus)
+        public CreateOrderCommandHandler(IOrderRepository orderRepository, IEventBus eventBus,
+            ILogger<CreateOrderCommandHandler> logger)
         {
             _orderRepository = orderRepository ?? throw new ArgumentNullException(nameof(orderRepository));
             _eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         public async Task<Guid> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
@@ -30,15 +36,20 @@ namespace Orders.API.Application.Commands.CreateOrder
             _orderRepository.Add(order);
             await _orderRepository.UnitOfWork.SaveChangesAndDispatchDomainEventsAsync(cancellationToken);
 
-            foreach (var orderItem in order.OrderItems)
+            var integrationEvent = new OrderStartedIntegrationEvent
             {
-                var @event = new OrderStartedIntegrationEvent
+                OrderId = order.Id,
+                OrderItems = order.OrderItems.Select(orderItem => new OrderItemDto
                 {
                     OfferId = orderItem.OfferId,
                     Quantity = orderItem.Quantity
-                };
-                await _eventBus.PublishAsync(@event);
-            }
+                }).ToList()
+            };
+            await _eventBus.PublishAsync(integrationEvent);
+
+            _logger.LogInformation($"Integration event {nameof(OrderStartedIntegrationEvent)} published",
+                "EventId".ToKvp(integrationEvent.Id),
+                "OfferIds".ToKvp(string.Join(",", integrationEvent.OrderItems.Select(x => x.OfferId))));
 
             return order.Id;
         }

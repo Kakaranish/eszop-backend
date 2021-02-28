@@ -1,6 +1,8 @@
 ﻿using Common.Domain;
 using Common.EventBus;
 using Common.EventBus.IntegrationEvents;
+using Common.Extensions;
+using Common.Logging;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading;
@@ -22,6 +24,12 @@ namespace Offers.API.Application.DomainEvents.AvailableStockChanged
 
         public async Task Handle(AvailableStockChangedDomainEvent domainEvent, CancellationToken cancellationToken)
         {
+            _logger.LogWithProps(LogLevel.Information,
+                $"Handling {nameof(AvailableStockChangedDomainEvent)} domain event",
+                "OfferId".ToKvp(domainEvent.OfferId),
+                "PreviousValue".ToKvp(domainEvent.AvailableStock.OldValue),
+                "CurrentValue".ToKvp(domainEvent.AvailableStock.NewValue));
+
             var integrationEvent = new OfferChangedIntegrationEvent
             {
                 OfferId = domainEvent.OfferId,
@@ -29,7 +37,11 @@ namespace Offers.API.Application.DomainEvents.AvailableStockChanged
             };
 
             await _eventBus.PublishAsync(integrationEvent);
-            _logger.LogInformation($"Published {nameof(OfferChangedIntegrationEvent)} integration event");
+
+            _logger.LogWithProps(LogLevel.Information,
+                $"Published {nameof(OfferChangedIntegrationEvent)} integration event",
+                "EventId".ToKvp(integrationEvent.Id),
+                "OfferId".ToKvp(integrationEvent.OfferId));
         }
     }
 }

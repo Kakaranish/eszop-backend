@@ -71,7 +71,8 @@ namespace Offers.API
 
             services
                 .AddRabbitMqEventBus()
-                .Subscribe<OrderStartedIntegrationEvent, OrderStartedIntegrationEventHandler>();
+                .Subscribe<OrderStartedIntegrationEvent, OrderStartedIntegrationEventHandler>()
+                .Subscribe<OrderCancelledIntegrationEvent, OrderCancelledIntegrationEventHandler>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

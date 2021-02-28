@@ -1,6 +1,8 @@
-﻿using Common.Domain;
+using Common.Domain;
+using Common.Dto;
 using Common.Types;
 using Common.Validators;
+using Orders.API.Application.DomainEvents.OrderCancelled;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -21,7 +23,7 @@ namespace Orders.API.Domain
         public virtual DeliveryAddress DeliveryAddress { get; private set; }
         public virtual DeliveryMethod DeliveryMethod { get; private set; }
 
-        [NotMapped] public bool IsCancelled => OrderState?.IsCancellationState() ?? false;
+        [NotMapped] public bool IsCancelled => OrderState?.IsCancelled() ?? false;
         [NotMapped] public bool IsEditable => !IsCancelled && OrderState != OrderState.Shipped;
         [NotMapped] public decimal TotalPrice => OrderItems.Sum(orderItem => orderItem.TotalPrice);
 
@@ -65,6 +67,19 @@ namespace Orders.API.Domain
         public void SetCancelled(OrderState orderState)
         {
             ValidateCancellation(orderState);
+
+            var domainEvent = new OrderCancelledDomainEvent
+            {
+                OrderId = Id,
+                PreviousState = OrderState,
+                CurrentState = orderState,
+                OrderItems = OrderItems.Select(orderItem => new OrderItemDto
+                {
+                    OfferId = orderItem.OfferId,
+                    Quantity = orderItem.Quantity
+                }).ToList()
+            };
+            AddDomainEvent(domainEvent);
 
             OrderState = orderState;
             UpdatedAt = DateTime.UtcNow;
@@ -111,11 +126,16 @@ namespace Orders.API.Domain
 
         private void ValidateCancellation(OrderState orderState)
         {
-            if (orderState == null || !orderState.IsCancellationState())
+            if (orderState == null || !orderState.IsCancelled())
                 throw new OrdersDomainException("Provided order state is invalid");
 
-            if (OrderState.IsCancellationState())
+            if (OrderState.IsCancelled())
                 throw new OrdersDomainException("Order is already cancelled");
+
+            if (OrderState == OrderState.Shipped)
+                throw new OrdersDomainException("Order is already completed");
+        }
+
         }
 
         private static void ValidateDeliveryAddress(DeliveryAddress deliveryAddress)

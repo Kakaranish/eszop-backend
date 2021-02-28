@@ -139,6 +139,21 @@ namespace Offers.API.Domain
             AvailableStock -= toDecrease;
         }
 
+        public void IncreaseAvailableStock(int toIncrease)
+        {
+            ValidateEditable();
+            ValidateIncreaseAvailableStock(toIncrease);
+
+            var domainEvent = new AvailableStockChangedDomainEvent
+            {
+                OfferId = Id,
+                AvailableStock = new ChangeState<int?>(AvailableStock, AvailableStock + toIncrease)
+            };
+            AddDomainEvent(domainEvent);
+
+            AvailableStock += toIncrease;
+        }
+
         public void EndOffer()
         {
             ValidateEndOffer();
@@ -263,6 +278,14 @@ namespace Offers.API.Domain
                 throw new OffersDomainException($"{nameof(toDecrease)} must be > 0");
             if (AvailableStock < toDecrease)
                 throw new OffersDomainException($"{nameof(toDecrease)} cannot be greater than {nameof(AvailableStock)}");
+        }
+
+        private void ValidateIncreaseAvailableStock(int toIncrease)
+        {
+            if (toIncrease <= 0)
+                throw new OffersDomainException($"{nameof(toIncrease)} must be > 0");
+            if (AvailableStock + toIncrease > TotalStock)
+                throw new OffersDomainException($"{nameof(toIncrease)} + {nameof(AvailableStock)} cannot be greater than {nameof(TotalStock)}");
         }
 
         private static void ValidateCategory(Category category)

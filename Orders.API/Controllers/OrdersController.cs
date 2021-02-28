@@ -60,6 +60,13 @@ namespace Orders.API.Controllers
             return await _mediator.Send(query);
         }
 
+        [HttpGet("{orderId}/transfer/details")]
+        [JwtAuthorize]
+        public async Task<BankTransferDetailsDto> GetBankTransferDetails([FromRoute] GetBankTransferDetailsCommand request)
+        {
+            return await _mediator.Send(request);
+        }
+
         [HttpPut("{orderId}/delivery-info")]
         [JwtAuthorize]
         public async Task<IActionResult> UpdateDeliveryAddress(string orderId, UpdateDeliveryInfoCommand request)
@@ -67,13 +74,6 @@ namespace Orders.API.Controllers
             request.OrderId = orderId;
             await _mediator.Send(request);
             return Ok();
-        }
-
-        [HttpGet("{orderId}/transfer/details")]
-        [JwtAuthorize]
-        public async Task<BankTransferDetailsDto> GetBankTransferDetails([FromRoute] GetBankTransferDetailsCommand request)
-        {
-            return await _mediator.Send(request);
         }
 
         [HttpPost("")]
@@ -85,9 +85,9 @@ namespace Orders.API.Controllers
             return new OrderCreatedDto { OrderId = orderId };
         }
 
-        [HttpPost("cancel")]
+        [HttpPost("{orderId}/cancel")]
         [JwtAuthorize]
-        public async Task<IActionResult> Cancel(CancelOrderCommand request)
+        public async Task<IActionResult> Cancel([FromRoute] CancelOrderCommand request)
         {
             await _mediator.Send(request);
             return Ok();
