@@ -1,5 +1,5 @@
 ﻿using Carts.API.DataAccess.Repositories;
-using Carts.API.Domain;
+using Common.Exceptions;
 using Common.Extensions;
 using Common.Logging;
 using MediatR;
@@ -35,8 +35,7 @@ namespace Carts.API.Application.Commands.UpdateCartItemQuantity
             var cartItem = await _cartItemRepository.GetByIdAsync(cartItemId);
 
             var cart = await _cartRepository.GetOrCreateByUserIdAsync(userId);
-            if (cartItem == null || cartItem.CartId != cart.Id)
-                throw new CartsDomainException($"Cart item {cartItemId} not found");
+            if (cartItem == null || cartItem.CartId != cart.Id) throw new NotFoundException();
 
             if (cartItem.Quantity == request.Quantity) return await Unit.Task;
 

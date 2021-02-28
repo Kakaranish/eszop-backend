@@ -1,4 +1,5 @@
-﻿using Common.Extensions;
+﻿using Common.Exceptions;
+using Common.Extensions;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
@@ -32,8 +33,7 @@ namespace Offers.API.Application.Commands.UpdateOfferDraftTwo
             var deliveryMethods = ExtractDeliveryMethods(request);
 
             var offer = await _offerRepository.GetByIdAsync(offerId);
-            if (offer.OwnerId != userId)
-                throw new OffersDomainException($"There is no offer with id {offerId}");
+            if (offer == null || offer.OwnerId != userId) throw new NotFoundException();
 
             offer.SetDeliveryMethods(deliveryMethods);
             offer.SetBankAccountNumber(request.BankAccount);

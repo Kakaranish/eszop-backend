@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using Common.Exceptions;
 using Common.Extensions;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -13,6 +8,12 @@ using Offers.API.DataAccess.Repositories;
 using Offers.API.Domain;
 using Offers.API.Services;
 using Offers.API.Services.Dto;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Offers.API.Application.Commands.CreateOfferDraftOne
 {
@@ -38,7 +39,7 @@ namespace Offers.API.Application.Commands.CreateOfferDraftOne
         {
             var categoryId = Guid.Parse(request.CategoryId);
             var category = await _categoryRepository.GetByIdAsync(categoryId);
-            if (category is null) throw new OffersDomainException($"There is no category with id {categoryId}");
+            if (category == null) throw new NotFoundException("Category");
 
             var tokenPayload = _httpContext.User.Claims.ToTokenPayload();
 

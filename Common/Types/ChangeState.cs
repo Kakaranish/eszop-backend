@@ -7,7 +7,7 @@
         public T OldValue { get; }
         public T NewValue { get; }
 
-        public bool Changed => (_nullable || NewValue is not null) && !OldValue.Equals(NewValue);
+        public bool Changed => (_nullable || NewValue != null) && !OldValue.Equals(NewValue);
 
         public ChangeState(T oldValue, T newValue, bool nullable = false)
         {

@@ -1,4 +1,5 @@
-﻿using Common.Extensions;
+﻿using Common.Exceptions;
+using Common.Extensions;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Orders.API.DataAccess.Repositories;
@@ -26,7 +27,7 @@ namespace Orders.API.Application.Commands.CancelOrder
         {
             var orderId = Guid.Parse(request.OrderId);
             var order = await _orderRepository.GetByIdAsync(orderId);
-            if (order == null) throw new OrdersDomainException($"Order {orderId} not found");
+            if (order == null) throw new NotFoundException();
 
             var userClaims = _httpContext.User.Claims.ToTokenPayload().UserClaims;
             var userId = userClaims.Id;
@@ -35,7 +36,7 @@ namespace Orders.API.Application.Commands.CancelOrder
             if (userId == order.BuyerId) order.SetCancelled(OrderState.CancelledByBuyer);
             else if (userId == order.SellerId) order.SetCancelled(OrderState.CancelledBySeller);
             else if (userRole.ToLowerInvariant() == "admin") order.SetCancelled(OrderState.Cancelled);
-            else throw new OrdersDomainException($"Order {orderId} not found");
+            else throw new NotFoundException();
 
             _orderRepository.Update(order);
             await _orderRepository.UnitOfWork.SaveChangesAndDispatchDomainEventsAsync(cancellationToken);

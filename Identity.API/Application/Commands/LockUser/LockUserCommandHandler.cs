@@ -1,4 +1,5 @@
-﻿using Common.Extensions;
+﻿using Common.Exceptions;
+using Common.Extensions;
 using Identity.API.DataAccess.Repositories;
 using Identity.API.Domain;
 using MediatR;
@@ -30,7 +31,7 @@ namespace Identity.API.Application.Commands.LockUser
                 CultureInfo.InvariantCulture, DateTimeStyles.None);
 
             var user = await _userRepository.GetByIdAsync(userId);
-            if (user == null) throw new IdentityDomainException("There is no such user");
+            if (user == null) throw new NotFoundException("User");
             if (user.Id == requesterId) throw new IdentityDomainException("User cannot lock himself/herself");
             if (user.IsLocked) throw new IdentityDomainException("User is already locked");
 

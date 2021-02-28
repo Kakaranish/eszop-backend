@@ -9,13 +9,13 @@ namespace Orders.API.Domain
     {
         public string Name { get; }
 
-        public static readonly OrderState Started = new(nameof(Started));
-        public static readonly OrderState InProgress = new(nameof(InProgress));
-        public static readonly OrderState InPreparation = new(nameof(InPreparation));
-        public static readonly OrderState Shipped = new(nameof(Shipped));
-        public static readonly OrderState Cancelled = new(nameof(Cancelled));
-        public static readonly OrderState CancelledByBuyer = new(nameof(CancelledByBuyer));
-        public static readonly OrderState CancelledBySeller = new(nameof(CancelledBySeller));
+        public static readonly OrderState Started = new("STARTED");
+        public static readonly OrderState InProgress = new("IN_PROGRESS");
+        public static readonly OrderState InPreparation = new("IN_PREPARATION");
+        public static readonly OrderState Shipped = new("SHIPPED");
+        public static readonly OrderState Cancelled = new("CANCELLED");
+        public static readonly OrderState CancelledByBuyer = new("CANCELLED_BY_BUYER");
+        public static readonly OrderState CancelledBySeller = new("CANCELLED_BY_SELLER");
 
         private static readonly IReadOnlyList<OrderState> CancelOrderStates = new List<OrderState>
         {

@@ -1,4 +1,5 @@
-﻿using Common.Extensions;
+﻿using Common.Exceptions;
+using Common.Extensions;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
@@ -37,8 +38,7 @@ namespace Offers.API.Application.Commands.UpdateOfferDraftOne
         {
             var userId = _httpContext.User.Claims.ToTokenPayload().UserClaims.Id;
             var offer = await _offerRepository.GetByIdAsync(Guid.Parse(request.OfferId));
-            if (offer == null || offer.OwnerId != userId)
-                throw new OffersDomainException($"Offer {request.OfferId} not found");
+            if (offer == null || offer.OwnerId != userId) throw new NotFoundException();
 
             var keyValueInfos = ExtractKeyValueInfos(request);
             offer.SetKeyValueInfos(keyValueInfos);
@@ -55,7 +55,7 @@ namespace Offers.API.Application.Commands.UpdateOfferDraftOne
                 if (categoryId != offer.Category.Id)
                 {
                     var category = await _categoryRepository.GetByIdAsync(categoryId);
-                    if (category == null) throw new OffersDomainException($"There is no category with id {categoryId}");
+                    if (category == null) throw new NotFoundException("Category");
                     offer.SetCategory(category);
                 }
             }

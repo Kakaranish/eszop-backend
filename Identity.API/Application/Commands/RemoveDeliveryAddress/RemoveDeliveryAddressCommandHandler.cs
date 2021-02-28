@@ -1,6 +1,6 @@
-﻿using Common.Extensions;
+﻿using Common.Exceptions;
+using Common.Extensions;
 using Identity.API.DataAccess.Repositories;
-using Identity.API.Domain;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -27,7 +27,7 @@ namespace Identity.API.Application.Commands.RemoveDeliveryAddress
             var deliveryAddressId = Guid.Parse(request.DeliveryAddressId);
 
             var user = await _userRepository.GetByIdAsync(userId);
-            if (user == null) throw new IdentityDomainException("There is no such user");
+            if (user == null) throw new NotFoundException("User");
 
             user.RemoveDeliveryAddress(deliveryAddressId);
             user.UnsetPrimaryDeliveryAddress();

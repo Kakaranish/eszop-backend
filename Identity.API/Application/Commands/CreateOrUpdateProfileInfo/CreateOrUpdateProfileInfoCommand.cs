@@ -19,19 +19,19 @@ namespace Identity.API.Application.Commands.CreateOrUpdateProfileInfo
         {
             RuleFor(x => x.FirstName)
                 .SetValidator(new FirstNameValidator())
-                .When(x => x.FirstName is not null);
+                .When(x => x.FirstName != null);
 
             RuleFor(x => x.LastName)
                 .SetValidator(new LastNameValidator())
-                .When(x => x.LastName is not null);
+                .When(x => x.LastName != null);
 
             RuleFor(x => x.PhoneNumber)
                 .SetValidator(new PhoneNumberValidator())
-                .When(x => x.PhoneNumber is not null);
+                .When(x => x.PhoneNumber != null);
 
             RuleFor(x => x.DateOfBirth)
                 .SetValidator(new DateOfBirthStrValidator())
-                .When(x => x.DateOfBirth is not null);
+                .When(x => x.DateOfBirth != null);
         }
     }
 }

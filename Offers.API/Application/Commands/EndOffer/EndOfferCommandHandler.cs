@@ -1,8 +1,8 @@
-﻿using Common.Extensions;
+﻿using Common.Exceptions;
+using Common.Extensions;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Offers.API.DataAccess.Repositories;
-using Offers.API.Domain;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -25,18 +25,12 @@ namespace Offers.API.Application.Commands.EndOffer
         {
             var offerId = Guid.Parse(request.OfferId);
             var offer = await _offerRepository.GetByIdAsync(offerId);
-            if (offer == null) 
-            {
-                throw new OffersDomainException($"There is no offer {offerId}");
-            }
+            if (offer == null) throw new NotFoundException();
 
             var userClaims = _httpContext.User.Claims.ToTokenPayload().UserClaims;
             var userId = userClaims.Id;
             const string adminRole = "admin";
-            if (offer.OwnerId != userId && userClaims.Role != adminRole)
-            {
-                throw new OffersDomainException($"There is no offer {offerId}");
-            }
+            if (offer.OwnerId != userId && userClaims.Role != adminRole) throw new NotFoundException();
 
             offer.EndOffer();
 

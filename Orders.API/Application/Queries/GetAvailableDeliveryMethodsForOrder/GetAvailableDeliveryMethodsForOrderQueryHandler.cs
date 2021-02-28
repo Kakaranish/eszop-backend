@@ -1,10 +1,10 @@
 ﻿using Common.Dto;
+using Common.Exceptions;
 using Common.Extensions;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Orders.API.Application.Services;
 using Orders.API.DataAccess.Repositories;
-using Orders.API.Domain;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -34,8 +34,7 @@ namespace Orders.API.Application.Queries.GetAvailableDeliveryMethodsForOrder
             var orderId = Guid.Parse(request.OrderId);
 
             var order = await _orderRepository.GetByIdAsync(orderId);
-            if (order.BuyerId != userId)
-                throw new OrdersDomainException("There is no such order");
+            if (order.BuyerId != userId) throw new NotFoundException();
 
             var deliveryMethods = await _deliveryMethodsProvider.Get(order);
 

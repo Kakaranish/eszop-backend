@@ -33,9 +33,9 @@ namespace Offers.API.Application.IntegrationEventHandlers
                 var offer = await _offerRepository.GetByIdAsync(orderItem.OfferId);
                 if (offer == null)
                     throw new IntegrationEventException($"Offer {orderItem.OfferId} not found");
+                
                 if (offer.AvailableStock < orderItem.Quantity)
                     throw new IntegrationEventException($"Illegal offer {orderItem.OfferId} quantity");
-
                 var previousAvailableStock = offer.AvailableStock;
                 offer.DecreaseAvailableStock(orderItem.Quantity);
 

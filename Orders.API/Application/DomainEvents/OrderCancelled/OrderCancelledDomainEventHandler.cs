@@ -33,8 +33,8 @@ namespace Orders.API.Application.DomainEvents.OrderCancelled
             {
                 OrderId = domainEvent.OrderId,
                 OrderItems = domainEvent.OrderItems,
-                PreviousState = Enum.Parse<OrderStateDto>(domainEvent.PreviousState.Name),
-                CurrentState = Enum.Parse<OrderStateDto>(domainEvent.CurrentState.Name)
+                PreviousState = domainEvent.PreviousState.Name,
+                CurrentState = domainEvent.CurrentState.Name
             };
 
             await _eventBus.PublishAsync(integrationEvent);

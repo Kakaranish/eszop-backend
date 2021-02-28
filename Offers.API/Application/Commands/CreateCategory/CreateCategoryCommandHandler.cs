@@ -19,7 +19,7 @@ namespace Offers.API.Application.Commands.CreateCategory
         public async Task<Guid> Handle(CreateCategoryCommand request, CancellationToken cancellationToken)
         {
             var category = await _categoryRepository.GetByNameAsync(request.Name);
-            if (category is not null)
+            if (category != null)
             {
                 throw new OffersDomainException($"Category {category.Id} has the same name");
             }

@@ -7,8 +7,8 @@ namespace Common.EventBus.IntegrationEvents
     public class OrderCancelledIntegrationEvent : IntegrationEvent
     {
         public Guid OrderId { get; init; }
-        public OrderStateDto PreviousState { get; init; }
-        public OrderStateDto CurrentState { get; init; }
+        public string PreviousState { get; init; }
+        public string CurrentState { get; init; }
         public IList<OrderItemDto> OrderItems { get; init; }
     }
 }

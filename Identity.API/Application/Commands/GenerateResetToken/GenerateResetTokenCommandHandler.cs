@@ -1,5 +1,5 @@
-﻿using Identity.API.DataAccess.Repositories;
-using Identity.API.Domain;
+﻿using Common.Exceptions;
+using Identity.API.DataAccess.Repositories;
 using Identity.API.Services;
 using MediatR;
 using Microsoft.Extensions.Caching.Distributed;
@@ -25,7 +25,7 @@ namespace Identity.API.Application.Commands.GenerateResetToken
         public async Task<string> Handle(GenerateResetTokenCommand request, CancellationToken cancellationToken)
         {
             var user = await _userRepository.GetByEmailAsync(request.Email);
-            if (user == null) throw new IdentityDomainException("There is no user with such email");
+            if (user == null) throw new NotFoundException("User");
 
             var resetToken = RandomStringGenerator.Generate(50);
             var userId = Encoding.UTF8.GetBytes(user.Id.ToString());

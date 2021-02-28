@@ -1,4 +1,5 @@
 ﻿using Common.Dto;
+using Common.Exceptions;
 using Common.Extensions;
 using Common.Types;
 using MediatR;
@@ -38,13 +39,13 @@ namespace Orders.API.Application.Commands.GetBankTransferDetails
         {
             var orderId = Guid.Parse(request.OrderId);
             var order = await _orderRepository.GetByIdAsync(orderId);
-            if (order == null) throw new OrdersDomainException($"Order {orderId} not found");
+            if (order == null) throw new NotFoundException("Order");
 
             var userClaims = _httpContext.User.Claims.ToTokenPayload().UserClaims;
-            if (userClaims.Role.ToLowerInvariant() != "admin" &&
+            if (userClaims.Role.ToUpperInvariant() != "ADMIN" &&
                 userClaims.Id != order.BuyerId && userClaims.Id != order.SellerId)
             {
-                throw new OrdersDomainException($"Order {orderId} not found");
+                throw new NotFoundException("Order");
             }
 
             var bankAccountInfoDto = await GetSellerBankAccountInfo(order.SellerId, cancellationToken);

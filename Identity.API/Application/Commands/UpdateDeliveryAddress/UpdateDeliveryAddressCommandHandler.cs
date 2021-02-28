@@ -1,6 +1,6 @@
-﻿using Common.Extensions;
+﻿using Common.Exceptions;
+using Common.Extensions;
 using Identity.API.DataAccess.Repositories;
-using Identity.API.Domain;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -28,11 +28,10 @@ namespace Identity.API.Application.Commands.UpdateDeliveryAddress
             var deliveryAddressId = Guid.Parse(request.DeliveryAddressId);
 
             var user = await _userRepository.GetByIdAsync(userId);
-            if (user == null) throw new IdentityDomainException("There is no such user");
+            if (user == null) throw new NotFoundException("User");
 
             var deliveryAddress = user.DeliveryAddresses.FirstOrDefault(x => x.Id == deliveryAddressId);
-            if (deliveryAddress == null)
-                throw new IdentityDomainException($"There is no delivery address with id {deliveryAddressId}");
+            if (deliveryAddress == null) throw new NotFoundException("Delivery address");
 
             if (request.FirstName != null) deliveryAddress.SetFirstName(request.FirstName);
             if (request.LastName != null) deliveryAddress.SetLastName(request.LastName);

@@ -1,4 +1,5 @@
-﻿using Common.Extensions;
+﻿using Common.Exceptions;
+using Common.Extensions;
 using Identity.API.DataAccess.Repositories;
 using Identity.API.Domain;
 using MediatR;
@@ -25,7 +26,7 @@ namespace Identity.API.Application.Commands.CreateDeliveryAddress
         {
             var userId = _httpContext.User.Claims.ToTokenPayload().UserClaims.Id;
             var user = await _userRepository.GetByIdAsync(userId);
-            if (user == null) throw new IdentityDomainException("There is no such user");
+            if (user == null) throw new NotFoundException();
 
             var deliveryAddress = new DeliveryAddress(request.FirstName, request.LastName,
                 request.PhoneNumber, request.Country, request.City, request.ZipCode, request.Street);

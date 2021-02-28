@@ -1,4 +1,5 @@
-﻿using Common.Extensions;
+﻿using Common.Exceptions;
+using Common.Extensions;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Orders.API.Application.Services;
@@ -32,11 +33,10 @@ namespace Orders.API.Application.Commands.UpdateDeliveryInfo
             var orderId = Guid.Parse(request.OrderId);
 
             var order = await _orderRepository.GetByIdAsync(orderId);
-            if (order == null || order.BuyerId != userId)
-                throw new OrdersDomainException($"There is no order with id {orderId}");
+            if (order == null || order.BuyerId != userId) throw new NotFoundException();
 
             var deliveryAddress = new DeliveryAddress(request.FirstName, request.LastName, request.PhoneNumber,
-                request.Country, request.City, request.ZipCode, request.Street);
+            request.Country, request.City, request.ZipCode, request.Street);
             order.SetDeliveryAddress(deliveryAddress);
 
             var availableDeliveryMethods = await _deliveryMethodsProvider.Get(order);

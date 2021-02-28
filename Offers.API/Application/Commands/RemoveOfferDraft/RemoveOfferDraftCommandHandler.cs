@@ -1,4 +1,5 @@
-﻿using Common.Extensions;
+﻿using Common.Exceptions;
+using Common.Extensions;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Offers.API.DataAccess.Repositories;
@@ -31,8 +32,8 @@ namespace Offers.API.Application.Commands.RemoveOfferDraft
             var offerId = Guid.Parse(request.OfferId);
 
             var offer = await _offerRepository.GetByIdAsync(offerId);
-            if (offer == null || offer.OwnerId != userId)
-                throw new OffersDomainException($"There is no offer with id {offerId}");
+            if (offer == null || offer.OwnerId != userId) throw new NotFoundException();
+
             if (!offer.IsDraft)
                 throw new OffersDomainException($"Offer {offerId} is not draft");
 

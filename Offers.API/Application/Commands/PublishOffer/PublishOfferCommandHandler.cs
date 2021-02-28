@@ -1,8 +1,8 @@
-﻿using Common.Extensions;
+﻿using Common.Exceptions;
+using Common.Extensions;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Offers.API.DataAccess.Repositories;
-using Offers.API.Domain;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -28,8 +28,7 @@ namespace Offers.API.Application.Commands.PublishOffer
             var offerId = Guid.Parse(request.OfferId);
 
             var offer = await _offerRepository.GetByIdAsync(offerId);
-            if (offer == null || offer.OwnerId != userId)
-                throw new OffersDomainException($"There is no offer with id {offerId}");
+            if (offer == null || offer.OwnerId != userId) throw new NotFoundException("Offer");
 
             offer.SetPublished();
 

@@ -1,6 +1,6 @@
-﻿using MediatR;
+﻿using Common.Exceptions;
+using MediatR;
 using Offers.API.DataAccess.Repositories;
-using Offers.API.Domain;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -21,8 +21,7 @@ namespace Offers.API.Application.Commands.UpdatePredefinedDeliveryMethod
             var deliveryMethodId = Guid.Parse(request.DeliveryMethodId);
 
             var deliveryMethod = await _deliveryMethodRepository.GetById(deliveryMethodId);
-            if (deliveryMethod == null)
-                throw new OffersDomainException($"Predefined delivery method {deliveryMethodId} not found");
+            if (deliveryMethod == null) throw new NotFoundException();
 
             deliveryMethod.SetName(request.Name);
             deliveryMethod.SetDescription(request.Description);

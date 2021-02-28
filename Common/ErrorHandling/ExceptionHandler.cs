@@ -1,10 +1,10 @@
-﻿using System;
-using System.Diagnostics;
-using Common.ErrorHandling.ActionResults;
+﻿using Common.ErrorHandling.ActionResults;
 using Common.EventBus;
 using Common.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Diagnostics;
 
 namespace Common.ErrorHandling
 {
@@ -25,6 +25,7 @@ namespace Common.ErrorHandling
                 return new ErrorActionResult(ordersDomainException.Message);
             if (exception is UnauthorizedException) return new UnauthorizedResult();
             if (exception is ForbiddenException) return new ForbidResult();
+            if (exception is NotFoundException notFoundException) return new ErrorActionResult(notFoundException.Message, 400); // It's not possible to return 404 :)
             if (exception is IntegrationEventException integrationEventException)
             {
                 var trace = new StackTrace(integrationEventException, true);
