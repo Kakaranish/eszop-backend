@@ -1,11 +1,12 @@
-﻿using MediatR;
+﻿using Carts.API.DataAccess.Repositories;
+using Common.Extensions;
+using Common.Logging;
+using MediatR;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Carts.API.DataAccess.Repositories;
-using Common.Extensions;
-using Microsoft.Extensions.Logging;
 
 namespace Carts.API.Application.Commands.ClearCart
 {
@@ -15,7 +16,7 @@ namespace Carts.API.Application.Commands.ClearCart
         private readonly ICartRepository _cartRepository;
         private readonly HttpContext _httpContext;
 
-        public ClearCartCommandHandler(ILogger<ClearCartCommandHandler> logger, 
+        public ClearCartCommandHandler(ILogger<ClearCartCommandHandler> logger,
             IHttpContextAccessor httpContextAccessor, ICartRepository cartRepository)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -29,12 +30,12 @@ namespace Carts.API.Application.Commands.ClearCart
             var userId = _httpContext.User.Claims.ToTokenPayload().UserClaims.Id;
             var cart = await _cartRepository.GetOrCreateByUserIdAsync(userId);
             cart.ClearCartItems();
-            
+
             _cartRepository.Update(cart);
             await _cartRepository.UnitOfWork.SaveChangesAndDispatchDomainEventsAsync(cancellationToken);
 
-            _logger.LogInformation($"Cart {cart.Id} cleared");
-            
+            _logger.LogWithProps(LogLevel.Debug, "Cart cleared", "CartId".ToKvp(cart.Id));
+
             return await Unit.Task;
         }
     }

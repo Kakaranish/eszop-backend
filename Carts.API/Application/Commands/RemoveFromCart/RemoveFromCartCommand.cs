@@ -14,7 +14,7 @@ namespace Carts.API.Application.Commands.RemoveFromCart
         public RemoveFromCartCommandValidation()
         {
             RuleFor(x => x.CartItemId)
-                .IsGuid();
+                .IsNotEmptyGuid();
         }
     }
 }

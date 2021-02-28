@@ -15,7 +15,7 @@ namespace Carts.API.Application.Commands.UpdateCartItemQuantity
         public UpdateCartItemQuantityCommandValidator()
         {
             RuleFor(x => x.CartItemId)
-                .IsGuid();
+                .IsNotEmptyGuid();
 
             RuleFor(x => x.Quantity)
                 .GreaterThan(0);

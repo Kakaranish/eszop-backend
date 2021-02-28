@@ -3,6 +3,7 @@ using Carts.API.DataAccess.Repositories;
 using Carts.API.Domain;
 using Carts.API.Extensions;
 using Common.Extensions;
+using Common.Logging;
 using Common.Types;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -46,15 +47,11 @@ namespace Carts.API.Application.Commands.AddToCart
             var offerDto = JsonConvert.DeserializeObject<OfferDto>(contentStr);
 
             if (request.Quantity > offerDto.AvailableStock)
-            {
                 throw new CartsDomainException($"Quantity out of range. AvailableStock for offer {offerDto.Id} is {offerDto.AvailableStock}");
-            }
 
             var userId = _httpContext.User.Claims.ToTokenPayload().UserClaims.Id;
             if (userId == offerDto.OwnerId)
-            {
                 throw new CartsDomainException("Buying from himself/herself is illegal");
-            }
 
             var cart = await _cartRepository.GetOrCreateByUserIdAsync(userId);
 
@@ -66,7 +63,10 @@ namespace Carts.API.Application.Commands.AddToCart
             _cartRepository.Update(cart);
             await _cartRepository.UnitOfWork.SaveChangesAndDispatchDomainEventsAsync(cancellationToken);
 
-            _logger.LogInformation($"Added {request.OfferId} offer to cart {cart.Id} as cart item {cartItem.Id}");
+            _logger.LogWithProps(LogLevel.Debug, "Offer added to cart",
+                "OfferId".ToKvp(request.OfferId),
+                "CartId".ToKvp(cart.Id),
+                "CartItemId".ToKvp(cartItem.Id));
 
             return cartItem.ToDto();
         }

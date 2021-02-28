@@ -1,6 +1,7 @@
 ﻿using Carts.API.DataAccess.Repositories;
 using Carts.API.Domain;
 using Common.Extensions;
+using Common.Logging;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
@@ -40,7 +41,10 @@ namespace Carts.API.Application.Commands.RemoveFromCart
             _cartItemRepository.Remove(cartItem);
             await _cartItemRepository.UnitOfWork.SaveChangesAndDispatchDomainEventsAsync(cancellationToken);
 
-            _logger.LogInformation($"Removed cart item {cartItem.Id} from cart {cartItem.CartId}");
+            _logger.LogWithProps(LogLevel.Debug, "Removed cart item",
+                "CartId".ToKvp(cartItem.CartId),
+                "OfferId".ToKvp(cartItem.OfferId),
+                "CartItemId".ToKvp(cartItem.Id));
 
             return await Unit.Task;
         }

@@ -16,7 +16,7 @@ namespace Carts.API.Application.Commands.AddToCart
         public AddToCartCommandValidator()
         {
             RuleFor(x => x.OfferId)
-                .IsGuid();
+                .IsNotEmptyGuid();
 
             RuleFor(x => x.Quantity)
                 .GreaterThan(0);

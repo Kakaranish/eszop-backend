@@ -26,10 +26,12 @@ namespace Common.Logging
             Log.Logger = new LoggerConfiguration()
                 .Enrich.WithMachineName()
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+                .MinimumLevel.Verbose()
                 .WriteTo.Console(
-                    outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u4}] {Message:lj}{NewLine}{Exception}",
-                    restrictedToMinimumLevel: LogEventLevel.Information)
+                    restrictedToMinimumLevel: LogEventLevel.Information,
+                    outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u4}] {Message:lj}{NewLine}{Exception}")
                 .WriteTo.File(logPath,
+                    restrictedToMinimumLevel: LogEventLevel.Debug,
                     outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u4}] {Message:lj}{NewLine}{Exception}",
                     rollingInterval: RollingInterval.Day)
                 .CreateLogger();

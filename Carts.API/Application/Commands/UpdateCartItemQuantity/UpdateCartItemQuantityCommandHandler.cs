@@ -1,6 +1,7 @@
 ﻿using Carts.API.DataAccess.Repositories;
 using Carts.API.Domain;
 using Common.Extensions;
+using Common.Logging;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
@@ -39,11 +40,17 @@ namespace Carts.API.Application.Commands.UpdateCartItemQuantity
 
             if (cartItem.Quantity == request.Quantity) return await Unit.Task;
 
+            var previousQuantity = cartItem.Quantity;
             cartItem.SetQuantity(request.Quantity);
             _cartItemRepository.Update(cartItem);
             await _cartItemRepository.UnitOfWork.SaveChangesAndDispatchDomainEventsAsync(cancellationToken);
 
-            _logger.LogInformation($"Offer's {cartItem.OfferId} quantity in cart {cartItem.CartId} for cart item {cartItem.Id} changed to {cartItem.Quantity}");
+            _logger.LogWithProps(LogLevel.Debug, "Changed offer quantity in cart",
+                "CartId".ToKvp(cartItem.CartId),
+                "OfferId".ToKvp(cartItem.OfferId),
+                "PreviousQuantity".ToKvp(previousQuantity),
+                "NewQuantity".ToKvp(cartItem.Quantity),
+                "CartItemId".ToKvp(cartItem.Id));
 
             return await Unit.Task;
         }

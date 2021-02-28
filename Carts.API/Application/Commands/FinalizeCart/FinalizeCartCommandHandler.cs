@@ -2,6 +2,7 @@
 using Carts.API.Domain;
 using Common.Dto;
 using Common.Extensions;
+using Common.Logging;
 using Common.Types;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -43,11 +44,7 @@ namespace Carts.API.Application.Commands.FinalizeCart
             var userId = _httpContext.User.Claims.ToTokenPayload().UserClaims.Id;
             var cart = await _cartRepository.GetOrCreateByUserIdAsync(userId);
             if (cart.IsEmpty)
-            {
-                var msg = $"Cart {cart.Id} cannot be finalized because it's empty";
-                _logger.LogError(msg);
-                throw new CartsDomainException(msg);
-            }
+                throw new CartsDomainException($"Cart {cart.Id} cannot be finalized because it's empty");
 
             var httpClient = _httpClientFactory.CreateClient();
             var accessToken = _httpContext.Request.Headers["Authorization"].ToString().Split(' ')[1];
@@ -59,19 +56,21 @@ namespace Carts.API.Application.Commands.FinalizeCart
             var responseContent = await response.Content.ReadAsStringAsync(cancellationToken);
             var orderCreatedDto = JsonConvert.DeserializeObject<OrderCreatedDto>(responseContent);
 
-            _logger.LogInformation($"Order {orderCreatedDto.OrderId} created from cart {cart.Id}");
+            _logger.LogWithProps(LogLevel.Debug, "Order created from cart",
+                "OrderId".ToKvp(orderCreatedDto.OrderId),
+                "CartId".ToKvp(cart.Id));
 
             _cartRepository.Remove(cart);
             await _cartRepository.UnitOfWork.SaveChangesAndDispatchDomainEventsAsync(cancellationToken);
 
-            _logger.LogInformation($"Removed cart {cart.Id}");
+            _logger.LogWithProps(LogLevel.Debug, "Removed cart", "CartId".ToKvp(cart.Id));
 
             return orderCreatedDto.OrderId;
         }
 
         private static CreateOrderCartDto ToCreateOrderCartDto(Cart cart)
         {
-            return new CreateOrderCartDto
+            return new()
             {
                 Id = cart.Id,
                 UserId = cart.UserId,
