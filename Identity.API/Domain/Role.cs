@@ -17,7 +17,7 @@ namespace Identity.API.Domain
 
         protected Role(string name)
         {
-            Name = ToCamelCase(name);
+            Name = name.ToUpperInvariant();
         }
 
         private Role()
@@ -26,14 +26,11 @@ namespace Identity.API.Domain
 
         public static Role Parse(string role)
         {
-            if (string.IsNullOrEmpty(role))
-            {
-                return null;
-            }
+            if (string.IsNullOrWhiteSpace(role)) return null;
 
             EnsureRolesCachePopulated();
 
-            _rolesCache.TryGetValue(role.ToLowerInvariant(), out var matchingRole);
+            _rolesCache.TryGetValue(role.ToUpperInvariant(), out var matchingRole);
             return matchingRole;
         }
 
@@ -48,23 +45,14 @@ namespace Identity.API.Domain
                 .GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly)
                 .Select(f => f.GetValue(null))
                 .Cast<Role>()
-                .ToDictionary(x => x.Name.ToLowerInvariant(), x => x);
-        }
-
-        private static string ToCamelCase(string str)
-        {
-            if (!string.IsNullOrEmpty(str) && str.Length > 0)
-            {
-                return char.ToLowerInvariant(str[0]) + str.Substring(1);
-            }
-
-            return str;
+                .ToDictionary(x => x.Name.ToUpperInvariant(), x => x);
         }
 
         public bool Equals(Role other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
+
             return Name == other.Name;
         }
 
@@ -73,6 +61,7 @@ namespace Identity.API.Domain
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != this.GetType()) return false;
+
             return Equals((Role)obj);
         }
 
@@ -83,18 +72,9 @@ namespace Identity.API.Domain
 
         public static bool operator ==(Role obj1, Role obj2)
         {
-            if (ReferenceEquals(obj1, obj2))
-            {
-                return true;
-            }
-            if (ReferenceEquals(obj1, null))
-            {
-                return false;
-            }
-            if (ReferenceEquals(obj2, null))
-            {
-                return false;
-            }
+            if (ReferenceEquals(obj1, obj2)) return true;
+            if (ReferenceEquals(obj1, null)) return false;
+            if (ReferenceEquals(obj2, null)) return false;
 
             return obj1.Equals(obj2);
         }
