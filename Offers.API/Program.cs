@@ -1,5 +1,6 @@
 using Common.Logging;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 
@@ -24,6 +25,11 @@ namespace Offers.API
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
+                    webBuilder.ConfigureKestrel(options =>
+                    {
+                        options.ListenAnyIP(5000, o => o.Protocols = HttpProtocols.Http1);
+                        options.ListenLocalhost(5001, o => o.Protocols = HttpProtocols.Http2);
+                    });
                 });
     }
 }

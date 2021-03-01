@@ -18,7 +18,9 @@ using Offers.API.DataAccess;
 using Offers.API.DataAccess.Repositories;
 using Offers.API.Domain;
 using Offers.API.Extensions;
+using Offers.API.Grpc;
 using Offers.API.Services;
+using ProtoBuf.Grpc.Server;
 using Serilog;
 
 namespace Offers.API
@@ -36,6 +38,7 @@ namespace Offers.API
         {
             services.AddControllers();
             services.AddHttpContextAccessor();
+            services.AddCodeFirstGrpc();
 
             services.ConfigureUrls();
 
@@ -95,6 +98,7 @@ namespace Offers.API
             {
                 endpoints.MapHealthChecks("/healthcheck");
                 endpoints.MapControllers();
+                endpoints.MapGrpcService<OfferService>();
             });
         }
     }

@@ -13,7 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Carts.API", "Carts.API\Cart
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orders.API", "Orders.API\Orders.API.csproj", "{3975614A-7D36-4904-8028-80643C21ADE3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "API.Gateway", "API.Gateway\API.Gateway.csproj", "{5FCDE94A-3538-4B32-B04E-59AB6CB702C9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "API.Gateway", "API.Gateway\API.Gateway.csproj", "{5FCDE94A-3538-4B32-B04E-59AB6CB702C9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Grpc", "Common.Grpc\Common.Grpc.csproj", "{4F4BAC6D-8D49-450C-BA8F-AAAE0706E127}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{5FCDE94A-3538-4B32-B04E-59AB6CB702C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5FCDE94A-3538-4B32-B04E-59AB6CB702C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5FCDE94A-3538-4B32-B04E-59AB6CB702C9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4F4BAC6D-8D49-450C-BA8F-AAAE0706E127}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4F4BAC6D-8D49-450C-BA8F-AAAE0706E127}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4F4BAC6D-8D49-450C-BA8F-AAAE0706E127}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4F4BAC6D-8D49-450C-BA8F-AAAE0706E127}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
