@@ -1,10 +1,11 @@
 ﻿using Common.Exceptions;
 using Common.Extensions;
+using Common.Grpc.Services.Types;
 using MediatR;
 using Microsoft.AspNetCore.Http;
-using Orders.API.Application.Services;
 using Orders.API.DataAccess.Repositories;
 using Orders.API.Domain;
+using Orders.API.Grpc;
 using System;
 using System.Linq;
 using System.Threading;
@@ -16,15 +17,15 @@ namespace Orders.API.Application.Commands.UpdateDeliveryInfo
     {
         private readonly HttpContext _httpContext;
         private readonly IOrderRepository _orderRepository;
-        private readonly IDeliveryMethodsProvider _deliveryMethodsProvider;
+        private readonly IOffersServiceClientFactory _offersServiceClientFactory;
 
         public UpdateDeliveryInfoCommandHandler(IHttpContextAccessor httpContextAccessor,
-            IOrderRepository orderRepository, IDeliveryMethodsProvider deliveryMethodsProvider)
+            IOrderRepository orderRepository, IOffersServiceClientFactory offersServiceClientFactory)
         {
             _httpContext = httpContextAccessor.HttpContext ??
                            throw new ArgumentNullException(nameof(httpContextAccessor.HttpContext));
             _orderRepository = orderRepository ?? throw new ArgumentNullException(nameof(orderRepository));
-            _deliveryMethodsProvider = deliveryMethodsProvider ?? throw new ArgumentNullException(nameof(deliveryMethodsProvider));
+            _offersServiceClientFactory = offersServiceClientFactory ?? throw new ArgumentNullException(nameof(offersServiceClientFactory));
         }
 
         public async Task<Unit> Handle(UpdateDeliveryInfoCommand request, CancellationToken cancellationToken)
@@ -39,10 +40,14 @@ namespace Orders.API.Application.Commands.UpdateDeliveryInfo
             request.Country, request.City, request.ZipCode, request.Street);
             order.SetDeliveryAddress(deliveryAddress);
 
-            var availableDeliveryMethods = await _deliveryMethodsProvider.Get(order);
-            var matchingDeliveryMethod = availableDeliveryMethods.FirstOrDefault(x => x.Name == request.DeliveryMethodName);
-            if (matchingDeliveryMethod == null)
-                throw new OrdersDomainException("Invalid delivery method name");
+            var offerIds = order.OrderItems.Select(orderItem => orderItem.Id);
+
+            var offersServiceClient = _offersServiceClientFactory.Create();
+            var grpcRequest = new GetDeliveryMethodsForOffersRequest { OfferIds = offerIds };
+            var grpcResponse = await offersServiceClient.GetDeliveryMethodsForOffers(grpcRequest);
+
+            var matchingDeliveryMethod = grpcResponse.DeliveryMethods?.FirstOrDefault(x => x.Name == request.DeliveryMethodName);
+            if (matchingDeliveryMethod == null) throw new OrdersDomainException("Invalid delivery method name");
 
             var deliveryMethod = new DeliveryMethod(matchingDeliveryMethod.Name, matchingDeliveryMethod.Price);
             order.SetDeliveryMethod(deliveryMethod);

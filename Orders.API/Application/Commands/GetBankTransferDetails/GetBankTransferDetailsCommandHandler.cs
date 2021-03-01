@@ -16,8 +16,8 @@ namespace Orders.API.Application.Commands.GetBankTransferDetails
     public class GetBankTransferDetailsCommandHandler
         : IRequestHandler<GetBankTransferDetailsCommand, BankTransferDetailsDto>
     {
-        private readonly IOrderRepository _orderRepository;
         private readonly HttpContext _httpContext;
+        private readonly IOrderRepository _orderRepository;
         private readonly IOffersServiceClientFactory _offersServiceClientFactory;
 
         public GetBankTransferDetailsCommandHandler(IHttpContextAccessor httpContextAccessor,

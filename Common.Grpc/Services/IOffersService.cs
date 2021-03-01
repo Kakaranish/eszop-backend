@@ -11,5 +11,9 @@ namespace Common.Grpc.Services
         [OperationContract]
         Task<GetBankAccountNumberResponse> GetBankAccount(
             GetBankAccountNumberRequest request, CallContext context = default);
+
+        [OperationContract]
+        Task<GetDeliveryMethodsForOffersResponse> GetDeliveryMethodsForOffers(
+            GetDeliveryMethodsForOffersRequest request, CallContext context = default);
     }
 }

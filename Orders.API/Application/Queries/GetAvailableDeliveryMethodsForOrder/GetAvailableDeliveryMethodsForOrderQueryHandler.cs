@@ -1,14 +1,16 @@
-﻿using Common.Dto;
-using Common.Exceptions;
+﻿using Common.Exceptions;
 using Common.Extensions;
+using Common.Grpc.Services.Types;
 using MediatR;
 using Microsoft.AspNetCore.Http;
-using Orders.API.Application.Services;
 using Orders.API.DataAccess.Repositories;
+using Orders.API.Grpc;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using DeliveryMethodDto = Common.Dto.DeliveryMethodDto;
 
 namespace Orders.API.Application.Queries.GetAvailableDeliveryMethodsForOrder
 {
@@ -17,15 +19,15 @@ namespace Orders.API.Application.Queries.GetAvailableDeliveryMethodsForOrder
     {
         private readonly HttpContext _httpContext;
         private readonly IOrderRepository _orderRepository;
-        private readonly IDeliveryMethodsProvider _deliveryMethodsProvider;
+        private readonly IOffersServiceClientFactory _offersServiceClientFactory;
 
         public GetAvailableDeliveryMethodsForOrderQueryHandler(IHttpContextAccessor httpContextAccessor,
-            IOrderRepository orderRepository, IDeliveryMethodsProvider deliveryMethodsProvider)
+            IOrderRepository orderRepository, IOffersServiceClientFactory offersServiceClientFactory)
         {
             _httpContext = httpContextAccessor.HttpContext ??
                            throw new ArgumentNullException(nameof(httpContextAccessor.HttpContext));
             _orderRepository = orderRepository ?? throw new ArgumentNullException(nameof(orderRepository));
-            _deliveryMethodsProvider = deliveryMethodsProvider ?? throw new ArgumentNullException(nameof(deliveryMethodsProvider));
+            _offersServiceClientFactory = offersServiceClientFactory ?? throw new ArgumentNullException(nameof(offersServiceClientFactory));
         }
 
         public async Task<IList<DeliveryMethodDto>> Handle(GetAvailableDeliveryMethodsForOrderQuery request, CancellationToken cancellationToken)
@@ -36,9 +38,17 @@ namespace Orders.API.Application.Queries.GetAvailableDeliveryMethodsForOrder
             var order = await _orderRepository.GetByIdAsync(orderId);
             if (order.BuyerId != userId) throw new NotFoundException();
 
-            var deliveryMethods = await _deliveryMethodsProvider.Get(order);
+            var offerIds = order.OrderItems.Select(orderItem => orderItem.OfferId);
 
-            return deliveryMethods;
+            var offersServiceClient = _offersServiceClientFactory.Create();
+            var grpcRequest = new GetDeliveryMethodsForOffersRequest { OfferIds = offerIds };
+            var grpcResponse = await offersServiceClient.GetDeliveryMethodsForOffers(grpcRequest);
+
+            return grpcResponse.DeliveryMethods.Select(method => new DeliveryMethodDto
+            {
+                Name = method.Name,
+                Price = method.Price
+            }).ToList();
         }
     }
 }

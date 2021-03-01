@@ -12,7 +12,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
-using Orders.API.Application.Services;
 using Orders.API.DataAccess;
 using Orders.API.DataAccess.Repositories;
 using Orders.API.Domain;
@@ -60,7 +59,6 @@ namespace Orders.API
             services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
             services.AddScoped<IOrderRepository, OrderRepository>();
-            services.AddScoped<IDeliveryMethodsProvider, DeliveryMethodsProvider>();
             services.AddScoped<IOffersServiceClientFactory, OffersServiceClientFactory>();
 
             services.AddExceptionHandling<OrdersDomainException>();
