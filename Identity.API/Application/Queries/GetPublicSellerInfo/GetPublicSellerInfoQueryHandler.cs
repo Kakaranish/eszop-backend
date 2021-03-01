@@ -1,9 +1,9 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-using Common.Dto;
+﻿using Common.Dto;
 using Identity.API.DataAccess.Repositories;
 using MediatR;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Identity.API.Application.Queries.GetPublicSellerInfo
 {

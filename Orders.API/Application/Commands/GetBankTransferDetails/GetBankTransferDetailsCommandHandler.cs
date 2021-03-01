@@ -1,18 +1,13 @@
 ﻿using Common.Exceptions;
 using Common.Extensions;
-using Common.Grpc.Services;
 using Common.Grpc.Services.Types;
-using Common.Types;
-using Grpc.Net.Client;
 using MediatR;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Options;
 using Orders.API.Application.Dto;
 using Orders.API.DataAccess.Repositories;
-using ProtoBuf.Grpc.Client;
+using Orders.API.Grpc;
 using System;
 using System.Linq;
-using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -23,15 +18,15 @@ namespace Orders.API.Application.Commands.GetBankTransferDetails
     {
         private readonly IOrderRepository _orderRepository;
         private readonly HttpContext _httpContext;
-        private readonly UrlsConfig _urlsConfig;
+        private readonly IOffersServiceClientFactory _offersServiceClientFactory;
 
         public GetBankTransferDetailsCommandHandler(IHttpContextAccessor httpContextAccessor,
-            IOrderRepository orderRepository, IOptions<UrlsConfig> options)
+            IOrderRepository orderRepository, IOffersServiceClientFactory offersServiceClientFactory)
         {
             _httpContext = httpContextAccessor.HttpContext ??
                            throw new ArgumentNullException(nameof(httpContextAccessor.HttpContext));
             _orderRepository = orderRepository ?? throw new ArgumentNullException(nameof(orderRepository));
-            _urlsConfig = options?.Value ?? throw new ArgumentNullException(nameof(options.Value));
+            _offersServiceClientFactory = offersServiceClientFactory ?? throw new ArgumentNullException(nameof(offersServiceClientFactory));
         }
 
         public async Task<BankTransferDetailsDto> Handle(GetBankTransferDetailsCommand request, CancellationToken cancellationToken)
@@ -47,10 +42,11 @@ namespace Orders.API.Application.Commands.GetBankTransferDetails
                 throw new NotFoundException("Order");
             }
 
-            using var channel = GrpcChannel.ForAddress($"{_urlsConfig.Offers}");
-            var client = channel.CreateGrpcService<IOffersService>();
-            var grpcRequest = new GetBankAccountNumberRequest { OfferId = order.OrderItems.First().OfferId };
-            var grpcResponse = await client.GetBankAccount(grpcRequest);
+            var offersServiceClient = _offersServiceClientFactory.Create();
+
+            var anyOfferId = order.OrderItems.First().OfferId;
+            var grpcRequest = new GetBankAccountNumberRequest { OfferId = anyOfferId };
+            var grpcResponse = await offersServiceClient.GetBankAccount(grpcRequest);
 
             var bankTransferDetails = new BankTransferDetailsDto
             {

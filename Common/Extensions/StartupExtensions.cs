@@ -25,7 +25,17 @@ namespace Common.Extensions
             
             return services;
         }
-        
+
+        public static IServiceCollection ConfigureServicesEndpoints(this IServiceCollection services)
+        {
+            using var servicesProvider = services.BuildServiceProvider();
+            var configuration = servicesProvider.GetRequiredService<IConfiguration>();
+
+            services.Configure<ServicesEndpointsConfig>(configuration.GetSection("Endpoints"));
+
+            return services;
+        }
+
         public static bool IsCustomDevelopment(this IWebHostEnvironment env)
         {
             return DevelopmentEnvironments.Contains(env.EnvironmentName);

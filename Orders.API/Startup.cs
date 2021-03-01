@@ -16,6 +16,7 @@ using Orders.API.Application.Services;
 using Orders.API.DataAccess;
 using Orders.API.DataAccess.Repositories;
 using Orders.API.Domain;
+using Orders.API.Grpc;
 using Serilog;
 
 namespace Orders.API
@@ -35,6 +36,7 @@ namespace Orders.API
             services.AddHttpContextAccessor();
 
             services.ConfigureUrls();
+            services.ConfigureServicesEndpoints();
             services.AddHttpClient();
 
             services.AddJwtAuthentication();
@@ -59,6 +61,7 @@ namespace Orders.API
 
             services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<IDeliveryMethodsProvider, DeliveryMethodsProvider>();
+            services.AddScoped<IOffersServiceClientFactory, OffersServiceClientFactory>();
 
             services.AddExceptionHandling<OrdersDomainException>();
 
@@ -73,7 +76,7 @@ namespace Orders.API
             }
 
             app.UseSerilogRequestLogging();
-            
+
             app.UseExceptionHandler("/error");
 
             app.UseRouting();
