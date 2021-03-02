@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
 
-namespace Common.Grpc.Services.Types
+namespace Common.Grpc.Services.OffersService.Requests.GetDeliveryMethodsForOffers
 {
     [DataContract]
     public class DeliveryMethodDto

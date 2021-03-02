@@ -1,9 +1,11 @@
-﻿using Common.Grpc.Services.Types;
+﻿using Common.Grpc.Services.OffersService.Requests.GetBankAccountNumber;
+using Common.Grpc.Services.OffersService.Requests.GetDeliveryMethodsForOffers;
+using Common.Grpc.Services.OffersService.Requests.GetOfferBasicInfo;
 using ProtoBuf.Grpc;
 using System.ServiceModel;
 using System.Threading.Tasks;
 
-namespace Common.Grpc.Services
+namespace Common.Grpc.Services.OffersService
 {
     [ServiceContract]
     public interface IOffersService
@@ -15,5 +17,9 @@ namespace Common.Grpc.Services
         [OperationContract]
         Task<GetDeliveryMethodsForOffersResponse> GetDeliveryMethodsForOffers(
             GetDeliveryMethodsForOffersRequest request, CallContext context = default);
+
+        [OperationContract]
+        Task<GetOfferBasicInfoResponse> GetOfferBasicInfo(
+            GetOfferBasicInfoRequest request, CallContext context = default);
     }
 }
