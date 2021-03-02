@@ -1,11 +1,11 @@
-﻿using System;
-using System.Linq;
-using Common.ErrorHandling;
+﻿using Common.ErrorHandling;
 using Common.Types;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Linq;
 
 namespace Common.Extensions
 {
@@ -16,17 +16,7 @@ namespace Common.Extensions
             "DevelopmentLocal"
         };
 
-        public static IServiceCollection ConfigureUrls(this IServiceCollection services)
-        {
-            using var servicesProvider = services.BuildServiceProvider();
-            var configuration = servicesProvider.GetRequiredService<IConfiguration>();
-
-            services.Configure<UrlsConfig>(configuration.GetSection("Urls"));
-            
-            return services;
-        }
-
-        public static IServiceCollection ConfigureServicesEndpoints(this IServiceCollection services)
+        public static IServiceCollection ReadServicesEndpoints(this IServiceCollection services)
         {
             using var servicesProvider = services.BuildServiceProvider();
             var configuration = servicesProvider.GetRequiredService<IConfiguration>();

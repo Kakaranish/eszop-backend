@@ -34,8 +34,7 @@ namespace Orders.API
             services.AddControllers();
             services.AddHttpContextAccessor();
 
-            services.ConfigureUrls();
-            services.ConfigureServicesEndpoints();
+            services.ReadServicesEndpoints();
             services.AddHttpClient();
 
             services.AddJwtAuthentication();

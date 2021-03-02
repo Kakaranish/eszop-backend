@@ -40,8 +40,6 @@ namespace Offers.API
             services.AddHttpContextAccessor();
             services.AddCodeFirstGrpc();
 
-            services.ConfigureUrls();
-
             services.AddJwtAuthentication();
             services.AddMediatR(typeof(Startup).Assembly);
 

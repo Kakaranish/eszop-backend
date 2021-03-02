@@ -2,6 +2,7 @@ using Carts.API.Application.IntegrationEventsHandlers;
 using Carts.API.DataAccess;
 using Carts.API.DataAccess.Repositories;
 using Carts.API.Domain;
+using Carts.API.Grpc;
 using Common.Authentication;
 using Common.ErrorHandling;
 using Common.EventBus;
@@ -35,8 +36,8 @@ namespace Carts.API
             services.AddControllers();
             services.AddHttpContextAccessor();
 
-            services.ConfigureUrls();
             services.AddHttpClient();
+            services.ReadServicesEndpoints();
 
             services.AddJwtAuthentication();
             services.AddMediatR(typeof(Startup).Assembly);
@@ -60,6 +61,7 @@ namespace Carts.API
 
             services.AddScoped<ICartRepository, CartRepository>();
             services.AddScoped<ICartItemRepository, CartItemRepository>();
+            services.AddScoped<IOffersServiceClientFactory, OffersServiceClientFactory>();
 
             services.AddExceptionHandling<CartsDomainException>();
 
