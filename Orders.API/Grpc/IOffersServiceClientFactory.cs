@@ -1,4 +1,4 @@
-﻿using Common.Grpc.Services;
+﻿using Common.Grpc.Services.OffersService;
 
 namespace Orders.API.Grpc
 {

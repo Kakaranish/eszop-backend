@@ -1,8 +1,11 @@
-﻿using Common.Grpc.Services;
-using Common.Grpc.Services.Types;
+﻿using Common.Grpc.Services.OffersService;
+using Common.Grpc.Services.OffersService.Requests.GetBankAccountNumber;
+using Common.Grpc.Services.OffersService.Requests.GetDeliveryMethodsForOffers;
+using Common.Grpc.Services.OffersService.Requests.GetOfferBasicInfo;
 using Offers.API.DataAccess.Repositories;
 using ProtoBuf.Grpc;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -51,6 +54,30 @@ namespace Offers.API.Grpc
                     }
                 )
             };
+        }
+
+        public async Task<GetOfferBasicInfoResponse> GetOfferBasicInfo(
+            GetOfferBasicInfoRequest request, CallContext context = default)
+        {
+            var offer = await _offerRepository.GetByIdAsync(request.OfferId);
+            if (offer == null) return new GetOfferBasicInfoResponse();
+
+            var offerDto = new OfferDto
+            {
+                Id = offer.Id,
+                Name = offer.Name,
+                OwnerId = offer.OwnerId,
+                AvailableStock = offer.AvailableStock,
+                Price = offer.Price,
+                Images = offer.Images?.Select(img => new ImageDto
+                {
+                    Id = img.Id,
+                    Uri = img.Uri,
+                    IsMain = img.IsMain
+                }) ?? new List<ImageDto>()
+            };
+
+            return new GetOfferBasicInfoResponse { Offer = offerDto };
         }
     }
 }

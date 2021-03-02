@@ -1,6 +1,5 @@
 ﻿using Common.Exceptions;
 using Common.Extensions;
-using Common.Grpc.Services.Types;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Orders.API.DataAccess.Repositories;
@@ -10,6 +9,8 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Common.Grpc.Services.OffersService;
+using Common.Grpc.Services.OffersService.Requests.GetDeliveryMethodsForOffers;
 
 namespace Orders.API.Application.Commands.UpdateDeliveryInfo
 {

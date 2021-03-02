@@ -1,4 +1,4 @@
-﻿using Common.Grpc.Services;
+﻿using Common.Grpc.Services.OffersService;
 using Common.Types;
 using Grpc.Net.Client;
 using Microsoft.Extensions.Options;
@@ -18,7 +18,7 @@ namespace Orders.API.Grpc
 
         public IOffersService Create()
         {
-            var uri = $"{_endpointsConfig.Offers.Grpc.Hostname}:{_endpointsConfig.Offers.Grpc.Port}";
+            var uri = _endpointsConfig.Offers.Grpc.ToString();
             var channel = GrpcChannel.ForAddress(uri);
             var client = channel.CreateGrpcService<IOffersService>();
 

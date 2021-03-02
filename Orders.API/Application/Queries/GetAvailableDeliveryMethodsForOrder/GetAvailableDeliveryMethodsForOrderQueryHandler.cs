@@ -1,6 +1,6 @@
 ﻿using Common.Exceptions;
 using Common.Extensions;
-using Common.Grpc.Services.Types;
+using Common.Grpc.Services.OffersService.Requests.GetDeliveryMethodsForOffers;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Orders.API.DataAccess.Repositories;
