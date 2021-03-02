@@ -1,16 +1,18 @@
 ﻿using Common.Exceptions;
 using Common.Extensions;
+using Common.Grpc;
+using Common.Grpc.Services.OffersService;
+using Common.Grpc.Services.OffersService.Requests.GetDeliveryMethodsForOffers;
+using Common.Types;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Options;
 using Orders.API.DataAccess.Repositories;
 using Orders.API.Domain;
-using Orders.API.Grpc;
 using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Common.Grpc.Services.OffersService;
-using Common.Grpc.Services.OffersService.Requests.GetDeliveryMethodsForOffers;
 
 namespace Orders.API.Application.Commands.UpdateDeliveryInfo
 {
@@ -18,15 +20,18 @@ namespace Orders.API.Application.Commands.UpdateDeliveryInfo
     {
         private readonly HttpContext _httpContext;
         private readonly IOrderRepository _orderRepository;
-        private readonly IOffersServiceClientFactory _offersServiceClientFactory;
+        private readonly IGrpcServiceClientFactory<IOffersService> _offersServiceClientFactory;
+        private readonly ServicesEndpointsConfig _endpointsConfig;
 
         public UpdateDeliveryInfoCommandHandler(IHttpContextAccessor httpContextAccessor,
-            IOrderRepository orderRepository, IOffersServiceClientFactory offersServiceClientFactory)
+            IOrderRepository orderRepository, IGrpcServiceClientFactory<IOffersService> offersServiceClientFactory,
+            IOptions<ServicesEndpointsConfig> options)
         {
             _httpContext = httpContextAccessor.HttpContext ??
                            throw new ArgumentNullException(nameof(httpContextAccessor.HttpContext));
             _orderRepository = orderRepository ?? throw new ArgumentNullException(nameof(orderRepository));
             _offersServiceClientFactory = offersServiceClientFactory ?? throw new ArgumentNullException(nameof(offersServiceClientFactory));
+            _endpointsConfig = options.Value ?? throw new ArgumentNullException(nameof(options.Value));
         }
 
         public async Task<Unit> Handle(UpdateDeliveryInfoCommand request, CancellationToken cancellationToken)
@@ -43,7 +48,7 @@ namespace Orders.API.Application.Commands.UpdateDeliveryInfo
 
             var offerIds = order.OrderItems.Select(orderItem => orderItem.Id);
 
-            var offersServiceClient = _offersServiceClientFactory.Create();
+            var offersServiceClient = _offersServiceClientFactory.Create(_endpointsConfig.Offers.Grpc.ToString());
             var grpcRequest = new GetDeliveryMethodsForOffersRequest { OfferIds = offerIds };
             var grpcResponse = await offersServiceClient.GetDeliveryMethodsForOffers(grpcRequest);
 

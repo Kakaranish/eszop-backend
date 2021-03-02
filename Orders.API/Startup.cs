@@ -2,6 +2,8 @@ using Common.Authentication;
 using Common.ErrorHandling;
 using Common.EventBus;
 using Common.Extensions;
+using Common.Grpc;
+using Common.Grpc.Services.OffersService;
 using Common.HealthCheck;
 using FluentValidation;
 using MediatR;
@@ -15,7 +17,6 @@ using Microsoft.Extensions.Logging;
 using Orders.API.DataAccess;
 using Orders.API.DataAccess.Repositories;
 using Orders.API.Domain;
-using Orders.API.Grpc;
 using Serilog;
 
 namespace Orders.API
@@ -58,7 +59,7 @@ namespace Orders.API
             services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
             services.AddScoped<IOrderRepository, OrderRepository>();
-            services.AddScoped<IOffersServiceClientFactory, OffersServiceClientFactory>();
+            services.AddScoped<IGrpcServiceClientFactory<IOffersService>, GrpcServiceClientFactory<IOffersService>>();
 
             services.AddExceptionHandling<OrdersDomainException>();
 

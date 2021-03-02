@@ -1,11 +1,14 @@
 ﻿using Common.Exceptions;
 using Common.Extensions;
+using Common.Grpc;
+using Common.Grpc.Services.OffersService;
 using Common.Grpc.Services.OffersService.Requests.GetBankAccountNumber;
+using Common.Types;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Options;
 using Orders.API.Application.Dto;
 using Orders.API.DataAccess.Repositories;
-using Orders.API.Grpc;
 using System;
 using System.Linq;
 using System.Threading;
@@ -18,15 +21,19 @@ namespace Orders.API.Application.Commands.GetBankTransferDetails
     {
         private readonly HttpContext _httpContext;
         private readonly IOrderRepository _orderRepository;
-        private readonly IOffersServiceClientFactory _offersServiceClientFactory;
+        private readonly IGrpcServiceClientFactory<IOffersService> _offersServiceClientFactory;
+        private readonly ServicesEndpointsConfig _endpointsConfig;
 
         public GetBankTransferDetailsCommandHandler(IHttpContextAccessor httpContextAccessor,
-            IOrderRepository orderRepository, IOffersServiceClientFactory offersServiceClientFactory)
+            IOrderRepository orderRepository, IGrpcServiceClientFactory<IOffersService> grpcServiceClientFactory,
+            IOptions<ServicesEndpointsConfig> options)
         {
             _httpContext = httpContextAccessor.HttpContext ??
                            throw new ArgumentNullException(nameof(httpContextAccessor.HttpContext));
             _orderRepository = orderRepository ?? throw new ArgumentNullException(nameof(orderRepository));
-            _offersServiceClientFactory = offersServiceClientFactory ?? throw new ArgumentNullException(nameof(offersServiceClientFactory));
+            _offersServiceClientFactory = grpcServiceClientFactory ??
+                                          throw new ArgumentNullException(nameof(grpcServiceClientFactory));
+            _endpointsConfig = options.Value ?? throw new ArgumentNullException(nameof(options.Value));
         }
 
         public async Task<BankTransferDetailsDto> Handle(GetBankTransferDetailsCommand request, CancellationToken cancellationToken)
@@ -42,7 +49,7 @@ namespace Orders.API.Application.Commands.GetBankTransferDetails
                 throw new NotFoundException("Order");
             }
 
-            var offersServiceClient = _offersServiceClientFactory.Create();
+            var offersServiceClient = _offersServiceClientFactory.Create(_endpointsConfig.Offers.Grpc.ToString());
 
             var anyOfferId = order.OrderItems.First().OfferId;
             var grpcRequest = new GetBankAccountNumberRequest { OfferId = anyOfferId };
