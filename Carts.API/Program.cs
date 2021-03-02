@@ -2,6 +2,7 @@ using Common.Logging;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Serilog;
+using System;
 
 namespace Carts.API
 {
@@ -9,6 +10,9 @@ namespace Carts.API
     {
         public static void Main(string[] args)
         {
+            AppContext.SetSwitch(
+                "System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
+
             LogConfiguration.Configure();
 
             Log.Logger.Information("----------------------------------------");
