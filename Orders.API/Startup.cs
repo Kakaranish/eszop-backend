@@ -17,6 +17,8 @@ using Microsoft.Extensions.Logging;
 using Orders.API.DataAccess;
 using Orders.API.DataAccess.Repositories;
 using Orders.API.Domain;
+using Orders.API.Grpc;
+using ProtoBuf.Grpc.Server;
 using Serilog;
 
 namespace Orders.API
@@ -34,6 +36,7 @@ namespace Orders.API
         {
             services.AddControllers();
             services.AddHttpContextAccessor();
+            services.AddCodeFirstGrpc();
 
             services.ReadServicesEndpoints();
             services.AddHttpClient();
@@ -86,6 +89,7 @@ namespace Orders.API
             {
                 endpoints.MapHealthChecks("/healthcheck");
                 endpoints.MapControllers();
+                endpoints.MapGrpcService<OrdersService>();
             });
         }
     }

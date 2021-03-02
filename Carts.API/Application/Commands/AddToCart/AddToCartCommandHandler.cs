@@ -2,16 +2,18 @@ using Carts.API.Application.Dto;
 using Carts.API.DataAccess.Repositories;
 using Carts.API.Domain;
 using Carts.API.Extensions;
-using Carts.API.Grpc;
 using Common.Extensions;
+using Common.Grpc;
+using Common.Grpc.Services.OffersService;
 using Common.Grpc.Services.OffersService.Requests.GetOfferBasicInfo;
 using Common.Logging;
+using Common.Types;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System;
 using System.Linq;
-using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -20,28 +22,28 @@ namespace Carts.API.Application.Commands.AddToCart
     public class AddToCartCommandHandler : IRequestHandler<AddToCartCommand, CartItemDto>
     {
         private readonly ILogger<AddToCartCommandHandler> _logger;
-        private readonly IHttpClientFactory _httpClientFactory;
         private readonly HttpContext _httpContext;
         private readonly ICartRepository _cartRepository;
-        private readonly IOffersServiceClientFactory _offersServiceClientFactory;
+        private readonly IGrpcServiceClientFactory<IOffersService> _offersServiceClientFactory;
+        private readonly ServicesEndpointsConfig _endpointsConfig;
 
-        public AddToCartCommandHandler(ILogger<AddToCartCommandHandler> logger, IHttpClientFactory httpClientFactory,
-            IHttpContextAccessor httpContextAccessor, ICartRepository cartRepository,
-            IOffersServiceClientFactory offersServiceClientFactory)
+        public AddToCartCommandHandler(ILogger<AddToCartCommandHandler> logger, IHttpContextAccessor httpContextAccessor,
+            ICartRepository cartRepository, IGrpcServiceClientFactory<IOffersService> offersServiceClientFactory,
+            IOptions<ServicesEndpointsConfig> options)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _httpClientFactory = httpClientFactory ?? throw new ArgumentNullException(nameof(httpClientFactory));
             _httpContext = httpContextAccessor.HttpContext ??
                            throw new ArgumentNullException(nameof(httpContextAccessor.HttpContext));
             _cartRepository = cartRepository ?? throw new ArgumentNullException(nameof(cartRepository));
             _offersServiceClientFactory = offersServiceClientFactory ??
                                           throw new ArgumentNullException(nameof(offersServiceClientFactory));
+            _endpointsConfig = options.Value ?? throw new ArgumentNullException(nameof(options.Value));
         }
 
         public async Task<CartItemDto> Handle(AddToCartCommand request, CancellationToken cancellationToken)
         {
             var offerId = Guid.Parse(request.OfferId);
-            var offersServiceClient = _offersServiceClientFactory.Create();
+            var offersServiceClient = _offersServiceClientFactory.Create(_endpointsConfig.Offers.Grpc.ToString());
             var grpcRequest = new GetOfferBasicInfoRequest { OfferId = offerId };
             var grpcResponse = await offersServiceClient.GetOfferBasicInfo(grpcRequest);
             var offer = grpcResponse.Offer;

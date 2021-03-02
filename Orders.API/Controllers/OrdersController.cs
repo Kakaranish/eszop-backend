@@ -1,11 +1,9 @@
 ﻿using Common.Authentication;
-using Common.Dto;
 using Common.Types;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Orders.API.Application.Commands.CancelOrder;
 using Orders.API.Application.Commands.ConfirmOrder;
-using Orders.API.Application.Commands.CreateOrder;
 using Orders.API.Application.Commands.GetBankTransferDetails;
 using Orders.API.Application.Commands.UpdateDeliveryInfo;
 using Orders.API.Application.Dto;
@@ -75,15 +73,6 @@ namespace Orders.API.Controllers
             request.OrderId = orderId;
             await _mediator.Send(request);
             return Ok();
-        }
-
-        [HttpPost("")]
-        [JwtAuthorize]
-        public async Task<OrderCreatedDto> Create(CreateOrderCartDto createOrderCartDto)
-        {
-            var request = new CreateOrderCommand(createOrderCartDto);
-            var orderId = await _mediator.Send(request);
-            return new OrderCreatedDto { OrderId = orderId };
         }
 
         [HttpPost("{orderId}/cancel")]

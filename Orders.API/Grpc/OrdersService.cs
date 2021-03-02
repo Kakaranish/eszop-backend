@@ -2,39 +2,38 @@
 using Common.EventBus;
 using Common.EventBus.IntegrationEvents;
 using Common.Extensions;
-using MediatR;
+using Common.Grpc.Services.OrdersService;
+using Common.Grpc.Services.OrdersService.CreateOrder;
 using Microsoft.Extensions.Logging;
 using Orders.API.DataAccess.Repositories;
 using Orders.API.Domain;
 using System;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 
-namespace Orders.API.Application.Commands.CreateOrder
+namespace Orders.API.Grpc
 {
-    public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Guid>
+    public class OrdersService : IOrdersService
     {
-        private readonly IOrderRepository _orderRepository;
+        private readonly ILogger<OrdersService> _logger;
         private readonly IEventBus _eventBus;
-        private readonly ILogger<CreateOrderCommandHandler> _logger;
+        private readonly IOrderRepository _orderRepository;
 
-        public CreateOrderCommandHandler(IOrderRepository orderRepository, IEventBus eventBus,
-            ILogger<CreateOrderCommandHandler> logger)
+        public OrdersService(ILogger<OrdersService> logger, IEventBus eventBus, IOrderRepository orderRepository)
         {
-            _orderRepository = orderRepository ?? throw new ArgumentNullException(nameof(orderRepository));
-            _eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
+            _orderRepository = orderRepository ?? throw new ArgumentNullException(nameof(orderRepository));
         }
 
-        public async Task<Guid> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
+        public async Task<CreateOrderResponse> CreateOrder(CreateOrderRequest request)
         {
             var orderItems = request.CartItems.Select(item => new OrderItem(
                 item.OfferId, item.OfferName, item.Quantity, item.PricePerItem, item.ImageUri)).ToList();
-            var order = new Order(request.BuyerId, request.SellerId, orderItems);
+            var order = new Order(request.UserId, request.SellerId, orderItems);
 
             _orderRepository.Add(order);
-            await _orderRepository.UnitOfWork.SaveChangesAndDispatchDomainEventsAsync(cancellationToken);
+            await _orderRepository.UnitOfWork.SaveChangesAndDispatchDomainEventsAsync();
 
             var integrationEvent = new OrderStartedIntegrationEvent
             {
@@ -51,7 +50,7 @@ namespace Orders.API.Application.Commands.CreateOrder
                 "EventId".ToKvp(integrationEvent.Id),
                 "OfferIds".ToKvp(string.Join(",", integrationEvent.OrderItems.Select(x => x.OfferId))));
 
-            return order.Id;
+            return new CreateOrderResponse { OrderId = order.Id };
         }
     }
 }
