@@ -14,6 +14,7 @@ using Offers.API.Application.Queries.GetActiveOffers;
 using Offers.API.Application.Queries.GetMyOffer;
 using Offers.API.Application.Queries.GetMyOffers;
 using Offers.API.Application.Queries.GetOffer;
+using Offers.API.Application.Queries.GetSellerOffers;
 using Offers.API.Application.Types;
 using System;
 using System.Threading.Tasks;
@@ -43,6 +44,17 @@ namespace Offers.API.Controllers
         public async Task<Pagination<OfferListPreviewDto>> GetMyOffers([FromQuery] OfferFilter offerFilter)
         {
             var query = new GetMyOffersQuery { OfferFilter = offerFilter };
+            return await _mediator.Send(query);
+        }
+
+        [HttpGet("seller/{sellerId}")]
+        public async Task<Pagination<OfferListPreviewDto>> GetSellerOffers([FromRoute] string sellerId, [FromQuery] OfferFilter offerFilter)
+        {
+            var query = new GetSellerOffersQuery
+            {
+                SellerId = sellerId,
+                OfferFilter = offerFilter
+            };
             return await _mediator.Send(query);
         }
 

@@ -12,7 +12,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
 using System.Linq;
-using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -22,14 +21,12 @@ namespace Carts.API.Application.Commands.FinalizeCart
     {
         private readonly ILogger<FinalizeCartCommandHandler> _logger;
         private readonly ICartRepository _cartRepository;
-        private readonly IHttpClientFactory _httpClientFactory;
         private readonly IGrpcServiceClientFactory<IOrdersService> _ordersServiceClientFactory;
         private readonly HttpContext _httpContext;
         private readonly ServicesEndpointsConfig _endpointsConfig;
 
         public FinalizeCartCommandHandler(ILogger<FinalizeCartCommandHandler> logger,
             IHttpContextAccessor httpContextAccessor, ICartRepository cartRepository,
-            IHttpClientFactory httpClientFactory,
             IGrpcServiceClientFactory<IOrdersService> ordersServiceClientFactory,
             IOptions<ServicesEndpointsConfig> options)
         {
@@ -37,7 +34,6 @@ namespace Carts.API.Application.Commands.FinalizeCart
             _httpContext = httpContextAccessor.HttpContext ??
                            throw new ArgumentNullException(nameof(httpContextAccessor.HttpContext));
             _cartRepository = cartRepository ?? throw new ArgumentNullException(nameof(cartRepository));
-            _httpClientFactory = httpClientFactory ?? throw new ArgumentNullException(nameof(httpClientFactory));
             _ordersServiceClientFactory = ordersServiceClientFactory ??
                                           throw new ArgumentNullException(nameof(ordersServiceClientFactory));
             _endpointsConfig = options.Value ?? throw new ArgumentNullException(nameof(options.Value));

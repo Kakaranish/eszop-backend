@@ -38,7 +38,6 @@ namespace Carts.API
             services.AddControllers();
             services.AddHttpContextAccessor();
 
-            services.AddHttpClient();
             services.ReadServicesEndpoints();
 
             services.AddJwtAuthentication();

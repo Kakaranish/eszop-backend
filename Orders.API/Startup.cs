@@ -39,7 +39,6 @@ namespace Orders.API
             services.AddCodeFirstGrpc();
 
             services.ReadServicesEndpoints();
-            services.AddHttpClient();
 
             services.AddJwtAuthentication();
             services.AddMediatR(typeof(Startup).Assembly);
