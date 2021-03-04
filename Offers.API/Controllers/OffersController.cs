@@ -3,7 +3,6 @@ using Common.Types;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Offers.API.Application.Commands.EndOffer;
-using Offers.API.Application.Commands.PublishOffer;
 using Offers.API.Application.Commands.RemoveOffer;
 using Offers.API.Application.Dto;
 using Offers.API.Application.Queries.GetActiveOffers;
@@ -79,14 +78,6 @@ namespace Offers.API.Controllers
         [HttpDelete("")]
         [JwtAuthorize]
         public async Task<IActionResult> Remove(RemoveOfferCommand command)
-        {
-            await _mediator.Send(command);
-            return Ok();
-        }
-
-        [HttpPost("{offerId}/publish")]
-        [JwtAuthorize]
-        public async Task<IActionResult> Publish([FromRoute] PublishOfferCommand command)
         {
             await _mediator.Send(command);
             return Ok();

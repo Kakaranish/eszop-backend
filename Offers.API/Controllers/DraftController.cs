@@ -3,6 +3,7 @@ using Common.Types;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Offers.API.Application.Commands.CreateOfferDraftOne;
+using Offers.API.Application.Commands.PublishOffer;
 using Offers.API.Application.Commands.RemoveOfferDraft;
 using Offers.API.Application.Commands.UpdateOfferDraftOne;
 using Offers.API.Application.Commands.UpdateOfferDraftTwo;
@@ -41,9 +42,17 @@ namespace Offers.API.Controllers
 
         [HttpPut("{offerId}/stage/2")]
         [JwtAuthorize]
-        public async Task<IActionResult> UpdateDraftTwo(string offerId, [FromForm] UpdateOfferDraftTwoCommand command)
+        public async Task<IActionResult> UpdateDraftTwo(string offerId, [FromBody] UpdateOfferDraftTwoCommand command)
         {
             command.OfferId = offerId;
+            await _mediator.Send(command);
+            return Ok();
+        }
+
+        [HttpPost("{offerId}/publish")]
+        [JwtAuthorize]
+        public async Task<IActionResult> Publish([FromRoute] PublishOfferCommand command)
+        {
             await _mediator.Send(command);
             return Ok();
         }

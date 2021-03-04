@@ -1,7 +1,7 @@
 @url = http://localhost:5000
-@accessToken = 
-@offerId = 
-@categoryId = 
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJUb2tlbklkIjoiZTExOWM3MGQtZTllOC00NGJkLWI3ODktMTIxMjIzNWIxNmYyIiwiVXNlcklkIjoiMzk2ZWZmMDUtMDU5ZC00ZmY3LTJlMGUtMDhkOGQ3NTk4ODQzIiwiRW1haWwiOiJ1c2VyQG1haWwuY29tIiwiUm9sZSI6IlVTRVIiLCJleHAiOjE2MTYwODM4NzIsImlzcyI6IklkZW50aXR5LkFQSSIsImF1ZCI6IklkZW50aXR5LkFQSS5BdWRpZW5jZSJ9.EV2Q6ym7vnDeiGmCKKMru4FiceGJHgqheuweQhBGUy4
+@offerId = 74cb15be-9ed4-4764-4cd6-08d8d9c5c192
+@sellerId = de36f4d2-44d6-4d8a-2e10-08d8d7598843
 
 ###
 
@@ -9,7 +9,7 @@ GET {{url}}/api/offers HTTP/1.1
 
 ###
 
-GET {{url}}/api/offers?fromPrice=48&toPrice=54&pageSize=2&pageIndex=1 HTTP/1.1
+GET {{url}}/api/offers?fromPrice=300&toPrice=400&pageSize=2&pageIndex=1 HTTP/1.1
 
 ### 
 
@@ -18,50 +18,17 @@ Authorization: Bearer {{accessToken}}
 
 ###
 
-GET {{url}}/api/offers/{{offerId}} HTTP/1.1
-
-### 
-
-POST {{url}}/api/offers HTTP/1.1
-Authorization: Bearer {{accessToken}}
-Content-Type:  application/json
-
-{
-    "Name": "Offer {{$datetime iso8601}}",
-    "Description": "Some offer {{$datetime iso8601}}",
-    "Price": {{$randomInt 1 100}},
-    "TotalStock": {{$randomInt 5 20}},
-    "CategoryId": "{{categoryId}}"
-}
+GET {{url}}/api/offers/seller/{{sellerId}}?pageSize=2&pageIndex=1 HTTP/1.1
 
 ###
 
-PUT  {{url}}/api/offers HTTP/1.1
-Authorization: Bearer {{accessToken}}
-Content-Type:  application/json
-
-{
-    "OfferId": "{{offerId}}",
-    "Name": "Some name {{$datetime iso8601}}",
-    "Description": "Some offer {{$datetime iso8601}}",
-    "Price": 52
-}
+GET {{url}}/api/offers/{{offerId}} HTTP/1.1
 
 ###
 
 POST {{url}}/api/offers/end HTTP/1.1
 Authorization: Bearer {{accessToken}}
 Content-Type: application/json
-
-{
-    "OfferId": "{{offerId}}"
-}
-
-###
-
-DELETE {{url}}/api/offers/draft HTTP/1.1
-Authorization: Bearer {{accessToken}}
-Content-Type:  application/json
 
 {
     "OfferId": "{{offerId}}"

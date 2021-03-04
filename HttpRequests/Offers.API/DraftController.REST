@@ -1,0 +1,35 @@
+@url = http://localhost:5000
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJUb2tlbklkIjoiZTExOWM3MGQtZTllOC00NGJkLWI3ODktMTIxMjIzNWIxNmYyIiwiVXNlcklkIjoiMzk2ZWZmMDUtMDU5ZC00ZmY3LTJlMGUtMDhkOGQ3NTk4ODQzIiwiRW1haWwiOiJ1c2VyQG1haWwuY29tIiwiUm9sZSI6IlVTRVIiLCJleHAiOjE2MTYwODM4NzIsImlzcyI6IklkZW50aXR5LkFQSSIsImF1ZCI6IklkZW50aXR5LkFQSS5BdWRpZW5jZSJ9.EV2Q6ym7vnDeiGmCKKMru4FiceGJHgqheuweQhBGUy4
+@offerId = 0b010bf3-0a94-4815-ec33-08d8df417a35
+
+### vvvv Temporary unavailable
+
+# POST {{url}}/api/draft HTTP/1.1
+
+### vvvv Temporary unavailable
+
+# PUT {{url}}/api/draft/{{offerId}}/stage/1 HTTP/1.1
+# Authorization: Bearer {{accessToken}}
+# Content-Type: multipart/form-data
+
+###
+
+PUT {{url}}/api/draft/{{offerId}}/stage/2 HTTP/1.1
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+    "BankAccount": "82 1020 5226 0000 6102 0417 7895",
+    "DeliveryMethods": "[{\"name\":\"DHL\",\"price\":\"12.00\"},{\"name\":\"Poczta Polska\",\"price\":\"12.37\"}]"
+}
+
+###
+
+POST {{url}}/api/draft/{{offerId}}/publish HTTP/1.1
+Authorization: Bearer {{accessToken}}
+
+###
+
+DELETE {{url}}/api/draft/{{offerId}} HTTP/1.1
+Authorization: Bearer {{accessToken}}
+Content-Type:  application/json
