@@ -10,7 +10,7 @@ namespace Offers.API.Application.Commands.UpdateOfferDraftOne
 {
     public class UpdateOfferDraftOneCommand : IRequest
     {
-        public string OfferId { get; init; }
+        public string OfferId { get; set; }
         public string Name { get; init; }
         public string Description { get; init; }
         public decimal? Price { get; init; }

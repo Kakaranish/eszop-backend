@@ -1,5 +1,4 @@
-﻿using Common.Authentication;
-using Common.Dto;
+﻿using Common.Dto;
 using Common.Types;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;

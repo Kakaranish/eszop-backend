@@ -1,4 +1,5 @@
-﻿using Common.Extensions;
+﻿using Common.Exceptions;
+using Common.Extensions;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Offers.API.Application.Dto;
@@ -28,11 +29,9 @@ namespace Offers.API.Application.Queries.GetMyOffer
             var offerId = Guid.Parse(request.OfferId);
 
             var offer = await _offerRepository.GetByIdAsync(offerId);
-            if (offer == null) return null;
+            if (offer == null || offer.OwnerId != userId) throw new NotFoundException();
 
-            return offer.OwnerId == userId
-                ? offer.ToOfferFullViewDto()
-                : null;
+            return offer.ToOfferFullViewDto();
         }
     }
 }

@@ -2,13 +2,9 @@
 using Common.Types;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Offers.API.Application.Commands.CreateOfferDraftOne;
 using Offers.API.Application.Commands.EndOffer;
 using Offers.API.Application.Commands.PublishOffer;
 using Offers.API.Application.Commands.RemoveOffer;
-using Offers.API.Application.Commands.RemoveOfferDraft;
-using Offers.API.Application.Commands.UpdateOfferDraftOne;
-using Offers.API.Application.Commands.UpdateOfferDraftTwo;
 using Offers.API.Application.Dto;
 using Offers.API.Application.Queries.GetActiveOffers;
 using Offers.API.Application.Queries.GetMyOffer;
@@ -60,9 +56,8 @@ namespace Offers.API.Controllers
 
         [HttpGet("{offerId}/my")]
         [JwtAuthorize]
-        public async Task<OfferFullViewDto> GetMyOffer(string offerId)
+        public async Task<OfferFullViewDto> GetMyOffer([FromRoute] GetMyOfferQuery query)
         {
-            var query = new GetMyOfferQuery { OfferId = offerId };
             return await _mediator.Send(query);
         }
 
@@ -73,41 +68,9 @@ namespace Offers.API.Controllers
             return await _mediator.Send(query);
         }
 
-        [HttpPost("draft/1")]
-        [JwtAuthorize]
-        public async Task<IActionResult> CreateDraftOne([FromForm] CreateOfferDraftOneCommand command)
-        {
-            var offerId = await _mediator.Send(command);
-            return Ok(new { OfferId = offerId });
-        }
-
-        [HttpPut("draft/1")]
-        [JwtAuthorize]
-        public async Task<IActionResult> UpdateDraftOne([FromForm] UpdateOfferDraftOneCommand command)
-        {
-            await _mediator.Send(command);
-            return Ok();
-        }
-
-        [HttpPut("draft/2")]
-        [JwtAuthorize]
-        public async Task<IActionResult> UpdateDraftTwo([FromForm] UpdateOfferDraftTwoCommand command)
-        {
-            await _mediator.Send(command);
-            return Ok();
-        }
-
         [HttpPost("end")]
         [JwtAuthorize]
         public async Task<IActionResult> End(EndOfferCommand command)
-        {
-            await _mediator.Send(command);
-            return Ok();
-        }
-
-        [HttpDelete("draft")]
-        [JwtAuthorize]
-        public async Task<IActionResult> RemoveDraft(RemoveOfferDraftCommand command)
         {
             await _mediator.Send(command);
             return Ok();
@@ -121,9 +84,9 @@ namespace Offers.API.Controllers
             return Ok();
         }
 
-        [HttpPost("publish")]
+        [HttpPost("{offerId}/publish")]
         [JwtAuthorize]
-        public async Task<IActionResult> Publish(PublishOfferCommand command)
+        public async Task<IActionResult> Publish([FromRoute] PublishOfferCommand command)
         {
             await _mediator.Send(command);
             return Ok();

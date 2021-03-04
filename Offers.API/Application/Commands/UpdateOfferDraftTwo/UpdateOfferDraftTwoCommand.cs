@@ -7,7 +7,7 @@ namespace Offers.API.Application.Commands.UpdateOfferDraftTwo
 {
     public class UpdateOfferDraftTwoCommand : IRequest
     {
-        public string OfferId { get; init; }
+        public string OfferId { get; set; }
         public string DeliveryMethods { get; init; }
         public string BankAccount { get; init; }
     }
