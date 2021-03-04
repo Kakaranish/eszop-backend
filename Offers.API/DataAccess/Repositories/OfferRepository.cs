@@ -49,7 +49,8 @@ namespace Offers.API.DataAccess.Repositories
         {
             var offers = _appDbContext.Offers.AsQueryable()
                 .Where(x => x.OwnerId == userId)
-                .OrderByDescending(x => x.CreatedAt)
+                .OrderByDescending(x => x.PublishedAt == null)
+                .ThenByDescending(x => x.CreatedAt)
                 .ApplyFilter(filter);
 
             var pageDetails = new PageCriteria(filter.PageIndex, filter.PageSize);
