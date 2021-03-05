@@ -30,7 +30,6 @@ namespace Offers.API.Domain
         public decimal Price { get; private set; }
         public int AvailableStock { get; private set; }
         public int TotalStock { get; private set; }
-        public string BankAccountNumber { get; private set; }
 
         public virtual Category Category { get; private set; }
         public IReadOnlyCollection<DeliveryMethod> DeliveryMethods => _deliveryMethods;
@@ -227,14 +226,6 @@ namespace Offers.API.Domain
             _keyValueInfos = null;
         }
 
-        public void SetBankAccountNumber(string bankAccountNumber)
-        {
-            ValidateBankAccountNumber(bankAccountNumber);
-
-            BankAccountNumber = !string.IsNullOrWhiteSpace(bankAccountNumber) ? bankAccountNumber : null;
-            UpdatedAt = DateTime.UtcNow;
-        }
-
         #region Validation
 
         private static void ValidateOwnerId(Guid ownerId)
@@ -314,8 +305,6 @@ namespace Offers.API.Domain
                 throw new OffersDomainException("Offer is already published");
             if (_deliveryMethods == null || _deliveryMethods.Count == 0)
                 throw new OffersDomainException("Offer has no delivery methods set");
-            if (string.IsNullOrWhiteSpace(BankAccountNumber))
-                throw new OffersDomainException($"Offer has no {nameof(BankAccountNumber)}");
         }
 
         private void ValidateAddImage(ImageInfo image)
@@ -347,15 +336,6 @@ namespace Offers.API.Domain
 
             if (deliveryMethods.Any(x => string.IsNullOrWhiteSpace(x.Name) || x.Price < 0))
                 throw new OffersDomainException($"{nameof(DeliveryMethods)} contains at least one invalid entry");
-        }
-
-        private static void ValidateBankAccountNumber(string bankAccountNumber)
-        {
-            if (string.IsNullOrEmpty(bankAccountNumber)) return;
-
-            var validator = new BankAccountNumberValidator();
-            var result = validator.Validate(bankAccountNumber);
-            if (!result.IsValid) throw new OffersDomainException(nameof(bankAccountNumber));
         }
 
         #endregion

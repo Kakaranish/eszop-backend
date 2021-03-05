@@ -36,7 +36,6 @@ namespace Offers.API.Application.Commands.UpdateOfferDraftTwo
             if (offer == null || offer.OwnerId != userId) throw new NotFoundException();
 
             offer.SetDeliveryMethods(deliveryMethods);
-            offer.SetBankAccountNumber(request.BankAccount);
 
             _offerRepository.Update(offer);
             await _offerRepository.UnitOfWork.SaveChangesAndDispatchDomainEventsAsync(cancellationToken);

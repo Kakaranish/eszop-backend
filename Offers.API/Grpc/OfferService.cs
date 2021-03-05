@@ -1,5 +1,4 @@
 ﻿using Common.Grpc.Services.OffersService;
-using Common.Grpc.Services.OffersService.Requests.GetBankAccountNumber;
 using Common.Grpc.Services.OffersService.Requests.GetDeliveryMethodsForOffers;
 using Common.Grpc.Services.OffersService.Requests.GetOfferBasicInfo;
 using Offers.API.DataAccess.Repositories;
@@ -18,12 +17,6 @@ namespace Offers.API.Grpc
         public OfferService(IOfferRepository offerRepository)
         {
             _offerRepository = offerRepository ?? throw new ArgumentNullException(nameof(offerRepository));
-        }
-
-        public async Task<GetBankAccountNumberResponse> GetBankAccount(GetBankAccountNumberRequest request, CallContext context = default)
-        {
-            var offer = await _offerRepository.GetByIdAsync(request.OfferId);
-            return new GetBankAccountNumberResponse { BankAccountNumber = offer.BankAccountNumber };
         }
 
         public async Task<GetDeliveryMethodsForOffersResponse> GetDeliveryMethodsForOffers(
