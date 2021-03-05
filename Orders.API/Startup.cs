@@ -3,6 +3,7 @@ using Common.ErrorHandling;
 using Common.EventBus;
 using Common.Extensions;
 using Common.Grpc;
+using Common.Grpc.Services.IdentityService;
 using Common.Grpc.Services.OffersService;
 using Common.HealthCheck;
 using FluentValidation;
@@ -62,6 +63,7 @@ namespace Orders.API
 
             services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<IGrpcServiceClientFactory<IOffersService>, GrpcServiceClientFactory<IOffersService>>();
+            services.AddScoped<IGrpcServiceClientFactory<IIdentityService>, GrpcServiceClientFactory<IIdentityService>>();
 
             services.AddExceptionHandling<OrdersDomainException>();
 

@@ -7,6 +7,7 @@ using FluentValidation;
 using Identity.API.DataAccess;
 using Identity.API.Domain;
 using Identity.API.Extensions;
+using Identity.API.Grpc;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -15,6 +16,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
+using ProtoBuf.Grpc.Server;
 using Serilog;
 
 namespace Identity.API
@@ -32,6 +34,7 @@ namespace Identity.API
         {
             services.AddControllers();
             services.AddHttpContextAccessor();
+            services.AddCodeFirstGrpc();
 
             services.Configure<JwtConfig>(Configuration.GetSection("JwtConfig"));
             services.AddJwtAuthentication();
@@ -88,6 +91,7 @@ namespace Identity.API
             {
                 endpoints.MapHealthChecks("/healthcheck");
                 endpoints.MapControllers();
+                endpoints.MapGrpcService<IdentityService>();
             });
         }
     }
