@@ -2,8 +2,10 @@
 using Common.Dto;
 using Common.Types;
 using Identity.API.Application.Commands.CreateOrUpdateSellerInfo;
-using Identity.API.Application.Queries.GetBankAccountInfo;
+using Identity.API.Application.Dto;
+using Identity.API.Application.Queries.CanSell;
 using Identity.API.Application.Queries.GetPublicSellerInfo;
+using Identity.API.Application.Queries.GetSellerMe;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -22,15 +24,24 @@ namespace Identity.API.Controllers
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
-        [HttpGet("{sellerId}")]
-        public async Task<PublicSellerInfoDto> GetPublicSellerInfo([FromRoute] GetPublicSellerInfoQuery request)
+        [HttpGet("can-sell")]
+        [JwtAuthorize]
+        public async Task<bool> GetCanSell()
         {
-            return await _mediator.Send(request);
+            var query = new CanSellQuery();
+            return await _mediator.Send(query);
         }
 
-        [HttpGet("bank-account/my")]
+        [HttpGet("me")]
         [JwtAuthorize]
-        public async Task<BankAccountInfoDto> GetMyBankAccountInfo([FromRoute] GetMyBankAccountInfoQuery request)
+        public async Task<SellerInfoDto> GetSellerMe()
+        {
+            var query = new GetSellerMeQuery();
+            return await _mediator.Send(query);
+        }
+
+        [HttpGet("{sellerId}")]
+        public async Task<PublicSellerInfoDto> GetPublicSellerInfo([FromRoute] GetPublicSellerInfoQuery request)
         {
             return await _mediator.Send(request);
         }

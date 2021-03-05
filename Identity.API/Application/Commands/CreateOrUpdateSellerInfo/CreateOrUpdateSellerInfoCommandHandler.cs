@@ -30,14 +30,17 @@ namespace Identity.API.Application.Commands.CreateOrUpdateSellerInfo
 
             if (!sellerInfoExists)
             {
-                sellerInfo = new SellerInfo(userId);
+                sellerInfo = new SellerInfo(userId, request.ContactEmail, request.PhoneNumber, request.BankAccountNumber);
+                if (request.AdditionalInfo != null) sellerInfo.SetAdditionalInfo(request.AdditionalInfo);
                 _sellerInfoRepository.Add(sellerInfo);
             }
-            
-            if (request.ContactEmail != null) sellerInfo.SetContactEmail(request.ContactEmail);
-            if (request.PhoneNumber != null) sellerInfo.SetPhoneNumber(request.PhoneNumber);
-            if (request.BankAccountNumber != null) sellerInfo.SetBankAccountNumber(request.BankAccountNumber);
-            if (request.AdditionalInfo != null) sellerInfo.SetAdditionalInfo(request.AdditionalInfo);
+            else
+            {
+                if (request.ContactEmail != null) sellerInfo.SetContactEmail(request.ContactEmail);
+                if (request.PhoneNumber != null) sellerInfo.SetPhoneNumber(request.PhoneNumber);
+                if (request.BankAccountNumber != null) sellerInfo.SetBankAccountNumber(request.BankAccountNumber);
+                if (request.AdditionalInfo != null) sellerInfo.SetAdditionalInfo(request.AdditionalInfo);
+            }
 
             if(sellerInfoExists) _sellerInfoRepository.Update(sellerInfo);
 

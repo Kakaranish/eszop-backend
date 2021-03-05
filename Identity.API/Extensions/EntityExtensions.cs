@@ -35,5 +35,19 @@ namespace Identity.API.Extensions
                 Street = deliveryAddress.Street,
             };
         }
+
+        public static SellerInfoDto ToDto(this SellerInfo sellerInfo)
+        {
+            if (sellerInfo == null) return null;
+
+            return new SellerInfoDto
+            {
+                Id = sellerInfo.Id,
+                BankAccountNumber = sellerInfo.BankAccountNumber,
+                ContactEmail = sellerInfo.ContactEmail,
+                PhoneNumber = sellerInfo.PhoneNumber,
+                AdditionalInfo = sellerInfo.AdditionalInfo
+            };
+        }
     }
 }

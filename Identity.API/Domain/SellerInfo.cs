@@ -20,9 +20,12 @@ namespace Identity.API.Domain
         {
         }
 
-        public SellerInfo(Guid userId)
+        public SellerInfo(Guid userId, string contactEmail, string phoneNumber, string bankAccountNumber)
         {
             SetUserId(userId);
+            SetContactEmail(contactEmail);
+            SetPhoneNumber(phoneNumber);
+            SetBankAccountNumber(bankAccountNumber);
 
             CreatedAt = DateTime.UtcNow;
             UpdatedAt = CreatedAt;
