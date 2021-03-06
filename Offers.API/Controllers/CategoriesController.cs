@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Offers.API.Application.Commands.CreateCategory;
 using Offers.API.Application.Dto;
 using Offers.API.Application.Queries.GetCategories;
+using Offers.API.Application.Queries.GetCategory;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -28,6 +29,12 @@ namespace Offers.API.Controllers
             var request = new GetCategoriesQuery();
             var categories = await _mediator.Send(request);
             return categories;
+        }
+
+        [HttpGet("{categoryId}")]
+        public async Task<CategoryDto> GetById([FromRoute] GetCategoryQuery query)
+        {
+            return await _mediator.Send(query);
         }
 
         [HttpPost("")]

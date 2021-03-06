@@ -9,7 +9,8 @@ namespace Offers.API.Application.Types
         public int PageIndex { get; init; } = 1;
         public decimal? FromPrice { get; init; }
         public decimal? ToPrice { get; init; }
-        public Guid? Category { get; init; }
+        public Guid? CategoryId { get; init; }
+        public string SearchPhrase { get; init; }
     }
 
     public class OfferFilterValidator : AbstractValidator<OfferFilter>
@@ -22,7 +23,7 @@ namespace Offers.API.Application.Types
             RuleFor(x => x.PageIndex)
                 .GreaterThan(0);
 
-            RuleFor(x => x.Category)
+            RuleFor(x => x.CategoryId)
                 .Must(x => x != Guid.Empty)
                 .WithMessage("Cannot be empty guid");
 
