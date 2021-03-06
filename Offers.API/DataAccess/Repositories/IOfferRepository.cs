@@ -12,7 +12,8 @@ namespace Offers.API.DataAccess.Repositories
     {
         Task<Pagination<Offer>> GetAllActiveAsync(OfferFilter filter);
         Task<IList<Offer>> GetMultipleWithIds(IEnumerable<Guid> offerIds);
-        Task<Pagination<Offer>> GetByUserIdAsync(Guid userId, OfferFilter filter);
+        Task<Pagination<Offer>> GetAllByUserIdAsync(Guid userId, OfferFilter filter);
+        Task<Pagination<Offer>> GetAllActiveByUserIdAsync(Guid userId, OfferFilter filter);
         Task<Offer> GetByIdAsync(Guid offerId);
         Task AddAsync(Offer product);
         void Update(Offer offer);

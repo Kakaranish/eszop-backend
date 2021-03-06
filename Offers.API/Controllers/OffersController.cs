@@ -43,7 +43,8 @@ namespace Offers.API.Controllers
         }
 
         [HttpGet("seller/{sellerId}")]
-        public async Task<Pagination<OfferListPreviewDto>> GetSellerOffers([FromRoute] string sellerId, [FromQuery] OfferFilter offerFilter)
+        public async Task<Pagination<OfferListPreviewDto>> GetSellerOffers(
+            [FromRoute] string sellerId, [FromQuery] OfferFilter offerFilter)
         {
             var query = new GetSellerOffersQuery
             {

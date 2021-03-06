@@ -28,7 +28,7 @@ namespace Offers.API.Application.Queries.GetMyOffers
         {
             var userId = _httpContext.User.Claims.ToTokenPayload().UserClaims.Id;
 
-            var offersPagination = await _offerRepository.GetByUserIdAsync(userId, request.OfferFilter);
+            var offersPagination = await _offerRepository.GetAllByUserIdAsync(userId, request.OfferFilter);
             var offersDtoPagination = offersPagination.Transform(offers =>
                 offers.Select(offer => offer.ToOfferListPreviewDto()));
 

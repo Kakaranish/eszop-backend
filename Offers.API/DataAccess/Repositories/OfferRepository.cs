@@ -45,12 +45,23 @@ namespace Offers.API.DataAccess.Repositories
             return await offers.ToListAsync();
         }
 
-        public async Task<Pagination<Offer>> GetByUserIdAsync(Guid userId, OfferFilter filter)
+        public async Task<Pagination<Offer>> GetAllByUserIdAsync(Guid userId, OfferFilter filter)
         {
             var offers = _appDbContext.Offers.AsQueryable()
                 .Where(x => x.OwnerId == userId)
                 .OrderByDescending(x => x.PublishedAt == null)
                 .ThenByDescending(x => x.CreatedAt)
+                .ApplyFilter(filter);
+
+            var pageDetails = new PageCriteria(filter.PageIndex, filter.PageSize);
+
+            return await offers.PaginateAsync(pageDetails);
+        }
+
+        public async Task<Pagination<Offer>> GetAllActiveByUserIdAsync(Guid userId, OfferFilter filter)
+        {
+            var offers = _appDbContext.Offers.AsQueryable()
+                .Where(x => x.OwnerId == userId && x.PublishedAt != null)
                 .ApplyFilter(filter);
 
             var pageDetails = new PageCriteria(filter.PageIndex, filter.PageSize);
