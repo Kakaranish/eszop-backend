@@ -6,9 +6,9 @@ using Microsoft.AspNetCore.Http;
 using Offers.API.Domain.Validators;
 using System.Collections.Generic;
 
-namespace Offers.API.Application.Commands.UpdateOfferDraftOne
+namespace Offers.API.Application.Commands.UpdateOfferDraft
 {
-    public class UpdateOfferDraftOneCommand : IRequest
+    public class UpdateOfferDraftCommand : IRequest
     {
         public string OfferId { get; set; }
         public string Name { get; init; }
@@ -19,11 +19,12 @@ namespace Offers.API.Application.Commands.UpdateOfferDraftOne
         public IList<IFormFile> Images { get; init; }
         public string ImagesMetadata { get; init; }
         public string KeyValueInfos { get; init; }
+        public string DeliveryMethods { get; init; }
     }
 
-    public class UpdateOfferDraftOneCommandValidator : AbstractValidator<UpdateOfferDraftOneCommand>
+    public class UpdateOfferDraftCommandValidator : AbstractValidator<UpdateOfferDraftCommand>
     {
-        public UpdateOfferDraftOneCommandValidator()
+        public UpdateOfferDraftCommandValidator()
         {
             RuleFor(x => x.OfferId)
                 .IsNotEmptyGuid();
@@ -59,6 +60,9 @@ namespace Offers.API.Application.Commands.UpdateOfferDraftOne
             RuleFor(x => x.KeyValueInfos)
                 .Must(x => x == null || !string.IsNullOrWhiteSpace(x))
                 .WithMessage("Must be null or not empty string");
+
+            RuleFor(x => x.DeliveryMethods)
+                .NotEmpty();
         }
     }
 }

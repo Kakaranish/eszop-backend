@@ -15,28 +15,27 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Offers.API.Application.Commands.UpdateOfferDraftOne
+namespace Offers.API.Application.Commands.UpdateOfferDraft
 {
-    public class UpdateOfferDraftOneCommandHandler : IRequestHandler<UpdateOfferDraftOneCommand>
+    public class UpdateOfferDraftCommandHandler : IRequestHandler<UpdateOfferDraftCommand>
     {
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IOfferRepository _offerRepository;
-        private readonly HttpContext _httpContext;
         private readonly IImageStorage _imageStorage;
         private readonly ICategoryRepository _categoryRepository;
 
-        public UpdateOfferDraftOneCommandHandler(IHttpContextAccessor httpContextAccessor, IOfferRepository offerRepository,
+        public UpdateOfferDraftCommandHandler(IHttpContextAccessor httpContextAccessor, IOfferRepository offerRepository,
             IImageStorage imageStorage, ICategoryRepository categoryRepository)
         {
-            _httpContext = httpContextAccessor.HttpContext ??
-                           throw new ArgumentNullException(nameof(httpContextAccessor.HttpContext));
+            _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
             _offerRepository = offerRepository ?? throw new ArgumentNullException(nameof(offerRepository));
             _imageStorage = imageStorage ?? throw new ArgumentNullException(nameof(imageStorage));
             _categoryRepository = categoryRepository ?? throw new ArgumentNullException(nameof(categoryRepository));
         }
 
-        public async Task<Unit> Handle(UpdateOfferDraftOneCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(UpdateOfferDraftCommand request, CancellationToken cancellationToken)
         {
-            var userId = _httpContext.User.Claims.ToTokenPayload().UserClaims.Id;
+            var userId = _httpContextAccessor.HttpContext.User.Claims.ToTokenPayload().UserClaims.Id;
             var offer = await _offerRepository.GetByIdAsync(Guid.Parse(request.OfferId));
             if (offer == null || offer.OwnerId != userId) throw new NotFoundException();
 
@@ -60,13 +59,16 @@ namespace Offers.API.Application.Commands.UpdateOfferDraftOne
                 }
             }
 
+            var deliveryMethods = ExtractDeliveryMethods(request);
+            offer.SetDeliveryMethods(deliveryMethods);
+
             _offerRepository.Update(offer);
             await _offerRepository.UnitOfWork.SaveChangesAndDispatchDomainEventsAsync(cancellationToken);
 
             return await Unit.Task;
         }
 
-        private async Task ProcessOfferImages(UpdateOfferDraftOneCommand request, Offer offer)
+        private async Task ProcessOfferImages(UpdateOfferDraftCommand request, Offer offer)
         {
             var imagesMetadataDict = ExtractImagesMetadata(request);
 
@@ -140,7 +142,7 @@ namespace Offers.API.Application.Commands.UpdateOfferDraftOne
             }
         }
 
-        private static Dictionary<string, ImageMetadata> ExtractImagesMetadata(UpdateOfferDraftOneCommand request)
+        private static Dictionary<string, ImageMetadata> ExtractImagesMetadata(UpdateOfferDraftCommand request)
         {
             var imagesMetadataList = JsonConvert.DeserializeObject<IList<ImageMetadata>>(request.ImagesMetadata);
             var metadataDict = imagesMetadataList.ToDictionary(x => x.ImageId);
@@ -168,7 +170,7 @@ namespace Offers.API.Application.Commands.UpdateOfferDraftOne
             return metadataDict;
         }
 
-        private static IList<KeyValueInfo> ExtractKeyValueInfos(UpdateOfferDraftOneCommand request)
+        private static IList<KeyValueInfo> ExtractKeyValueInfos(UpdateOfferDraftCommand request)
         {
             if (request.KeyValueInfos == null) return null;
 
@@ -176,6 +178,14 @@ namespace Offers.API.Application.Commands.UpdateOfferDraftOne
                                        ?? throw new OffersDomainException($"'{request.KeyValueInfos}' is not parsable");
 
             return extractKeyValueInfos;
+        }
+
+        private static IList<DeliveryMethod> ExtractDeliveryMethods(UpdateOfferDraftCommand request)
+        {
+            var extractedDeliveryMethods = JsonConvert.DeserializeObject<IList<DeliveryMethod>>(request.DeliveryMethods)
+                                           ?? throw new OffersDomainException($"'{request.DeliveryMethods}' is not parsable");
+
+            return extractedDeliveryMethods;
         }
     }
 }

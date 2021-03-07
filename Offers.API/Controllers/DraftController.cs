@@ -3,11 +3,9 @@ using Common.Types;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Offers.API.Application.Commands.CreateOfferDraft;
-using Offers.API.Application.Commands.CreateOfferDraftOne;
 using Offers.API.Application.Commands.PublishOffer;
 using Offers.API.Application.Commands.RemoveOfferDraft;
-using Offers.API.Application.Commands.UpdateOfferDraftOne;
-using Offers.API.Application.Commands.UpdateOfferDraftTwo;
+using Offers.API.Application.Commands.UpdateOfferDraft;
 using System;
 using System.Threading.Tasks;
 
@@ -24,33 +22,16 @@ namespace Offers.API.Controllers
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
-        [HttpPost("create")]
+        [HttpPost("")]
         [JwtAuthorize]
         public async Task<Guid> CreateDraft([FromForm] CreateOfferDraftCommand command)
         {
             return await _mediator.Send(command);
         }
 
-        [HttpPost("")]
+        [HttpPut("{offerId}")]
         [JwtAuthorize]
-        public async Task<IActionResult> CreateDraftOne([FromForm] CreateOfferDraftOneCommand command)
-        {
-            var offerId = await _mediator.Send(command);
-            return Ok(new { OfferId = offerId });
-        }
-
-        [HttpPut("{offerId}/stage/1")]
-        [JwtAuthorize]
-        public async Task<IActionResult> UpdateDraftOne(string offerId, [FromForm] UpdateOfferDraftOneCommand command)
-        {
-            command.OfferId = offerId;
-            await _mediator.Send(command);
-            return Ok();
-        }
-
-        [HttpPut("{offerId}/stage/2")]
-        [JwtAuthorize]
-        public async Task<IActionResult> UpdateDraftTwo(string offerId, [FromBody] UpdateOfferDraftTwoCommand command)
+        public async Task<IActionResult> UpdateDraft(string offerId, [FromForm] UpdateOfferDraftCommand command)
         {
             command.OfferId = offerId;
             await _mediator.Send(command);
