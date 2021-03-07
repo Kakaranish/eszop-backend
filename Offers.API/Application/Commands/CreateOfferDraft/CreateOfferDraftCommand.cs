@@ -27,8 +27,7 @@ namespace Offers.API.Application.Commands.CreateOfferDraft
         public CreateOfferDraftCommandValidator()
         {
             RuleFor(x => x.Name)
-                .SetValidator(new OfferNameValidator())
-                .OverridePropertyName("Name");
+                .SetValidator(new OfferNameValidator());
 
             RuleFor(x => x.Price)
                 .SetValidator(new OfferPriceValidator());

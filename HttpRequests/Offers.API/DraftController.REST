@@ -8,20 +8,9 @@
 
 ### vvvv Temporary unavailable
 
-# PUT {{url}}/api/draft/{{offerId}}/stage/1 HTTP/1.1
+# PUT {{url}}/api/draft/{{offerId}} HTTP/1.1
 # Authorization: Bearer {{accessToken}}
 # Content-Type: multipart/form-data
-
-###
-
-PUT {{url}}/api/draft/{{offerId}}/stage/2 HTTP/1.1
-Authorization: Bearer {{accessToken}}
-Content-Type: application/json
-
-{
-    "BankAccount": "82 1020 5226 0000 6102 0417 7895",
-    "DeliveryMethods": "[{\"name\":\"DHL\",\"price\":\"12.00\"},{\"name\":\"Poczta Polska\",\"price\":\"12.37\"}]"
-}
 
 ###
 
