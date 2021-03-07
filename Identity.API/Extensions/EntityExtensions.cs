@@ -5,6 +5,22 @@ namespace Identity.API.Extensions
 {
     public static class EntityExtensions
     {
+        public static UserPreviewDto ToPreviewDto(this User user)
+        {
+            if (user == null) return null;
+
+            return new UserPreviewDto
+            {
+                Id = user.Id,
+                Role = user.Role.Name,
+                CreatedAt = user.CreatedAt,
+                UpdatedAt = user.UpdatedAt,
+                Email = user.Email,
+                LastLogin = user.LastLogin,
+                LockedUntil = user.LockedUntil
+            };
+        }
+
         public static ProfileInfoDto ToDto(this ProfileInfo profileInfo)
         {
             if (profileInfo == null) return null;

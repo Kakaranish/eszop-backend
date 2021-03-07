@@ -1,8 +1,13 @@
-﻿using Identity.API.Domain;
+﻿using Common.DataAccess;
+using Common.Extensions;
+using Common.Types;
+using Identity.API.Application.Types;
+using Identity.API.Domain;
+using Identity.API.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
-using Common.DataAccess;
 
 namespace Identity.API.DataAccess.Repositories
 {
@@ -15,6 +20,18 @@ namespace Identity.API.DataAccess.Repositories
         public UserRepository(AppDbContext dbContext)
         {
             _appDbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+        }
+
+        public async Task<Pagination<User>> GetUsers(UserFilter filter)
+        {
+            var users = _appDbContext.Users
+                .AsQueryable()
+                .ApplyFilter(filter)
+                .OrderByDescending(x => x.Role);
+
+            var pageDetails = new PageCriteria(filter.PageIndex, filter.PageSize);
+
+            return await users.PaginateAsync(pageDetails);
         }
 
         public async Task<User> GetByIdAsync(Guid id)

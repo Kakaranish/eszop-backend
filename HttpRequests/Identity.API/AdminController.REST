@@ -1,4 +1,11 @@
 @url = http://localhost:6000
+@accessToken = 
+@userId = 396eff05-059d-4ff7-2e0e-08d8d7598843
+
+###
+
+GET {{url}}/api/admin/users?role=USER&searchPhrase=@mail HTTP/1.1
+Authorization: Bearer {{accessToken}}
 
 ### Lock
 
@@ -7,7 +14,7 @@ Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 
 {
-    "UserId": "{{userIdToBlock}}",
+    "UserId": "{{userId}}",
     "LockUntil": "2030-12-31T23:59"
 }
 
@@ -18,5 +25,5 @@ Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 
 {
-    "UserId": "{{userIdToBlock}}"
+    "UserId": "{{userId}}"
 }

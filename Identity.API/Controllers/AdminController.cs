@@ -2,6 +2,9 @@
 using Common.Types;
 using Identity.API.Application.Commands.LockUser;
 using Identity.API.Application.Commands.UnlockUser;
+using Identity.API.Application.Dto;
+using Identity.API.Application.Queries.GetUsers;
+using Identity.API.Application.Types;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -18,6 +21,14 @@ namespace Identity.API.Controllers
         public AdminController(IMediator mediator)
         {
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+        }
+
+        [JwtAuthorize("Admin")]
+        [HttpGet("users")]
+        public async Task<Pagination<UserPreviewDto>> GetUsers([FromQuery] UserFilter filter)
+        {
+            var query = new GetUsersQuery { UserFilter = filter };
+            return await _mediator.Send(query);
         }
 
         [JwtAuthorize("Admin")]
