@@ -12,5 +12,6 @@ namespace Offers.API.DataAccess.Repositories
         Task<Category> GetByIdAsync(Guid id);
         Task<Category> GetByNameAsync(string name);
         Task AddAsync(Category category);
+        void Update(Category category);
     }
 }

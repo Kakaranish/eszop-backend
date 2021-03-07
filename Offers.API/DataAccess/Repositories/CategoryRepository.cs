@@ -1,9 +1,9 @@
 ﻿using Common.DataAccess;
+using Microsoft.EntityFrameworkCore;
 using Offers.API.Domain;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 
 namespace Offers.API.DataAccess.Repositories
 {
@@ -18,7 +18,7 @@ namespace Offers.API.DataAccess.Repositories
         }
 
         public async Task<IList<Category>> GetAllAsync()
-        { 
+        {
             return await _appDbContext.Categories.ToListAsync();
         }
 
@@ -35,6 +35,11 @@ namespace Offers.API.DataAccess.Repositories
         public async Task AddAsync(Category category)
         {
             await _appDbContext.Categories.AddAsync(category);
+        }
+
+        public void Update(Category category)
+        {
+            _appDbContext.Update(category);
         }
     }
 }

@@ -14,7 +14,7 @@ namespace Identity.API.DataAccess
             var passwordHasher = serviceProvider.GetRequiredService<IPasswordHasher>();
 
             var hashedPassword = passwordHasher.Hash("Test1234");
-            var user = new User("admin@mail.com", hashedPassword, Role.Admin);
+            var user = new User("sa@mail.com", hashedPassword, Role.SuperAdmin);
             user.Bind(x => x.Id, Guid.NewGuid());
             modelBuilder.Entity<User>().HasData(user);
         }

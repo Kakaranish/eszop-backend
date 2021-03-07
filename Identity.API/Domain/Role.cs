@@ -9,15 +9,15 @@ namespace Identity.API.Domain
     {
         public string Name { get; }
 
-        public static readonly Role User = new(nameof(User));
-        public static readonly Role Admin = new(nameof(Admin));
-        public static readonly Role Owner = new(nameof(Owner));
+        public static readonly Role User = new("USER");
+        public static readonly Role Admin = new("ADMIN");
+        public static readonly Role SuperAdmin = new("SUPER_ADMIN");
 
         private static IDictionary<string, Role> _rolesCache;
 
         protected Role(string name)
         {
-            Name = name.ToUpperInvariant();
+            Name = name;
         }
 
         private Role()

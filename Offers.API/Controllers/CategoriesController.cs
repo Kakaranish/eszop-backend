@@ -3,6 +3,7 @@ using Common.Types;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Offers.API.Application.Commands.CreateCategory;
+using Offers.API.Application.Commands.UpdateCategory;
 using Offers.API.Application.Dto;
 using Offers.API.Application.Queries.GetCategories;
 using Offers.API.Application.Queries.GetCategory;
@@ -38,11 +39,20 @@ namespace Offers.API.Controllers
         }
 
         [HttpPost("")]
-        [JwtAuthorize("Admin")]
+        [JwtAuthorize("SuperAdmin")]
         public async Task<IActionResult> Create(CreateCategoryCommand request)
         {
             var categoryId = await _mediator.Send(request);
             return Ok(new { CategoryId = categoryId });
+        }
+
+        [HttpPut("{categoryId}")]
+        [JwtAuthorize("SuperAdmin")]
+        public async Task<IActionResult> Update(string categoryId, [FromBody] UpdateCategoryCommand request)
+        {
+            request.CategoryId = categoryId;
+            await _mediator.Send(request);
+            return Ok();
         }
     }
 }

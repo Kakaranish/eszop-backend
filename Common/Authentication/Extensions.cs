@@ -38,10 +38,17 @@ namespace Common.Authentication
                     options.SaveToken = true;
                 });
 
-            services.AddAuthorization(options => options.AddPolicy("Admin", builder =>
+            services.AddAuthorization(options =>
             {
-                builder.RequireClaim("Role", "ADMIN");
-            }));
+                options.AddPolicy("Admin", builder =>
+                {
+                    builder.RequireClaim("Role", "ADMIN", "SUPER_ADMIN");
+                });
+                options.AddPolicy("SuperAdmin", builder =>
+                {
+                    builder.RequireClaim("Role", "SUPER_ADMIN");
+                });
+            });
 
             services.AddSingleton<IAccessTokenDecoder, AccessTokenDecoder>();
 
