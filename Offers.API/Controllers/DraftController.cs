@@ -2,6 +2,7 @@
 using Common.Types;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Offers.API.Application.Commands.CreateOfferDraft;
 using Offers.API.Application.Commands.CreateOfferDraftOne;
 using Offers.API.Application.Commands.PublishOffer;
 using Offers.API.Application.Commands.RemoveOfferDraft;
@@ -21,6 +22,13 @@ namespace Offers.API.Controllers
         public DraftController(IMediator mediator)
         {
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+        }
+
+        [HttpPost("create")]
+        [JwtAuthorize]
+        public async Task<Guid> CreateDraft([FromForm] CreateOfferDraftCommand command)
+        {
+            return await _mediator.Send(command);
         }
 
         [HttpPost("")]
