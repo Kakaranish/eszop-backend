@@ -30,6 +30,7 @@ namespace API.Gateway
             app.UseSerilogRequestLogging();
             app.UseCors();
             app.UseCookieTokenMiddleware();
+            app.UseWebSockets();
             app.UseOcelot().Wait();
         }
     }

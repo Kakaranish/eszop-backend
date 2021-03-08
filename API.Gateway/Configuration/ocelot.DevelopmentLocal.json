@@ -95,6 +95,17 @@
           "Port": 8000
         }
       ]
+    },
+    {
+      "UpstreamPathTemplate": "/{catchAll}",
+      "DownstreamPathTemplate": "/{catchAll}",
+      "DownstreamScheme": "ws",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 9000
+        }
+      ]
     }
   ]
 }
