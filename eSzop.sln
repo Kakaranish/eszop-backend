@@ -15,7 +15,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orders.API", "Orders.API\Or
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "API.Gateway", "API.Gateway\API.Gateway.csproj", "{5FCDE94A-3538-4B32-B04E-59AB6CB702C9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Grpc", "Common.Grpc\Common.Grpc.csproj", "{4F4BAC6D-8D49-450C-BA8F-AAAE0706E127}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.Grpc", "Common.Grpc\Common.Grpc.csproj", "{4F4BAC6D-8D49-450C-BA8F-AAAE0706E127}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotificationService", "NotificationService\NotificationService.csproj", "{8F6E720A-1F75-42C3-8213-FB2B801189EF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{4F4BAC6D-8D49-450C-BA8F-AAAE0706E127}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4F4BAC6D-8D49-450C-BA8F-AAAE0706E127}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4F4BAC6D-8D49-450C-BA8F-AAAE0706E127}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8F6E720A-1F75-42C3-8213-FB2B801189EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F6E720A-1F75-42C3-8213-FB2B801189EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F6E720A-1F75-42C3-8213-FB2B801189EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F6E720A-1F75-42C3-8213-FB2B801189EF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
