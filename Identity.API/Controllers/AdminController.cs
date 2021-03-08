@@ -3,6 +3,7 @@ using Common.Types;
 using Identity.API.Application.Commands.LockUser;
 using Identity.API.Application.Commands.UnlockUser;
 using Identity.API.Application.Dto;
+using Identity.API.Application.Queries.GetUser;
 using Identity.API.Application.Queries.GetUsers;
 using Identity.API.Application.Types;
 using MediatR;
@@ -28,6 +29,13 @@ namespace Identity.API.Controllers
         public async Task<Pagination<UserPreviewDto>> GetUsers([FromQuery] UserFilter filter)
         {
             var query = new GetUsersQuery { UserFilter = filter };
+            return await _mediator.Send(query);
+        }
+
+        [JwtAuthorize("Admin")]
+        [HttpGet("users/{userId}")]
+        public async Task<UserPreviewDto> GetUserById([FromRoute] GetUserQuery query)
+        {
             return await _mediator.Send(query);
         }
 
