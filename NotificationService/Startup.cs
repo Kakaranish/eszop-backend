@@ -1,11 +1,15 @@
 using Common.Authentication;
+using Common.EventBus;
+using Common.EventBus.IntegrationEvents;
+using Common.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using NotificationService.Hubs;
-using NotificationService.Types;
+using NotificationService.Application.Hubs;
+using NotificationService.Application.IntegrationEventHandlers;
+using NotificationService.Application.Types;
+using Serilog;
 
 namespace NotificationService
 {
@@ -20,19 +24,24 @@ namespace NotificationService
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
             services.AddSignalR();
             services.AddJwtAuthentication();
 
             services.AddSingleton<IConnectionManager, ConnectionManager>();
+
+            services
+                .AddRabbitMqEventBus()
+                .Subscribe<NotificationIntegrationEvent, NotificationIntegrationEventHandler>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
+            if (env.IsCustomDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseSerilogRequestLogging();
 
             app.UseRouting();
 
@@ -41,7 +50,6 @@ namespace NotificationService
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
                 endpoints.MapHub<NotificationHub>("/hubs/notification");
             });
         }
