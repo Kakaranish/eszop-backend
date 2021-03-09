@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace NotificationService.Application.Hubs
 {
     [JwtAuthorize]
-    public class NotificationHub : Hub
+    public class NotificationHub : Hub<INotificationClient>
     {
         private readonly IConnectionManager _connectionManager;
 

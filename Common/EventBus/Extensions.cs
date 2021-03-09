@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using RawRabbit;
 using RawRabbit.Configuration;
 using RawRabbit.Logging;
 using RawRabbit.vNext;
@@ -11,12 +12,12 @@ namespace Common.EventBus
         public static RabbitMqEventBusBuilder AddRabbitMqEventBus(this IServiceCollection services)
         {
             var serviceProvider = services.BuildServiceProvider();
-            var configuration = serviceProvider.GetRequiredService<IConfiguration>();
 
             var rabbitMqConfig = new RawRabbitConfiguration();
             rabbitMqConfig.Hostnames.Clear();
+            var configuration = serviceProvider.GetRequiredService<IConfiguration>();
             configuration.GetSection("EventBus:RabbitMq").Bind(rabbitMqConfig);
-            
+
             var busClient = BusClientFactory.CreateDefault(
                 new ServiceCollection().AddRawRabbit(custom: ioc =>
                 {
@@ -24,10 +25,11 @@ namespace Common.EventBus
                     ioc.AddSingleton<ILoggerFactory, RawRabbit.Logging.Serilog.LoggerFactory>();
                 }));
 
-            var eventBus = new RabbitMqEventBus(busClient);
-            services.AddSingleton<IEventBus>(eventBus);
+            services.AddSingleton<IBusClient>(busClient);
+            services.AddSingleton<IEventBus, RabbitMqEventBus>();
+
             serviceProvider = services.BuildServiceProvider();
-            eventBus.SetServiceProvider(serviceProvider);
+            var eventBus = serviceProvider.GetRequiredService<IEventBus>();
 
             return new RabbitMqEventBusBuilder(eventBus);
         }

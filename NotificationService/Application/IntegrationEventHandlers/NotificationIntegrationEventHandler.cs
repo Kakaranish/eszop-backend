@@ -15,15 +15,15 @@ namespace NotificationService.Application.IntegrationEventHandlers
     public class NotificationIntegrationEventHandler : IntegrationEventHandler<NotificationIntegrationEvent>
     {
         private readonly ILogger<NotificationIntegrationEventHandler> _logger;
-        private readonly IHubContext<NotificationHub> _notificationHubContext;
         private readonly IConnectionManager _connectionManager;
+        private readonly IHubContext<NotificationHub, INotificationClient> _notificationHubContext;
 
         public NotificationIntegrationEventHandler(ILogger<NotificationIntegrationEventHandler> logger,
-            IHubContext<NotificationHub> notificationHubContext, IConnectionManager connectionManager)
+            IConnectionManager connectionManager, IHubContext<NotificationHub, INotificationClient> notificationHubContext)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _notificationHubContext = notificationHubContext ?? throw new ArgumentNullException(nameof(notificationHubContext));
             _connectionManager = connectionManager ?? throw new ArgumentNullException(nameof(connectionManager));
+            _notificationHubContext = notificationHubContext ?? throw new ArgumentNullException(nameof(notificationHubContext));
         }
 
         public override async Task Handle(NotificationIntegrationEvent @event)
@@ -47,13 +47,9 @@ namespace NotificationService.Application.IntegrationEventHandlers
             var connectionIds = _connectionManager.Get(@event.UserId).ToList();
             if (connectionIds.Count == 0) return;
 
-            const string methodName = "RECEIVE_NOTIF";
-            foreach (var connectionId in connectionIds)
-            {
-                await _notificationHubContext.Clients.Client(connectionId).SendAsync(methodName);
-            }
+            await _notificationHubContext.Clients.Clients(connectionIds).ReceiveNotification(notification);
 
-            _logger.Log(LogLevel.Information, "Notification pushed",
+            _logger.LogWithProps(LogLevel.Information, "Notification pushed",
                 "EventId".ToKvp(@event.Id),
                 "UserId".ToKvp(@event.UserId));
         }

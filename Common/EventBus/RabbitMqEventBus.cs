@@ -1,23 +1,19 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using RawRabbit;
+using System;
+using System.Threading.Tasks;
 
 namespace Common.EventBus
 {
     public class RabbitMqEventBus : IEventBus
     {
         private readonly IBusClient _busClient;
-        private IServiceProvider _serviceProvider;
+        private readonly IServiceProvider _provider;
 
-        public RabbitMqEventBus(IBusClient busClient)
+        public RabbitMqEventBus(IBusClient busClient, IServiceProvider provider)
         {
             _busClient = busClient ?? throw new ArgumentNullException(nameof(busClient));
-        }
-        
-        public void SetServiceProvider(IServiceProvider serviceProvider)
-        {
-            _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+            _provider = provider ?? throw new ArgumentNullException(nameof(provider));
         }
 
         public Task SubscribeAsync<TEvent, TEventHandler>()
@@ -26,13 +22,13 @@ namespace Common.EventBus
         {
             _busClient.SubscribeAsync<TEvent>(async (@event, _) =>
             {
-                var handler = ActivatorUtilities.CreateInstance<TEventHandler>(_serviceProvider);
+                var handler = ActivatorUtilities.CreateInstance<TEventHandler>(_provider);
                 await handler.Handle(@event);
             });
 
             return Task.CompletedTask;
         }
-        
+
         public async Task PublishAsync<TEvent>(TEvent integrationEvent)
             where TEvent : IntegrationEvent
         {

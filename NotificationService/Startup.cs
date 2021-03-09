@@ -29,9 +29,8 @@ namespace NotificationService
 
             services.AddSingleton<IConnectionManager, ConnectionManager>();
 
-            services
-                .AddRabbitMqEventBus()
-                .Subscribe<NotificationIntegrationEvent, NotificationIntegrationEventHandler>();
+            services.AddScoped<NotificationIntegrationEventHandler>();
+            services.AddRabbitMqEventBus();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -52,6 +51,14 @@ namespace NotificationService
             {
                 endpoints.MapHub<NotificationHub>("/hubs/notification");
             });
+
+            SubscribeDirectly(app);
+        }
+
+        private void SubscribeDirectly(IApplicationBuilder app)
+        {
+            var eventBus = app.ApplicationServices.GetRequiredService<IEventBus>();
+            eventBus.SubscribeAsync<NotificationIntegrationEvent, NotificationIntegrationEventHandler>();
         }
     }
 }
