@@ -13,15 +13,14 @@ namespace Offers.API.DataAccess
 {
     public class AppDbContext : DbContext, IUnitOfWork
     {
-        private readonly IMediator _mediator;
-
+        private readonly IEventDispatcher _eventDispatcher;
         public DbSet<Offer> Offers { get; private set; }
         public DbSet<Category> Categories { get; private set; }
         public DbSet<PredefinedDeliveryMethod> PredefinedDeliveryMethods { get; private set; }
 
-        public AppDbContext(DbContextOptions options, IMediator mediator) : base(options)
+        public AppDbContext(DbContextOptions options, IEventDispatcher eventDispatcher) : base(options)
         {
-            _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+            _eventDispatcher = eventDispatcher ?? throw new ArgumentNullException(nameof(eventDispatcher));
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -56,7 +55,9 @@ namespace Offers.API.DataAccess
 
         public async Task<bool> SaveChangesAndDispatchDomainEventsAsync(CancellationToken cancellationToken = default)
         {
-            await this.DispatchDomainEvents(_mediator, cancellationToken);
+            var changedEntities = this.GetChangedEntities();
+            await _eventDispatcher.Dispatch(changedEntities);
+
             return await base.SaveChangesAsync(cancellationToken) > 0;
         }
     }
