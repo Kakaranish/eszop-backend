@@ -1,6 +1,6 @@
 ﻿using Common.DataAccess;
+using Common.EventBus;
 using Common.Extensions;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Offers.API.Domain;

@@ -1,4 +1,5 @@
 ﻿using Common.ErrorHandling;
+using Common.EventBus;
 using Common.Types;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -38,6 +39,20 @@ namespace Common.Extensions
             var exceptionHandler = new ExceptionHandler<TDomainException>(loggerFactory);
 
             services.AddSingleton(exceptionHandler);
+
+            return services;
+        }
+
+        public static IServiceCollection AddEventDispatching(this IServiceCollection services)
+        {
+            services.AddEventDispatching<DefaultEventReducer>();
+
+            return services;
+        }
+        public static IServiceCollection AddEventDispatching<TReducer>(this IServiceCollection services) where TReducer : class, IEventReducer
+        {
+            services.AddScoped<IEventDispatcher, EventDispatcher>();
+            services.AddScoped<IEventReducer, TReducer>();
 
             return services;
         }
