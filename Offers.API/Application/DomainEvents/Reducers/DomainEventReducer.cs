@@ -1,5 +1,5 @@
 ﻿using Common.Domain;
-using Common.EventBus;
+using Common.Domain.EventDispatching;
 using Offers.API.Domain;
 using System;
 using System.Collections.Generic;

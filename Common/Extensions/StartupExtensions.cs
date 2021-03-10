@@ -1,5 +1,5 @@
-﻿using Common.ErrorHandling;
-using Common.EventBus;
+﻿using Common.Domain.EventDispatching;
+using Common.ErrorHandling;
 using Common.Types;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;

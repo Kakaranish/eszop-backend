@@ -1,10 +1,9 @@
-﻿using Common.Domain;
-using MediatR;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using MediatR;
 
-namespace Common.EventBus
+namespace Common.Domain.EventDispatching
 {
     public class EventDispatcher : IEventDispatcher
     {

@@ -1,5 +1,5 @@
 ﻿using Common.DataAccess;
-using Common.EventBus;
+using Common.Domain.EventDispatching;
 using Common.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;

@@ -1,7 +1,6 @@
-﻿using Common.Domain;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace Common.EventBus
+namespace Common.Domain.EventDispatching
 {
     public interface IEventReducer
     {

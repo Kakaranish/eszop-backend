@@ -1,8 +1,7 @@
-﻿using Common.Domain;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Common.EventBus
+namespace Common.Domain.EventDispatching
 {
     public interface IEventDispatcher
     {
