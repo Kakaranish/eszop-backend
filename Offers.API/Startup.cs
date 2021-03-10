@@ -13,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
+using Offers.API.Application.DomainEvents.Reducers;
 using Offers.API.Application.IntegrationEventHandlers;
 using Offers.API.DataAccess;
 using Offers.API.DataAccess.Repositories;
@@ -69,6 +70,7 @@ namespace Offers.API
             services.AddScoped<IPredefinedDeliveryMethodRepository, PredefinedDeliveryMethodRepository>();
 
             services.AddEventDispatching<DomainEventReducer>();
+            services.AddScoped<IOfferDomainEventReducer, OfferDomainEventReducer>();
 
             services.AddExceptionHandling<OffersDomainException>();
 
