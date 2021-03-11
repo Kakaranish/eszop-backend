@@ -24,7 +24,6 @@ namespace Offers.API.Application.Commands.UpdatePredefinedDeliveryMethod
             if (deliveryMethod == null) throw new NotFoundException();
 
             deliveryMethod.SetName(request.Name);
-            deliveryMethod.SetDescription(request.Description);
             deliveryMethod.SetPrice(request.Price);
 
             _deliveryMethodRepository.Update(deliveryMethod);

@@ -5,7 +5,6 @@ namespace Offers.API.Domain
     public class PredefinedDeliveryMethod : EntityBase, IAggregateRoot
     {
         public string Name { get; private set; }
-        public string Description { get; private set; }
         public decimal? Price { get; set; }
 
         protected PredefinedDeliveryMethod()
@@ -21,11 +20,6 @@ namespace Offers.API.Domain
         {
             ValidateName(name);
             Name = name;
-        }
-
-        public void SetDescription(string description)
-        {
-            Description = description;
         }
 
         public void SetPrice(decimal? price)

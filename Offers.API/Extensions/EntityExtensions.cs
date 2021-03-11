@@ -16,7 +16,6 @@ namespace Offers.API.Extensions
             {
                 Id = predefinedDeliveryMethod.Id,
                 Name = predefinedDeliveryMethod.Name,
-                Description = predefinedDeliveryMethod.Description,
                 Price = predefinedDeliveryMethod.Price
             };
         }
