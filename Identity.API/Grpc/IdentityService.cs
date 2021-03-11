@@ -17,7 +17,7 @@ namespace Identity.API.Grpc
 
         public async Task<GetBankAccountNumberResponse> GetBankAccount(GetBankAccountNumberRequest request)
         {
-            var sellerInfo = await _sellerInfoRepository.GetByIdAsync(request.UserId);
+            var sellerInfo = await _sellerInfoRepository.GetByUserIdAsync(request.UserId);
             var response = new GetBankAccountNumberResponse { BankAccountNumber = sellerInfo?.BankAccountNumber };
 
             return response;

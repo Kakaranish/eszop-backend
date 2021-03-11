@@ -68,7 +68,7 @@ namespace Orders.API.Controllers
 
         [HttpPut("{orderId}/delivery-info")]
         [JwtAuthorize]
-        public async Task<IActionResult> UpdateDeliveryAddress(string orderId, UpdateDeliveryInfoCommand request)
+        public async Task<IActionResult> UpdateDeliveryAddress([FromRoute] string orderId, UpdateDeliveryInfoCommand request)
         {
             request.OrderId = orderId;
             await _mediator.Send(request);

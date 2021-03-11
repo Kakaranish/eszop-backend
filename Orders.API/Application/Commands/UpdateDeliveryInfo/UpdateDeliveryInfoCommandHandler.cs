@@ -46,7 +46,7 @@ namespace Orders.API.Application.Commands.UpdateDeliveryInfo
             request.Country, request.City, request.ZipCode, request.Street);
             order.SetDeliveryAddress(deliveryAddress);
 
-            var offerIds = order.OrderItems.Select(orderItem => orderItem.Id);
+            var offerIds = order.OrderItems.Select(orderItem => orderItem.OfferId);
 
             var offersServiceClient = _offersServiceClientFactory.Create(_endpointsConfig.Offers.Grpc.ToString());
             var grpcRequest = new GetDeliveryMethodsForOffersRequest { OfferIds = offerIds };
