@@ -27,13 +27,15 @@ namespace Offers.API.Application.IntegrationEventHandlers
                 $"Handling {nameof(OrderCancelledIntegrationEvent)} integration event",
                 "EventId".ToKvp(@event.Id),
                 "OrderId".ToKvp(@event.OrderId),
-                "PreviousState".ToKvp(@event.PreviousState.ToString()),
-                "CurrentState".ToKvp(@event.CurrentState.ToString()));
+                "PreviousState".ToKvp(@event.PreviousState),
+                "CurrentState".ToKvp(@event.CurrentState));
 
             foreach (var orderItem in @event.OrderItems)
             {
                 var offer = await _offerRepository.GetByIdAsync(orderItem.OfferId);
-                offer.IncreaseAvailableStock(orderItem.Quantity);
+                var currentAvailableStock = offer.AvailableStock;
+                offer.SetAvailableStock(currentAvailableStock + orderItem.Quantity);
+
                 _offerRepository.Update(offer);
 
                 _logger.LogWithProps(LogLevel.Information, "Increased available stock",

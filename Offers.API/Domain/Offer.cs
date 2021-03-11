@@ -109,15 +109,18 @@ namespace Offers.API.Domain
             if (Price == price) return;
             ValidatePrice(price);
 
-            var domainEvent = new PriceChangedDomainEvent
-            {
-                PriceChange = new ChangeState<decimal>(Price, price)
-            };
-
+            var previousPrice = Price;
             Price = price;
             UpdatedAt = DateTime.UtcNow;
 
-            AddDomainEvent(domainEvent);
+            if (IsPublished)
+            {
+                var domainEvent = new PriceChangedDomainEvent
+                {
+                    PriceChange = new ChangeState<decimal>(previousPrice, price)
+                };
+                AddDomainEvent(domainEvent);
+            }
         }
 
         public void SetTotalStock(int totalStock)
@@ -130,22 +133,42 @@ namespace Offers.API.Domain
             UpdatedAt = DateTime.UtcNow;
         }
 
-        public void SetAvailableStock(int availableStock)
+        public void SetAvailableStock(int availableStock, bool totalStockIndependent = true)
+        {
+            ValidateSetAvailableStock(availableStock, totalStockIndependent);
+
+            var previousAvailableStock = AvailableStock;
+
+            if (totalStockIndependent)
+            {
+                AvailableStock = availableStock;
+            }
+            else
+            {
+                var stockDiff = TotalStock - AvailableStock;
+                AvailableStock = availableStock;
+                TotalStock = availableStock + stockDiff;
+            }
+
+            if (IsPublished)
+            {
+                var domainEvent = new AvailableStockChangedDomainEvent
+                {
+                    AvailableStockChange = new ChangeState<int>(previousAvailableStock, availableStock)
+                };
+                AddDomainEvent(domainEvent);
+            }
+        }
+
+        private void ValidateSetAvailableStock(int availableStock, bool totalStockIndependent)
         {
             ValidateEditable();
 
-            if (availableStock < 0) throw new OffersDomainException($"{nameof(AvailableStock)} must be > 0");
+            if (availableStock < 0)
+                throw new OffersDomainException($"{nameof(AvailableStock)} must be > 0");
 
-            var domainEvent = new AvailableStockChangedDomainEvent
-            {
-                AvailableStockChange = new ChangeState<int>(AvailableStock, availableStock)
-            };
-
-            var stockDiff = TotalStock - AvailableStock;
-            AvailableStock = availableStock;
-            TotalStock = availableStock + stockDiff;
-
-            AddDomainEvent(domainEvent);
+            if (totalStockIndependent && availableStock > TotalStock)
+                throw new OffersDomainException($"{nameof(AvailableStock)} cannot be greater than {nameof(TotalStock)}");
         }
 
         public void SetCategory(Category category)
@@ -157,34 +180,6 @@ namespace Offers.API.Domain
 
             Category = category;
             UpdatedAt = DateTime.UtcNow;
-        }
-
-        public void DecreaseAvailableStock(int toDecrease)
-        {
-            ValidateEditable();
-            ValidateDecreaseAvailableStock(toDecrease);
-
-            var domainEvent = new AvailableStockChangedDomainEvent
-            {
-                AvailableStockChange = new ChangeState<int>(AvailableStock, AvailableStock - toDecrease)
-            };
-            AddDomainEvent(domainEvent);
-
-            AvailableStock -= toDecrease;
-        }
-
-        public void IncreaseAvailableStock(int toIncrease)
-        {
-            ValidateEditable();
-            ValidateIncreaseAvailableStock(toIncrease);
-
-            var domainEvent = new AvailableStockChangedDomainEvent
-            {
-                AvailableStockChange = new ChangeState<int>(AvailableStock, AvailableStock + toIncrease)
-            };
-            AddDomainEvent(domainEvent);
-
-            AvailableStock += toIncrease;
         }
 
         public void EndOffer()
@@ -287,7 +282,8 @@ namespace Offers.API.Domain
 
         private void ValidateSetTotalStock(int totalStock)
         {
-            if (IsPublished) throw new OffersDomainException($"Can't set {nameof(TotalStock)} when offer is published");
+            if (IsPublished)
+                throw new OffersDomainException($"Can't set {nameof(TotalStock)} when offer is published");
 
             var validator = new TotalStockValidator();
             var result = validator.Validate(totalStock);
