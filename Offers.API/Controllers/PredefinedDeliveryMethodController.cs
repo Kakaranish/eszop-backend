@@ -39,23 +39,25 @@ namespace Offers.API.Controllers
         }
 
         [HttpPost("")]
-        [JwtAuthorize("Admin")]
+        [JwtAuthorize("SuperAdmin")]
         public async Task<Guid> Create(CreatePredefinedDeliveryMethodCommand command)
         {
             return await _mediator.Send(command);
         }
 
-        [HttpPut("")]
-        [JwtAuthorize("Admin")]
-        public async Task<IActionResult> Update(UpdatePredefinedDeliveryMethodCommand command)
+        [HttpPut("{deliveryMethodId}")]
+        [JwtAuthorize("SuperAdmin")]
+        public async Task<IActionResult> Update([FromRoute] string deliveryMethodId, 
+            UpdatePredefinedDeliveryMethodCommand command)
         {
+            command.DeliveryMethodId = deliveryMethodId;
             await _mediator.Send(command);
             return Ok();
         }
 
-        [HttpDelete("")]
-        [JwtAuthorize("Admin")]
-        public async Task<IActionResult> Remove(RemovePredefinedDeliveryMethodCommand command)
+        [HttpDelete("{deliveryMethodId}")]
+        [JwtAuthorize("SuperAdmin")]
+        public async Task<IActionResult> Remove([FromRoute] RemovePredefinedDeliveryMethodCommand command)
         {
             await _mediator.Send(command);
             return Ok();

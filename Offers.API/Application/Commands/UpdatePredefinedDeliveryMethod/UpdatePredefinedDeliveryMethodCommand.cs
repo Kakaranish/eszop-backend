@@ -6,7 +6,7 @@ namespace Offers.API.Application.Commands.UpdatePredefinedDeliveryMethod
 {
     public class UpdatePredefinedDeliveryMethodCommand : IRequest
     {
-        public string DeliveryMethodId { get; init; }
+        public string DeliveryMethodId { get; set; }
         public string Name { get; init; }
         public string Description { get; init; }
         public decimal? Price { get; init; }
