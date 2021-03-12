@@ -15,6 +15,7 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
 using Offers.API.Application.DomainEvents.Reducers;
 using Offers.API.Application.IntegrationEventHandlers;
+using Offers.API.Application.Services;
 using Offers.API.DataAccess;
 using Offers.API.DataAccess.Repositories;
 using Offers.API.Domain;
@@ -64,6 +65,8 @@ namespace Offers.API
             AssemblyScanner.FindValidatorsInAssembly(typeof(Startup).Assembly)
                 .ForEach(item => services.AddScoped(item.InterfaceType, item.ValidatorType));
             services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+
+            services.AddScoped<IRequestOfferImagesProcessor, RequestOfferImagesProcessor>();
 
             services.AddScoped<IOfferRepository, OfferRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();

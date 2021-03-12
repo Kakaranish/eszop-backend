@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Offers.API.Domain;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Offers.API.DataAccess.Repositories
@@ -19,7 +20,7 @@ namespace Offers.API.DataAccess.Repositories
 
         public async Task<IList<Category>> GetAllAsync()
         {
-            return await _appDbContext.Categories.ToListAsync();
+            return await _appDbContext.Categories.OrderBy(x => x.Name).ToListAsync();
         }
 
         public async Task<Category> GetByIdAsync(Guid id)
