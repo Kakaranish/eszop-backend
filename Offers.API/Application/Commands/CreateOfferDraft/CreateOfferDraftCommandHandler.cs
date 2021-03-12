@@ -2,16 +2,10 @@
 using Common.Extensions;
 using MediatR;
 using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json;
-using Offers.API.Application.Types;
+using Offers.API.Application.Services;
 using Offers.API.DataAccess.Repositories;
 using Offers.API.Domain;
-using Offers.API.Services;
-using Offers.API.Services.Dto;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -22,16 +16,20 @@ namespace Offers.API.Application.Commands.CreateOfferDraft
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IOfferRepository _offerRepository;
         private readonly ICategoryRepository _categoryRepository;
-        private readonly IImageStorage _imageStorage;
+        private readonly IRequestOfferImagesProcessor _offerImagesProcessor;
+        private readonly IRequestDeliveryMethodExtractor _deliveryMethodExtractor;
+        private readonly IRequestKeyValueInfoExtractor _keyValueInfoExtractor;
 
-        public CreateOfferDraftCommandHandler(IHttpContextAccessor httpContextAccessor,
-            IOfferRepository offerRepository, ICategoryRepository categoryRepository,
-            IImageStorage imageStorage)
+        public CreateOfferDraftCommandHandler(IHttpContextAccessor httpContextAccessor, IOfferRepository offerRepository,
+            ICategoryRepository categoryRepository, IRequestOfferImagesProcessor offerImagesProcessor,
+            IRequestDeliveryMethodExtractor deliveryMethodExtractor, IRequestKeyValueInfoExtractor keyValueInfoExtractor)
         {
             _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
             _offerRepository = offerRepository ?? throw new ArgumentNullException(nameof(offerRepository));
             _categoryRepository = categoryRepository ?? throw new ArgumentNullException(nameof(categoryRepository));
-            _imageStorage = imageStorage ?? throw new ArgumentNullException(nameof(imageStorage));
+            _offerImagesProcessor = offerImagesProcessor ?? throw new ArgumentNullException(nameof(offerImagesProcessor));
+            _deliveryMethodExtractor = deliveryMethodExtractor ?? throw new ArgumentNullException(nameof(deliveryMethodExtractor));
+            _keyValueInfoExtractor = keyValueInfoExtractor ?? throw new ArgumentNullException(nameof(keyValueInfoExtractor));
         }
 
         public async Task<Guid> Handle(CreateOfferDraftCommand request, CancellationToken cancellationToken)
@@ -51,111 +49,18 @@ namespace Offers.API.Application.Commands.CreateOfferDraft
                 category: category
             );
 
-            var keyValueInfos = ExtractKeyValueInfos(request);
+            var keyValueInfos = _keyValueInfoExtractor.Extract(request.KeyValueInfos);
             offer.SetKeyValueInfos(keyValueInfos);
 
-            var deliveryMethods = ExtractDeliveryMethods(request);
+            var deliveryMethods = _deliveryMethodExtractor.Extract(request.DeliveryMethods);
             offer.SetDeliveryMethods(deliveryMethods);
 
-            await ProcessOfferImages(request, offer);
+            await _offerImagesProcessor.Process(offer, request.Images, request.ImagesMetadata);
 
             await _offerRepository.AddAsync(offer);
             await _offerRepository.UnitOfWork.SaveChangesAndDispatchDomainEventsAsync(cancellationToken);
 
             return await Task.FromResult(offer.Id);
-        }
-
-        private async Task ProcessOfferImages(CreateOfferDraftCommand request, Offer offer)
-        {
-            var imagesToUpload = ExtractImagesToUpload(request);
-            var uploadedImages = await UploadImages(imagesToUpload);
-            foreach (var uploadedImage in uploadedImages)
-            {
-                offer.AddImage(uploadedImage);
-            }
-        }
-
-        private async Task<IList<ImageInfo>> UploadImages(IList<ImageToUpload> imagesToUpload)
-        {
-            var uploadedImages = new List<ImageInfo>();
-
-            var mainImage = imagesToUpload[0];
-            var uploadedMainImage = (await _imageStorage.UploadAsync(mainImage.File)).ToImageInfo();
-            uploadedMainImage.SetIsMain(true);
-            uploadedMainImage.SetSortId(0);
-            uploadedImages.Add(uploadedMainImage);
-
-            foreach (var (imageToUpload, index) in imagesToUpload.Skip(1).WithIndex(1))
-            {
-                var uploadedImage = (await _imageStorage.UploadAsync(imageToUpload.File)).ToImageInfo();
-                uploadedImage.SetSortId(index);
-                uploadedImages.Add(uploadedImage);
-            }
-
-            return uploadedImages;
-        }
-
-        private static IList<ImageToUpload> ExtractImagesToUpload(CreateOfferDraftCommand request)
-        {
-            var imagesMetadata = ExtractImagesMetadata(request);
-            var imagesToUpload = new List<ImageToUpload>();
-
-            ImageToUpload mainImage = null;
-            foreach (var requestImage in request.Images)
-            {
-                var id = Path.GetFileNameWithoutExtension(requestImage.FileName);
-                var metadata = imagesMetadata[id];
-
-                var imageToUpload = new ImageToUpload
-                {
-                    Id = id,
-                    File = requestImage,
-                    Metadata = metadata
-                };
-
-                if (metadata.IsMain) mainImage = imageToUpload;
-                else imagesToUpload.Add(imageToUpload);
-            }
-
-            imagesToUpload = imagesToUpload.OrderBy(x => x.Metadata.SortId).ToList();
-            imagesToUpload.Insert(0, mainImage);
-
-            return imagesToUpload;
-        }
-
-        private static Dictionary<string, ImageMetadata> ExtractImagesMetadata(CreateOfferDraftCommand request)
-        {
-            var imagesMetadataList = JsonConvert.DeserializeObject<IList<ImageMetadata>>(request.ImagesMetadata);
-            if (imagesMetadataList == null) throw new OffersDomainException("Invalid images metadata");
-
-            var metadataDict = imagesMetadataList.ToDictionary(x => x.ImageId);
-
-            if (!imagesMetadataList.Any(img => img.IsMain))
-                throw new OffersDomainException("No main image indicated");
-
-            var imagesIdList = request.Images.Select(img => Path.GetFileNameWithoutExtension(img.FileName));
-            if (imagesIdList.Any(id => !metadataDict.ContainsKey(id)))
-                throw new OffersDomainException("Invalid images metadata");
-
-            return metadataDict;
-        }
-
-        private static IList<KeyValueInfo> ExtractKeyValueInfos(CreateOfferDraftCommand request)
-        {
-            if (request.KeyValueInfos == null) return null;
-
-            var extractKeyValueInfos = JsonConvert.DeserializeObject<IList<KeyValueInfo>>(request.KeyValueInfos)
-                                       ?? throw new OffersDomainException($"'{request.KeyValueInfos}' is not parsable");
-
-            return extractKeyValueInfos;
-        }
-
-        private static IList<DeliveryMethod> ExtractDeliveryMethods(CreateOfferDraftCommand request)
-        {
-            var extractedDeliveryMethods = JsonConvert.DeserializeObject<IList<DeliveryMethod>>(request.DeliveryMethods)
-                                           ?? throw new OffersDomainException($"'{request.DeliveryMethods}' is not parsable");
-
-            return extractedDeliveryMethods;
         }
     }
 }

@@ -33,11 +33,12 @@ namespace Offers.API.Domain
 
         public virtual Category Category { get; private set; }
         public IReadOnlyCollection<DeliveryMethod> DeliveryMethods => _deliveryMethods;
-        public IReadOnlyCollection<ImageInfo> Images => _images?.OrderBy(x => x.SortId).ToList();
+        public IReadOnlyCollection<ImageInfo> Images => _images?.OrderBy(x => x.SortId).ToList() ?? new List<ImageInfo>();
         public IReadOnlyCollection<KeyValueInfo> KeyValueInfos => _keyValueInfos;
 
         [NotMapped] public bool IsPublished => PublishedAt != null;
         [NotMapped] public bool IsDraft => PublishedAt == null;
+
         [NotMapped]
         public bool IsActive =>
             PublishedAt != null && DateTime.UtcNow < EndsAt && UserEndedAt == null && RemovedAt == null;
