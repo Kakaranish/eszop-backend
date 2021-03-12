@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Offers.API.Application.Commands.EndOffer;
 using Offers.API.Application.Commands.RemoveOffer;
+using Offers.API.Application.Commands.UpdateActiveOffer;
 using Offers.API.Application.Dto;
 using Offers.API.Application.Queries.GetActiveOffers;
 using Offers.API.Application.Queries.GetMyOffer;
@@ -72,6 +73,16 @@ namespace Offers.API.Controllers
         [JwtAuthorize]
         public async Task<IActionResult> End(EndOfferCommand command)
         {
+            await _mediator.Send(command);
+            return Ok();
+        }
+
+        [HttpPut("{offerId}")]
+        [JwtAuthorize]
+        public async Task<IActionResult> UpdateActiveOffer([FromRoute] string offerId,
+            [FromForm] UpdateActiveOfferCommand command)
+        {
+            command.OfferId = offerId;
             await _mediator.Send(command);
             return Ok();
         }

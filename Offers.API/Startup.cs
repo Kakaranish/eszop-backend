@@ -68,6 +68,8 @@ namespace Offers.API
 
             services.AddScoped<IRequestOfferImagesProcessor, RequestOfferImagesProcessor>();
             services.AddScoped<IRequestOfferImagesMetadataExtractor, RequestOfferImagesMetadataExtractor>();
+            services.AddScoped<IRequestDeliveryMethodExtractor, RequestDeliveryMethodExtractor>();
+            services.AddScoped<IRequestKeyValueInfoExtractor, RequestKeyValueInfoExtractor>();
 
             services.AddScoped<IOfferRepository, OfferRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
