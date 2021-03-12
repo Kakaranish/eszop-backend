@@ -3,15 +3,11 @@ using Common.Extensions;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
-using Offers.API.Application.Types;
+using Offers.API.Application.Services;
 using Offers.API.DataAccess.Repositories;
 using Offers.API.Domain;
-using Offers.API.Services;
-using Offers.API.Services.Dto;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -21,16 +17,16 @@ namespace Offers.API.Application.Commands.UpdateOfferDraft
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IOfferRepository _offerRepository;
-        private readonly IImageStorage _imageStorage;
         private readonly ICategoryRepository _categoryRepository;
+        private readonly IRequestOfferImagesProcessor _offerImagesProcessor;
 
-        public UpdateOfferDraftCommandHandler(IHttpContextAccessor httpContextAccessor, IOfferRepository offerRepository,
-            IImageStorage imageStorage, ICategoryRepository categoryRepository)
+        public UpdateOfferDraftCommandHandler(IHttpContextAccessor httpContextAccessor, IOfferRepository offerRepository, 
+            ICategoryRepository categoryRepository, IRequestOfferImagesProcessor offerImagesProcessor)
         {
             _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
             _offerRepository = offerRepository ?? throw new ArgumentNullException(nameof(offerRepository));
-            _imageStorage = imageStorage ?? throw new ArgumentNullException(nameof(imageStorage));
             _categoryRepository = categoryRepository ?? throw new ArgumentNullException(nameof(categoryRepository));
+            _offerImagesProcessor = offerImagesProcessor ?? throw new ArgumentNullException(nameof(offerImagesProcessor));
         }
 
         public async Task<Unit> Handle(UpdateOfferDraftCommand request, CancellationToken cancellationToken)
@@ -42,7 +38,7 @@ namespace Offers.API.Application.Commands.UpdateOfferDraft
             var keyValueInfos = ExtractKeyValueInfos(request);
             offer.SetKeyValueInfos(keyValueInfos);
 
-            await ProcessOfferImages(request, offer);
+            await _offerImagesProcessor.Process(offer, request.Images, request.ImagesMetadata);
 
             if (request.Name != null) offer.SetName(request.Name);
             if (request.Description != null) offer.SetDescription(request.Description);
@@ -66,108 +62,6 @@ namespace Offers.API.Application.Commands.UpdateOfferDraft
             await _offerRepository.UnitOfWork.SaveChangesAndDispatchDomainEventsAsync(cancellationToken);
 
             return await Unit.Task;
-        }
-
-        private async Task ProcessOfferImages(UpdateOfferDraftCommand request, Offer offer)
-        {
-            var imagesMetadataDict = ExtractImagesMetadata(request);
-
-            var imagesToRemove = offer.Images.Where(x => !imagesMetadataDict.ContainsKey(x.Id.ToString())).ToList();
-            foreach (var imageToRemove in imagesToRemove)
-            {
-                await _imageStorage.DeleteAsync(imageToRemove.Filename);
-                offer.RemoveImage(imageToRemove);
-            }
-
-            var currentOfferImages = new List<ImageInfo>();
-            ImageInfo mainImage = null;
-
-            foreach (var offerImage in offer.Images)
-            {
-                var imageMetadata = imagesMetadataDict[offerImage.Id.ToString()];
-                if (!imageMetadata.IsRemote)
-                    throw new OffersDomainException($"Invalid metadata entry - '{nameof(imageMetadata.IsRemote)}' should be true");
-
-                offerImage.SetIsMain(imageMetadata.IsMain);
-                if (offerImage.IsMain)
-                {
-                    offerImage.SetSortId(0);
-                    mainImage = offerImage;
-                }
-                else
-                {
-                    offerImage.SetSortId(imageMetadata.SortId);
-                    currentOfferImages.Add(offerImage);
-                }
-
-                imagesMetadataDict.Remove(offerImage.Id.ToString());
-            }
-
-            offer.ClearImages();
-
-            if (imagesMetadataDict.Any(x => x.Value.IsRemote))
-                throw new OffersDomainException("Uploaded image cannot be marked as isRemote");
-
-            var uploadedImages = new List<ImageInfo>();
-
-            if (request.Images != null)
-            {
-                foreach (var requestImageFile in request.Images)
-                {
-                    var id = Path.GetFileNameWithoutExtension(requestImageFile.FileName);
-                    var metadata = imagesMetadataDict[id];
-
-                    var uploadedImage = (await _imageStorage.UploadAsync(requestImageFile)).ToImageInfo();
-                    uploadedImage.SetIsMain(metadata.IsMain);
-
-                    if (uploadedImage.IsMain)
-                    {
-                        uploadedImage.SetSortId(0);
-                        mainImage = uploadedImage;
-                    }
-                    else
-                    {
-                        uploadedImage.SetSortId(metadata.SortId);
-                        uploadedImages.Add(uploadedImage);
-                    }
-                }
-            }
-
-            offer.AddImage(mainImage);
-            foreach (var (offerImage, index) in
-                new List<ImageInfo>(currentOfferImages).Concat(uploadedImages).OrderBy(x => x.SortId).WithIndex(1))
-            {
-                offerImage.SetSortId(index);
-                offer.AddImage(offerImage);
-            }
-        }
-
-        private static Dictionary<string, ImageMetadata> ExtractImagesMetadata(UpdateOfferDraftCommand request)
-        {
-            var imagesMetadataList = JsonConvert.DeserializeObject<IList<ImageMetadata>>(request.ImagesMetadata);
-            var metadataDict = imagesMetadataList.ToDictionary(x => x.ImageId);
-
-            if (imagesMetadataList == null)
-                throw new OffersDomainException("Invalid images metadata");
-            if (imagesMetadataList.Count == 0)
-                throw new OffersDomainException("Min number of images is 1");
-            if (imagesMetadataList.Count > 5)
-                throw new OffersDomainException("Max number of images is 5");
-
-            var mainImages = imagesMetadataList.Where(x => x.IsMain).ToList();
-            if (mainImages.Count == 0)
-                throw new OffersDomainException("No main image indicated");
-            if (mainImages.Count > 1)
-                throw new OffersDomainException("Possible only 1 main image");
-
-            if (request.Images != null)
-            {
-                var imagesIdList = request.Images.Select(img => Path.GetFileNameWithoutExtension(img.FileName));
-                if (imagesIdList.Any(id => !metadataDict.ContainsKey(id)))
-                    throw new OffersDomainException("Invalid images metadata");
-            }
-
-            return metadataDict;
         }
 
         private static IList<KeyValueInfo> ExtractKeyValueInfos(UpdateOfferDraftCommand request)

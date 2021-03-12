@@ -33,7 +33,7 @@ namespace Offers.API.Domain
 
         public virtual Category Category { get; private set; }
         public IReadOnlyCollection<DeliveryMethod> DeliveryMethods => _deliveryMethods;
-        public IReadOnlyCollection<ImageInfo> Images => _images;
+        public IReadOnlyCollection<ImageInfo> Images => _images?.OrderBy(x => x.SortId).ToList();
         public IReadOnlyCollection<KeyValueInfo> KeyValueInfos => _keyValueInfos;
 
         [NotMapped] public bool IsPublished => PublishedAt != null;
