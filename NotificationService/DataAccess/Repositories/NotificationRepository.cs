@@ -52,12 +52,17 @@ namespace NotificationService.DataAccess.Repositories
             _appDbContext.Notifications.Where(x => x.Id == notificationId).DeleteFromQuery();
         }
 
-        public void RemoveAllExpired(TimeSpan expiration)
+        public async Task<IEnumerable<Guid>> RemoveAllExpired(TimeSpan expiration)
         {
-            var notificationsToRemove = _appDbContext.Notifications
-                .Where(x => x.CreatedAt.AddMinutes(expiration.Minutes) < DateTime.UtcNow);
+            var notificationsToRemove = await _appDbContext.Notifications
+                .Where(x => x.CreatedAt.AddMinutes(expiration.Minutes) < DateTime.UtcNow)
+                .ToListAsync();
+
+            var impactedUsers = notificationsToRemove.Select(x => x.UserId).Distinct();
 
             _appDbContext.Notifications.RemoveRange(notificationsToRemove);
+
+            return impactedUsers;
         }
 
         public void RemoveAllByUserId(Guid userId)

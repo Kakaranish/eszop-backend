@@ -43,6 +43,11 @@ namespace NotificationService.Application.Services
             _cache.Set(userId, notifications, CacheEntryOptions);
         }
 
+        public void Delete(Guid userId)
+        {
+            _cache.Remove(userId);
+        }
+
         public void PushIfExists(Guid userId, Notification notification)
         {
             if (!_cache.TryGetValue(userId, out IList<Notification> notificationsResult)) return;

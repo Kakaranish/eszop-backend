@@ -12,7 +12,7 @@ namespace NotificationService.DataAccess.Repositories
         void Add(Notification notification);
         Task MarkAllAsRead(Guid userId);
         void RemoveById(Guid notificationId);
-        void RemoveAllExpired(TimeSpan expiration);
+        Task<IEnumerable<Guid>> RemoveAllExpired(TimeSpan expiration);
         void RemoveAllByUserId(Guid userId);
     }
 }

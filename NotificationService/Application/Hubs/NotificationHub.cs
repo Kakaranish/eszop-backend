@@ -9,7 +9,6 @@ using MediatR;
 using NotificationService.Application.Commands.DeleteAll;
 using NotificationService.Application.Commands.DeleteSingle;
 using NotificationService.Application.Commands.ReadAll;
-using NotificationService.DataAccess.Repositories;
 using NotificationService.Extensions;
 
 namespace NotificationService.Application.Hubs
@@ -18,15 +17,12 @@ namespace NotificationService.Application.Hubs
     public class NotificationHub : Hub<INotificationClient>
     {
         private readonly IConnectionManager _connectionManager;
-        private readonly INotificationRepository _notificationRepository;
         private readonly IMediator _mediator;
         private readonly INotificationCache _notificationCache;
 
-        public NotificationHub(IConnectionManager connectionManager, 
-            INotificationRepository notificationRepository, IMediator mediator, INotificationCache notificationCache)
+        public NotificationHub(IConnectionManager connectionManager, IMediator mediator, INotificationCache notificationCache)
         {
             _connectionManager = connectionManager ?? throw new ArgumentNullException(nameof(connectionManager));
-            _notificationRepository = notificationRepository ?? throw new ArgumentNullException(nameof(notificationRepository));
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _notificationCache = notificationCache ?? throw new ArgumentNullException(nameof(notificationCache));
         }

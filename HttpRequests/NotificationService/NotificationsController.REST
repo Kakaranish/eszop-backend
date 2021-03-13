@@ -1,0 +1,18 @@
+@url = http://localhost:9000
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJUb2tlbklkIjoiMWY2OGYwMmYtNDc1ZC00MTk1LTlhZDYtYWI2OWYxNzUzOWE2IiwiVXNlcklkIjoiNmYwYzdiMmItNGIyOS00MWExLWYyYWItMDhkOGU0OWRjMThhIiwiRW1haWwiOiJ1c2VyQG1haWwuY29tIiwiUm9sZSI6IlVTRVIiLCJleHAiOjE2MTY4NDIyNzMsImlzcyI6IklkZW50aXR5LkFQSSIsImF1ZCI6IklkZW50aXR5LkFQSS5BdWRpZW5jZSJ9.tJJeEuLJg4-i6gayZT55cXp_WDMQ6HLVLq2Va6bLfB4
+@notificationId = 69E5A933-7489-4352-C622-08D8E63717D0
+
+###
+
+POST {{url}}/notifications/all/read HTTP/1.1
+Authorization: Bearer {{accessToken}}
+
+###
+
+DELETE {{url}}/notifications/all HTTP/1.1
+Authorization: Bearer {{accessToken}}
+
+### 
+
+DELETE {{url}}/notifications/{{notificationId}} HTTP/1.1
+Authorization: Bearer {{accessToken}}

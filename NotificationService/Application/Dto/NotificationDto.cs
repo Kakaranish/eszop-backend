@@ -11,6 +11,5 @@ namespace NotificationService.Application.Dto
         public string Message { get; init; }
         public IDictionary<string, string> Details { get; init; }
         public bool IsRead { get; init; }
-        public bool MarkedAsDeleted { get; init; }
     }
 }

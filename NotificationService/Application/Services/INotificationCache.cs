@@ -9,6 +9,7 @@ namespace NotificationService.Application.Services
     {
         Task<IList<Notification>> Get(Guid userId);
         void Set(Guid userId, IEnumerable<Notification> notifications);
+        void Delete(Guid userId);
         void PushIfExists(Guid userId, Notification notification);
     }
 }
