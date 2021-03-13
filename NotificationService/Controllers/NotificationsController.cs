@@ -2,6 +2,8 @@
 using Common.Types;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using NotificationService.Application.Commands.DeleteAll;
+using NotificationService.Application.Commands.DeleteSingle;
 using NotificationService.Application.Commands.ReadAll;
 using System;
 using System.Threading.Tasks;
@@ -28,17 +30,20 @@ namespace NotificationService.Controllers
             return Ok();
         }
 
-        [HttpDelete("{notificationId}")]
-        [JwtAuthorize]
-        public async Task<IActionResult> DeleteById([FromRoute] string notificationId)
-        {
-            return Ok();
-        }
-
         [HttpDelete("all")]
         [JwtAuthorize]
         public async Task<IActionResult> DeleteAll()
         {
+            var command = new DeleteAllCommand();
+            await _mediator.Send(command);
+            return Ok();
+        }
+
+        [HttpDelete("{notificationId}")]
+        [JwtAuthorize]
+        public async Task<IActionResult> DeleteById([FromRoute] DeleteSingleCommand request)
+        {
+            await _mediator.Send(request);
             return Ok();
         }
     }

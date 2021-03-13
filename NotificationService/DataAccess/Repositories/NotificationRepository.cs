@@ -38,6 +38,20 @@ namespace NotificationService.DataAccess.Repositories
             _appDbContext.Notifications.Add(notification);
         }
 
+        public async Task MarkAllAsRead(Guid userId)
+        {
+            await using var connection = new SqlConnection(_connectionString);
+            await connection.OpenAsync();
+
+            var query = $"UPDATE Notifications SET {nameof(Notification.IsRead)}=@IsRead WHERE {nameof(Notification.UserId)}=@UserId";
+            await connection.ExecuteAsync(query, new { UserId = userId, IsRead = true });
+        }
+
+        public void RemoveById(Guid notificationId)
+        {
+            _appDbContext.Notifications.Where(x => x.Id == notificationId).DeleteFromQuery();
+        }
+
         public void RemoveAllExpired(TimeSpan expiration)
         {
             var notificationsToRemove = _appDbContext.Notifications
@@ -46,13 +60,9 @@ namespace NotificationService.DataAccess.Repositories
             _appDbContext.Notifications.RemoveRange(notificationsToRemove);
         }
 
-        public async Task MarkAllAsRead(Guid userId)
+        public void RemoveAllByUserId(Guid userId)
         {
-            await using var connection = new SqlConnection(_connectionString);
-            await connection.OpenAsync();
-
-            var query = $"UPDATE Notifications SET {nameof(Notification.IsRead)}=@IsRead WHERE {nameof(Notification.UserId)}=@UserId";
-            await connection.ExecuteAsync(query, new { UserId = userId, IsRead = true });
+            _appDbContext.Notifications.Where(x => x.UserId == userId).DeleteFromQuery();
         }
     }
 }
