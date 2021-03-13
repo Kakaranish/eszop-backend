@@ -40,6 +40,7 @@ namespace NotificationService
                     failureStatus: HealthStatus.Unhealthy);
 
             services.AddSingleton<IConnectionManager, ConnectionManager>();
+            services.AddScoped<INotificationRepository, NotificationRepository>();
 
             services.AddScoped<NotificationIntegrationEventHandler>();
             services.AddRabbitMqEventBus();
