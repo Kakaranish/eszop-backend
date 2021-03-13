@@ -1,9 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using NotificationService.Application.Dto;
+using System.Threading.Tasks;
 
 namespace NotificationService.Application.Hubs
 {
     public interface INotificationClient
     {
-        Task ReceiveNotification(Notification notification);
+        Task ReceiveNotification(NotificationDto notification);
     }
 }

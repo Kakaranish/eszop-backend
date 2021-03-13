@@ -2,13 +2,21 @@ using Common.Authentication;
 using Common.EventBus;
 using Common.EventBus.IntegrationEvents;
 using Common.Extensions;
+using Common.HealthCheck;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Logging;
+using NotificationService.Application;
 using NotificationService.Application.Hubs;
 using NotificationService.Application.IntegrationEventHandlers;
-using NotificationService.Application.Types;
+using NotificationService.Application.Services;
+using NotificationService.DataAccess;
+using NotificationService.DataAccess.Repositories;
 using Serilog;
 
 namespace NotificationService
@@ -24,8 +32,12 @@ namespace NotificationService
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddControllers();
             services.AddSignalR();
             services.AddJwtAuthentication();
+            services.AddHttpContextAccessor();
+
+            services.AddMediatR(typeof(Startup).Assembly);
 
             var connectionString = Configuration.GetConnectionString("SqlServer");
             services.AddDbContext<AppDbContext>(builder =>
@@ -62,13 +74,15 @@ namespace NotificationService
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapControllers();
+                endpoints.MapHealthChecks("/healthcheck");
                 endpoints.MapHub<NotificationHub>("/hubs/notification");
             });
 
             SubscribeDirectly(app);
         }
 
-        private void SubscribeDirectly(IApplicationBuilder app)
+        private static void SubscribeDirectly(IApplicationBuilder app)
         {
             var eventBus = app.ApplicationServices.GetRequiredService<IEventBus>();
             eventBus.SubscribeAsync<NotificationIntegrationEvent, NotificationIntegrationEventHandler>();

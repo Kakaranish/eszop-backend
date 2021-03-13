@@ -1,7 +1,7 @@
 ﻿using Common.Authentication;
 using Common.Extensions;
 using Microsoft.AspNetCore.SignalR;
-using NotificationService.Application.Types;
+using NotificationService.Application.Services;
 using System;
 using System.Threading.Tasks;
 
