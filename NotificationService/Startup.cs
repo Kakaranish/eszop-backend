@@ -63,6 +63,7 @@ namespace NotificationService
             });
 
             services.AddSingleton<IConnectionManager, ConnectionManager>();
+            services.AddSingleton<INotificationCache, NotificationCache>();
             services.AddScoped<INotificationRepository, NotificationRepository>();
 
             services.AddScoped<NotificationIntegrationEventHandler>();
