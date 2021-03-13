@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace NotificationService.Application.Types
+namespace NotificationService.Application.Services
 {
     public class ConnectionManager : IConnectionManager
     {

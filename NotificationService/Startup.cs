@@ -27,6 +27,18 @@ namespace NotificationService
             services.AddSignalR();
             services.AddJwtAuthentication();
 
+            var connectionString = Configuration.GetConnectionString("SqlServer");
+            services.AddDbContext<AppDbContext>(builder =>
+                builder
+                    .UseSqlServer(connectionString)
+                    .UseLoggerFactory(LoggerFactory.Create(loggingBuilder => loggingBuilder.AddDebug()))
+                );
+            services.AddHealthChecks()
+                .AddCheck(
+                    name: "SqlServerCheck",
+                    instance: new SqlConnectionHealthCheck(connectionString),
+                    failureStatus: HealthStatus.Unhealthy);
+
             services.AddSingleton<IConnectionManager, ConnectionManager>();
 
             services.AddScoped<NotificationIntegrationEventHandler>();

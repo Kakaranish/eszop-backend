@@ -7,3 +7,4 @@ docker volume create eszop-identity-sqlserver
 docker volume create eszop-identity-redis
 docker volume create eszop-carts-sqlserver
 docker volume create eszop-orders-sqlserver
+docker volume create eszop-notification-sqlserver
