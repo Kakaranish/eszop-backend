@@ -16,7 +16,6 @@ namespace NotificationService.Extensions
                 CreatedAt = notification.CreatedAt,
                 Message = notification.Message,
                 Details = notification.Details,
-                MarkedAsDeleted = notification.MarkedAsDeleted,
                 IsRead = notification.IsRead
             };
         }

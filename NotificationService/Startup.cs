@@ -37,6 +37,8 @@ namespace NotificationService
             services.AddJwtAuthentication();
             services.AddHttpContextAccessor();
 
+            services.Configure<NotificationSettings>(Configuration.GetSection("NotificationSettings"));
+
             services.AddMediatR(typeof(Startup).Assembly);
 
             var connectionString = Configuration.GetConnectionString("SqlServer");
@@ -50,6 +52,15 @@ namespace NotificationService
                     name: "SqlServerCheck",
                     instance: new SqlConnectionHealthCheck(connectionString),
                     failureStatus: HealthStatus.Unhealthy);
+
+            var notificationOptions = Configuration.GetSection("NotificationSettings").Get<NotificationSettings>();
+            services.AddScheduler(builder =>
+            {
+                builder.AddJob<CleanupJob>(configure: options =>
+                {
+                    options.CronSchedule = notificationOptions.CleanupJobCronPattern;
+                });
+            });
 
             services.AddSingleton<IConnectionManager, ConnectionManager>();
             services.AddScoped<INotificationRepository, NotificationRepository>();

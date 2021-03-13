@@ -11,7 +11,6 @@ namespace NotificationService.Application.Domain
         public string Message { get; private set; }
         public IDictionary<string, string> Details { get; private set; }
         public bool IsRead { get; private set; }
-        public bool MarkedAsDeleted { get; private set; }
 
         private Notification()
         {
@@ -57,13 +56,6 @@ namespace NotificationService.Application.Domain
             IsRead = isRead;
         }
 
-        public void SetMarkedAsDeleted(bool isMarkedAsDeleted)
-        {
-            ValidateMarkedAsDeleted(isMarkedAsDeleted);
-
-            MarkedAsDeleted = isMarkedAsDeleted;
-        }
-
         #region Validation
 
         private void ValidateUserId(Guid userId)
@@ -73,7 +65,7 @@ namespace NotificationService.Application.Domain
 
         private void ValidateCreatedAt(DateTime createdAt)
         {
-            if(DateTime.UtcNow - createdAt > TimeSpan.FromMinutes(5))
+            if (DateTime.UtcNow - createdAt > TimeSpan.FromMinutes(5))
                 throw new NotificationDomainException($"{nameof(CreatedAt)} must be created max 5 minutes before NOW");
         }
 
@@ -87,11 +79,6 @@ namespace NotificationService.Application.Domain
         {
             if (details == null || details.Keys.Count == 0)
                 throw new NotificationDomainException($"{nameof(Details)} cannot be null or empty dictionary");
-        }
-
-        private void ValidateMarkedAsDeleted(bool isMarkedAsDeleted)
-        {
-            if (MarkedAsDeleted) throw new NotificationDomainException("Already marked as deleted");
         }
 
         #endregion
