@@ -11,7 +11,7 @@ namespace NotificationService.DataAccess.Repositories
         Task<IList<Notification>> GetByUserId(Guid userId, int itemsNum);
         void Add(Notification notification);
         Task MarkAllAsRead(Guid userId);
-        void RemoveById(Guid notificationId);
+        Task RemoveById(Guid notificationId);
         Task<IEnumerable<Guid>> RemoveAllExpired(TimeSpan expiration);
         void RemoveAllByUserId(Guid userId);
     }

@@ -47,9 +47,9 @@ namespace NotificationService.DataAccess.Repositories
             await connection.ExecuteAsync(query, new { UserId = userId, IsRead = true });
         }
 
-        public void RemoveById(Guid notificationId)
+        public async Task RemoveById(Guid notificationId)
         {
-            _appDbContext.Notifications.Where(x => x.Id == notificationId).DeleteFromQuery();
+            await _appDbContext.Notifications.Where(x => x.Id == notificationId).DeleteFromQueryAsync();
         }
 
         public async Task<IEnumerable<Guid>> RemoveAllExpired(TimeSpan expiration)

@@ -43,10 +43,13 @@ namespace NotificationService
 
             var connectionString = Configuration.GetConnectionString("SqlServer");
             services.AddDbContext<AppDbContext>(builder =>
-                builder
-                    .UseSqlServer(connectionString)
-                    .UseLoggerFactory(LoggerFactory.Create(loggingBuilder => loggingBuilder.AddDebug()))
-                );
+                {
+                    builder
+                        .UseSqlServer(connectionString)
+                        .UseLoggerFactory(LoggerFactory.Create(loggingBuilder => loggingBuilder.AddDebug()));
+                },
+                ServiceLifetime.Transient
+            );
             services.AddHealthChecks()
                 .AddCheck(
                     name: "SqlServerCheck",
@@ -64,7 +67,7 @@ namespace NotificationService
 
             services.AddSingleton<IConnectionManager, ConnectionManager>();
             services.AddSingleton<INotificationCache, NotificationCache>();
-            services.AddScoped<INotificationRepository, NotificationRepository>();
+            services.AddTransient<INotificationRepository, NotificationRepository>();
 
             services.AddScoped<NotificationIntegrationEventHandler>();
             services.AddRabbitMqEventBus();

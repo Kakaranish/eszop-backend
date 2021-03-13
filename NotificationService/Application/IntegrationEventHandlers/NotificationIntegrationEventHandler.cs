@@ -42,7 +42,6 @@ namespace NotificationService.Application.IntegrationEventHandlers
 
             var notification = new Notification(@event.UserId, @event.CreatedAt, @event.Message);
             if (@event.Details != null) notification.SetDetails(@event.Details);
-
             _notificationRepository.Add(notification);
 
             await _notificationRepository.UnitOfWork.SaveChangesAndDispatchDomainEventsAsync();

@@ -29,8 +29,7 @@ namespace NotificationService.Application.Commands.DeleteSingle
             var userId = _httpContextAccessor.HttpContext.User.Claims.ToTokenPayload().UserClaims.Id;
             var notificationId = Guid.Parse(request.NotificationId);
 
-            _notificationRepository.RemoveById(notificationId);
-            await _notificationRepository.UnitOfWork.SaveChangesAndDispatchDomainEventsAsync(cancellationToken);
+            await _notificationRepository.RemoveById(notificationId);
 
             var notifications = await _notificationCache.Get(userId);
             _notificationCache.Set(userId, notifications.Where(x => x.Id != notificationId));
