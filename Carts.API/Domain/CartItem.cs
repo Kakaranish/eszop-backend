@@ -26,6 +26,7 @@ namespace Carts.API.Domain
             int quantity, int availableStock, string imageUri)
         {
             SetCartId(cartId);
+            SetCartOwnerId(cartOwnerId);
             SetOfferId(offerId);
             SetSellerId(sellerId);
             SetOfferName(offerName);

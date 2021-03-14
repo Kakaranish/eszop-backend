@@ -58,13 +58,16 @@ namespace Carts.API.Application.IntegrationEventsHandlers
 
                 _cartItemRepository.Update(cartItem);
 
-                notificationIntegrationEvents.Add(new NotificationIntegrationEvent
+                if (ShouldPublishNotification(@event, cartItem))
                 {
-                    UserId = cartItem.CartOwnerId,
-                    Code = NotificationCodes.CartItemChanged,
-                    Message = "Cart item changed",
-                    Metadata = PrepareMetadata(@event, cartItem)
-                });
+                    notificationIntegrationEvents.Add(new NotificationIntegrationEvent
+                    {
+                        UserId = cartItem.CartOwnerId,
+                        Code = NotificationCodes.CartItemChanged,
+                        Message = "Cart item changed",
+                        Metadata = PrepareMetadata(@event, cartItem)
+                    });
+                }
             }
 
             await _cartItemRepository.UnitOfWork.SaveChangesAndDispatchDomainEventsAsync();
@@ -81,12 +84,22 @@ namespace Carts.API.Application.IntegrationEventsHandlers
                 "OfferId".ToKvp(@event.OfferId));
         }
 
+        private static bool ShouldPublishNotification(ActiveOfferChangedIntegrationEvent integrationEvent,
+            CartItem cartItem)
+        {
+            return (integrationEvent.PriceChange?.Changed ?? false) ||
+                   ((integrationEvent.AvailableStockChange?.Changed ?? false) &&
+                    cartItem.AvailableStock < integrationEvent.AvailableStockChange.NewValue);
+        }
+
         private static IDictionary<string, string> PrepareMetadata(
             ActiveOfferChangedIntegrationEvent integrationEvent, CartItem cartItem)
         {
             var metadata = new Dictionary<string, string>
             {
-                {"CartItemId", cartItem.CartOwnerId.ToString()}
+                {"CartItemId", cartItem.CartOwnerId.ToString()},
+                {"OfferId", cartItem.OfferId.ToString()},
+                {"OfferName", cartItem.OfferName}
             };
 
             if (integrationEvent.AvailableStockChange?.Changed ?? false)
