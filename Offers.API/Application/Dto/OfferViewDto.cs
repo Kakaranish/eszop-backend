@@ -11,7 +11,8 @@ namespace Offers.API.Application.Dto
         public DateTime UpdatedAt { get; init; }
         public DateTime EndsAt { get; init; }
         public DateTime? UserEndedAt { get; init; }
-        public DateTime? PublishedAt { get; set; }
+        public DateTime? PublishedAt { get; init; }
+        public bool IsActive { get; init; }
 
         public Guid OwnerId { get; init; }
         public string Name { get; init; }

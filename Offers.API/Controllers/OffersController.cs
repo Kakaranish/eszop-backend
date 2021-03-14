@@ -69,9 +69,9 @@ namespace Offers.API.Controllers
             return await _mediator.Send(query);
         }
 
-        [HttpPost("end")]
+        [HttpPost("{offerId}/end")]
         [JwtAuthorize]
-        public async Task<IActionResult> End(EndOfferCommand command)
+        public async Task<IActionResult> End([FromRoute] EndOfferCommand command)
         {
             await _mediator.Send(command);
             return Ok();

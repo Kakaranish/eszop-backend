@@ -3,5 +3,7 @@
     public static class NotificationCodes
     {
         public static readonly string CartItemChanged = nameof(CartItemChanged);
+
+        public static readonly string OfferBecameUnavailable = nameof(OfferBecameUnavailable);
     }
 }

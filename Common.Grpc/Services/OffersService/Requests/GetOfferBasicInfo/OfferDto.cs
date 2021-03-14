@@ -24,5 +24,8 @@ namespace Common.Grpc.Services.OffersService.Requests.GetOfferBasicInfo
 
         [DataMember(Order = 6)]
         public IEnumerable<ImageDto> Images { get; set; }
+
+        [DataMember(Order = 7)] 
+        public bool IsActive { get; set; }
     }
 }

@@ -299,7 +299,8 @@ namespace Offers.API.Domain
 
         private void ValidateEndOffer()
         {
-            if (UserEndedAt != null) throw new OffersDomainException("Offer is already ended");
+            if (UserEndedAt != null || EndsAt < DateTime.UtcNow) 
+                throw new OffersDomainException("Offer is already ended");
         }
 
         private void ValidateEditable()

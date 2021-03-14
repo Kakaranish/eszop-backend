@@ -8,12 +8,16 @@ using Offers.API.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace Offers.API.DataAccess.Repositories
 {
     public class OfferRepository : IOfferRepository
     {
+        private static readonly Expression<Func<Offer, bool>> OfferActiveExpression = offer
+            => offer.PublishedAt != null && offer.UserEndedAt == null && offer.EndsAt > DateTime.UtcNow && offer.RemovedAt == null;
+
         private readonly AppDbContext _appDbContext;
 
         public IUnitOfWork UnitOfWork => _appDbContext;
@@ -27,7 +31,7 @@ namespace Offers.API.DataAccess.Repositories
         {
             var offers = _appDbContext.Offers
                 .AsQueryable()
-                .Where(x => x.PublishedAt != null)
+                .Where(OfferActiveExpression)
                 .ApplyFilter(filter)
                 .OrderByDescending(x => x.CreatedAt)
                 .Include(x => x.Category);
@@ -61,7 +65,8 @@ namespace Offers.API.DataAccess.Repositories
         public async Task<Pagination<Offer>> GetAllActiveByUserIdAsync(Guid userId, OfferFilter filter)
         {
             var offers = _appDbContext.Offers.AsQueryable()
-                .Where(x => x.OwnerId == userId && x.PublishedAt != null)
+                .Where(x => x.OwnerId == userId)
+                .Where(OfferActiveExpression)
                 .ApplyFilter(filter);
 
             var pageDetails = new PageCriteria(filter.PageIndex, filter.PageSize);

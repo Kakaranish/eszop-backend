@@ -80,6 +80,7 @@ namespace Offers.API.Extensions
                 UserEndedAt = offer.UserEndedAt,
                 EndsAt = offer.EndsAt,
                 PublishedAt = offer.PublishedAt,
+                IsActive = offer.IsActive,
                 OwnerId = offer.OwnerId,
                 Name = offer.Name,
                 Description = offer.Description,
