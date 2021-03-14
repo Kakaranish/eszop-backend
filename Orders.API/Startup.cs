@@ -1,6 +1,7 @@
 using Common.Authentication;
 using Common.ErrorHandling;
 using Common.EventBus;
+using Common.EventBus.IntegrationEvents;
 using Common.Extensions;
 using Common.Grpc;
 using Common.Grpc.Services.IdentityService;
@@ -15,6 +16,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
+using Orders.API.Application.IntegrationEvents;
 using Orders.API.DataAccess;
 using Orders.API.DataAccess.Repositories;
 using Orders.API.Domain;
@@ -67,7 +69,8 @@ namespace Orders.API
 
             services.AddExceptionHandling<OrdersDomainException>();
 
-            services.AddRabbitMqEventBus();
+            services.AddRabbitMqEventBus()
+                .Subscribe<OfferBecameUnavailableIntegrationEvent, OfferBecameUnavailableIntegrationEventHandler>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

@@ -4,6 +4,7 @@ using Common.Types;
 using Microsoft.EntityFrameworkCore;
 using Orders.API.Domain;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -23,6 +24,13 @@ namespace Orders.API.DataAccess.Repositories
         public async Task<Order> GetByIdAsync(Guid orderId)
         {
             return await _appDbContext.Orders.FirstOrDefaultAsync(x => x.Id == orderId);
+        }
+
+        public async Task<IList<Order>> GetAllStartedOrdersByOfferId(Guid offerId)
+        {
+            return await _appDbContext.Orders.Where(x =>
+                    x.OrderState == OrderState.Started && x.OrderItems.Any(order => order.OfferId == offerId))
+                .ToListAsync();
         }
 
         public async Task<Pagination<Order>> GetAllByUserIdAsync(Guid userId, BasicPaginationFilter filter)
