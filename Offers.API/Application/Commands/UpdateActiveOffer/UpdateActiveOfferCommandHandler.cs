@@ -1,10 +1,12 @@
 ﻿using Common.Exceptions;
 using Common.Extensions;
+using Common.Logging;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Offers.API.Application.Services;
 using Offers.API.DataAccess.Repositories;
+using Offers.API.Domain;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -42,6 +44,7 @@ namespace Offers.API.Application.Commands.UpdateActiveOffer
 
             var offer = await _offerRepository.GetByIdAsync(offerId);
             if (offer == null || offer.OwnerId != userId) throw new NotFoundException();
+            if (!offer.IsActive) throw new OffersDomainException("Offer is not active");
 
             var keyValueInfos = _keyValueInfoExtractor.Extract(request.KeyValueInfos);
             offer.SetKeyValueInfos(keyValueInfos);
@@ -68,6 +71,10 @@ namespace Offers.API.Application.Commands.UpdateActiveOffer
 
             _offerRepository.Update(offer);
             await _offerRepository.UnitOfWork.SaveChangesAndDispatchDomainEventsAsync(cancellationToken);
+
+            _logger.LogWithProps(LogLevel.Debug, "Active offer updated",
+                "OfferId".ToKvp(offer.Id),
+                "UserId".ToKvp(userId));
 
             return await Unit.Task;
         }

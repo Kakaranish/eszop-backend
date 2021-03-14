@@ -20,19 +20,19 @@ namespace Offers.API.Application.DomainEvents.Reducers
                 switch (offerDomainEvent)
                 {
                     case PriceChangedDomainEvent priceChangedEvent:
-                        activeOfferChanged ??= new ActiveOfferChangedDomainEvent();
+                        activeOfferChanged ??= new ActiveOfferChangedDomainEvent(offer.Id);
                         activeOfferChanged.PriceChange = priceChangedEvent.PriceChange;
                         break;
                     case MainImageChangedDomainEvent mainImageChanged:
-                        activeOfferChanged ??= new ActiveOfferChangedDomainEvent();
+                        activeOfferChanged ??= new ActiveOfferChangedDomainEvent(offer.Id);
                         activeOfferChanged.MainImageUriChange = mainImageChanged.MainImageUriChange;
                         break;
                     case AvailableStockChangedDomainEvent availableStockChanged:
-                        activeOfferChanged ??= new ActiveOfferChangedDomainEvent();
+                        activeOfferChanged ??= new ActiveOfferChangedDomainEvent(offer.Id);
                         activeOfferChanged.AvailableStockChange = availableStockChanged.AvailableStockChange;
                         break;
                     case NameChangedDomainEvent nameChanged:
-                        activeOfferChanged ??= new ActiveOfferChangedDomainEvent();
+                        activeOfferChanged ??= new ActiveOfferChangedDomainEvent(offer.Id);
                         activeOfferChanged.NameChange = nameChanged.NameChange;
                         break;
                 }
