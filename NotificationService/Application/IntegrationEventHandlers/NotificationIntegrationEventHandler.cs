@@ -41,7 +41,7 @@ namespace NotificationService.Application.IntegrationEventHandlers
                 "EventId".ToKvp(@event.Id));
 
             var notification = new Notification(@event.UserId, @event.CreatedAt, @event.Message);
-            if (@event.Details != null) notification.SetDetails(@event.Details);
+            if (@event.Metadata != null) notification.SetMetadata(@event.Metadata);
             _notificationRepository.Add(notification);
 
             await _notificationRepository.UnitOfWork.SaveChangesAndDispatchDomainEventsAsync();

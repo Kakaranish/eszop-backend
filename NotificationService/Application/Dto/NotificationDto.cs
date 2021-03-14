@@ -9,7 +9,8 @@ namespace NotificationService.Application.Dto
         public Guid UserId { get; init; }
         public DateTime CreatedAt { get; init; }
         public string Message { get; init; }
-        public IDictionary<string, string> Details { get; init; }
+        public string Code { get; init; }
+        public IDictionary<string, string> Metadata { get; init; }
         public bool IsRead { get; init; }
     }
 }

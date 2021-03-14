@@ -9,7 +9,8 @@ namespace NotificationService.Application.Domain
         public Guid UserId { get; private set; }
         public DateTime CreatedAt { get; private set; }
         public string Message { get; private set; }
-        public IDictionary<string, string> Details { get; private set; }
+        public string Code { get; private set; }
+        public IDictionary<string, string> Metadata { get; private set; }
         public bool IsRead { get; private set; }
 
         private Notification()
@@ -44,11 +45,16 @@ namespace NotificationService.Application.Domain
             Message = message;
         }
 
-        public void SetDetails(IDictionary<string, string> details)
+        public void SetCode(string code)
         {
-            ValidateDetails(details);
+            Code = code;
+        }
 
-            Details = details;
+        public void SetMetadata(IDictionary<string, string> details)
+        {
+            ValidateMetadata(details);
+
+            Metadata = details;
         }
 
         public void SetIsRead(bool isRead)
@@ -75,10 +81,10 @@ namespace NotificationService.Application.Domain
                 throw new NotificationDomainException($"{nameof(Message)} cannot be null or whitespace");
         }
 
-        private void ValidateDetails(IDictionary<string, string> details)
+        private void ValidateMetadata(IDictionary<string, string> details)
         {
             if (details == null || details.Keys.Count == 0)
-                throw new NotificationDomainException($"{nameof(Details)} cannot be null or empty dictionary");
+                throw new NotificationDomainException($"{nameof(Metadata)} cannot be null or empty dictionary");
         }
 
         #endregion

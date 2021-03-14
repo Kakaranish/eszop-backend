@@ -15,7 +15,8 @@ namespace NotificationService.Extensions
                 UserId = notification.UserId,
                 CreatedAt = notification.CreatedAt,
                 Message = notification.Message,
-                Details = notification.Details,
+                Code = notification.Code,
+                Metadata = notification.Metadata,
                 IsRead = notification.IsRead
             };
         }

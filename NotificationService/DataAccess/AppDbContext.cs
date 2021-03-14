@@ -22,7 +22,7 @@ namespace NotificationService.DataAccess
             modelBuilder.Entity<Notification>()
                 .HasKey(x => x.Id);
             modelBuilder.Entity<Notification>()
-                .Property(x => x.Details)
+                .Property(x => x.Metadata)
                 .HasConversion(
                     x => x == null ? null : JsonConvert.SerializeObject(x),
                     x => x == null ? null : JsonConvert.DeserializeObject<IDictionary<string, string>>(x));
