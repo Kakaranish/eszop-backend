@@ -3,7 +3,7 @@ using System;
 
 namespace Offers.API.Domain
 {
-    public class ImageInfo
+    public class ImageInfo : ICloneable
     {
         [JsonProperty] public Guid Id { get; set; }
         [JsonProperty] public string Uri { get; private set; }
@@ -25,19 +25,19 @@ namespace Offers.API.Domain
             SetContainerName(containerName);
         }
 
-        public void SetUri(string uri)
+        private void SetUri(string uri)
         {
             ValidateUri(uri);
             Uri = uri;
         }
 
-        public void SetFilename(string filename)
+        private void SetFilename(string filename)
         {
             ValidateFilename(filename);
             Filename = filename;
         }
 
-        public void SetContainerName(string containerName)
+        private void SetContainerName(string containerName)
         {
             ValidateContainerName(containerName);
             ContainerName = containerName;
@@ -51,6 +51,11 @@ namespace Offers.API.Domain
         public void SetIsMain(bool value)
         {
             IsMain = value;
+        }
+
+        public object Clone()
+        {
+            return MemberwiseClone();
         }
 
         #region Validation

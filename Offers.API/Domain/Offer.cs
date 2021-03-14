@@ -62,10 +62,8 @@ namespace Offers.API.Domain
 
         private void SetOwnerId(Guid ownerId)
         {
-            ValidateEditable();
-
-            if (OwnerId == ownerId) return;
             ValidateOwnerId(ownerId);
+            if (OwnerId == ownerId) return;
 
             OwnerId = ownerId;
             UpdatedAt = DateTime.UtcNow;
@@ -73,16 +71,14 @@ namespace Offers.API.Domain
 
         public void SetName(string name)
         {
-            ValidateEditable();
-
-            if (Name == name) return;
             ValidateName(name);
+            if (Name == name) return;
 
             var previousName = Name;
             Name = name;
             UpdatedAt = DateTime.UtcNow;
 
-            if (IsPublished)
+            if (IsActive)
             {
                 var domainEvent = new NameChangedDomainEvent
                 {
@@ -94,10 +90,8 @@ namespace Offers.API.Domain
 
         public void SetDescription(string description)
         {
-            ValidateEditable();
-
-            if (Description == description) return;
             ValidateDescription(description);
+            if (Description == description) return;
 
             Description = description;
             UpdatedAt = DateTime.UtcNow;
@@ -105,16 +99,14 @@ namespace Offers.API.Domain
 
         public void SetPrice(decimal price)
         {
-            ValidateEditable();
-
-            if (Price == price) return;
             ValidatePrice(price);
+            if (Price == price) return;
 
             var previousPrice = Price;
             Price = price;
             UpdatedAt = DateTime.UtcNow;
 
-            if (IsPublished)
+            if (IsActive)
             {
                 var domainEvent = new PriceChangedDomainEvent
                 {
@@ -137,6 +129,7 @@ namespace Offers.API.Domain
         public void SetAvailableStock(int availableStock, bool totalStockIndependent = true)
         {
             ValidateSetAvailableStock(availableStock, totalStockIndependent);
+            if (availableStock == AvailableStock) return;
 
             var previousAvailableStock = AvailableStock;
 
@@ -151,7 +144,9 @@ namespace Offers.API.Domain
                 TotalStock = availableStock + stockDiff;
             }
 
-            if (IsPublished)
+            UpdatedAt = DateTime.UtcNow;
+
+            if (IsActive)
             {
                 var domainEvent = new AvailableStockChangedDomainEvent
                 {
@@ -161,21 +156,8 @@ namespace Offers.API.Domain
             }
         }
 
-        private void ValidateSetAvailableStock(int availableStock, bool totalStockIndependent)
-        {
-            ValidateEditable();
-
-            if (availableStock < 0)
-                throw new OffersDomainException($"{nameof(AvailableStock)} must be > 0");
-
-            if (totalStockIndependent && availableStock > TotalStock)
-                throw new OffersDomainException($"{nameof(AvailableStock)} cannot be greater than {nameof(TotalStock)}");
-        }
-
         public void SetCategory(Category category)
         {
-            ValidateEditable();
-
             ValidateCategory(category);
             if (category == Category) return;
 
@@ -186,6 +168,7 @@ namespace Offers.API.Domain
         public void EndOffer()
         {
             ValidateEndOffer();
+
             UserEndedAt = DateTime.UtcNow;
             UpdatedAt = UserEndedAt.Value;
 
@@ -221,27 +204,25 @@ namespace Offers.API.Domain
             UpdatedAt = PublishedAt.Value;
         }
 
-        public void AddImage(ImageInfo image)
+        public void SetImages(IList<ImageInfo> images)
         {
-            ValidateAddImage(image);
+            ValidateImages(images);
+
             _images ??= new List<ImageInfo>();
-            _images.Add(image);
-        }
+            var previousMainUri = _images.FirstOrDefault(x => x.IsMain)?.Uri;
 
-        public void RemoveImage(ImageInfo imageInfo)
-        {
-            if (_images == null || _images.Count == 0)
-                throw new OffersDomainException("Offer has no such image to remove");
+            _images = (List<ImageInfo>)images;
 
-            var removed = _images.Remove(imageInfo);
+            var currentMainUri = images.First(x => x.IsMain).Uri;
 
-            if (!removed)
-                throw new OffersDomainException("Offer has no such image to remove");
-        }
-
-        public void ClearImages()
-        {
-            _images?.Clear();
+            if (IsActive && previousMainUri != currentMainUri)
+            {
+                var domainEvent = new MainImageChangedDomainEvent
+                {
+                    MainImageUriChange = new ChangeState<string>(previousMainUri, currentMainUri)
+                };
+                AddDomainEvent(domainEvent);
+            }
         }
 
         public void SetKeyValueInfos(IList<KeyValueInfo> keyValueInfos)
@@ -253,29 +234,37 @@ namespace Offers.API.Domain
 
         #region Validation
 
-        private static void ValidateOwnerId(Guid ownerId)
+        private void ValidateOwnerId(Guid ownerId)
         {
+            ValidateEditable();
+
             var validator = new IdValidator();
             var result = validator.Validate(ownerId);
             if (!result.IsValid) throw new OffersDomainException(nameof(OwnerId));
         }
 
-        private static void ValidateName(string name)
+        private void ValidateName(string name)
         {
+            ValidateEditable();
+
             var validator = new OfferNameValidator();
             var result = validator.Validate(name);
             if (!result.IsValid) throw new OffersDomainException(nameof(Name));
         }
 
-        private static void ValidateDescription(string description)
+        private void ValidateDescription(string description)
         {
+            ValidateEditable();
+
             var validator = new OfferDescriptionValidator();
             var result = validator.Validate(description);
             if (!result.IsValid) throw new OffersDomainException(nameof(Description));
         }
 
-        private static void ValidatePrice(decimal price)
+        private void ValidatePrice(decimal price)
         {
+            ValidateEditable();
+
             var validator = new OfferPriceValidator();
             var result = validator.Validate(price);
             if (!result.IsValid) throw new OffersDomainException(nameof(Price));
@@ -291,24 +280,20 @@ namespace Offers.API.Domain
             if (!result.IsValid) throw new OffersDomainException(nameof(TotalStock));
         }
 
-        private void ValidateDecreaseAvailableStock(int toDecrease)
+        private void ValidateSetAvailableStock(int availableStock, bool totalStockIndependent)
         {
-            if (toDecrease <= 0)
-                throw new OffersDomainException($"{nameof(toDecrease)} must be > 0");
-            if (AvailableStock < toDecrease)
-                throw new OffersDomainException($"{nameof(toDecrease)} cannot be greater than {nameof(AvailableStock)}");
+            ValidateEditable();
+
+            if (availableStock < 0)
+                throw new OffersDomainException($"{nameof(AvailableStock)} must be > 0");
+
+            if (totalStockIndependent && availableStock > TotalStock)
+                throw new OffersDomainException($"{nameof(AvailableStock)} cannot be greater than {nameof(TotalStock)}");
         }
 
-        private void ValidateIncreaseAvailableStock(int toIncrease)
+        private void ValidateCategory(Category category)
         {
-            if (toIncrease <= 0)
-                throw new OffersDomainException($"{nameof(toIncrease)} must be > 0");
-            if (AvailableStock + toIncrease > TotalStock)
-                throw new OffersDomainException($"{nameof(toIncrease)} + {nameof(AvailableStock)} cannot be greater than {nameof(TotalStock)}");
-        }
-
-        private static void ValidateCategory(Category category)
-        {
+            ValidateEditable();
             if (category == null) throw new OffersDomainException($"{nameof(Category)} cannot be null");
         }
 
@@ -335,12 +320,18 @@ namespace Offers.API.Domain
                 throw new OffersDomainException("Offer has no delivery methods set");
         }
 
-        private void ValidateAddImage(ImageInfo image)
+        private void ValidateImages(IList<ImageInfo> images)
         {
-            if (image == null)
-                throw new OffersDomainException($"'{nameof(image)}' cannot be null");
-            if (image.IsMain && (_images?.Any(x => x.IsMain) ?? false))
-                throw new OffersDomainException("There is already main image");
+            ValidateEditable();
+
+            if (images == null || !images.Any())
+                throw new OffersDomainException($"{nameof(Images)} cannot be null or empty collection");
+
+            if (images.Count(x => x.IsMain) != 1)
+                throw new OffersDomainException($"{nameof(Images)} must have one and only one main image");
+
+            if (images.Select(x => x.SortId).Distinct().Count() != images.Count)
+                throw new OffersDomainException($"{nameof(Images)} sort ids must be unique");
         }
 
         private void ValidateKeyValueInfos(IList<KeyValueInfo> keyValueInfos)

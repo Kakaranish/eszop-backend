@@ -34,17 +34,16 @@ namespace Offers.API.Application.Services
             }
 
             // Delete images not present in metadata
-            var imagesToRemove = offer.Images.Where(x => imagesMetadataDict.ContainsKey(x.Id.ToString()) == false);
+            var imagesToRemove = offer.Images.Where(x => imagesMetadataDict.ContainsKey(x.Id.ToString()) == false).ToList();
             foreach (var imageToRemove in imagesToRemove)
             {
                 await _imageStorage.DeleteAsync(imageToRemove.Filename);
-                offer.RemoveImage(imageToRemove);
             }
 
-            var newOfferImages = new List<ImageInfo>();
+            var currentImages = offer.Images.Except(imagesToRemove).Select(x => (ImageInfo)x.Clone()).ToList();
 
             // Process remaining offer images
-            foreach (var offerImage in offer.Images)
+            foreach (var offerImage in currentImages)
             {
                 var imageMetadata = imagesMetadataDict[offerImage.Id.ToString()];
                 if (!imageMetadata.IsRemote)
@@ -53,11 +52,7 @@ namespace Offers.API.Application.Services
                 offerImage.SetIsMain(imageMetadata.IsMain);
                 offerImage.SetSortId(imageMetadata.IsMain ? 0 : imageMetadata.SortId);
                 imagesMetadataDict.Remove(offerImage.Id.ToString());
-
-                newOfferImages.Add(offerImage);
             }
-
-            offer.ClearImages();
 
             if (imagesMetadataDict.Any(x => x.Value.IsRemote))
                 throw new OffersDomainException($"Uploaded image cannot be marked as '{nameof(ImageMetadata.IsRemote)}'");
@@ -76,19 +71,22 @@ namespace Offers.API.Application.Services
                     uploadedImageInfo.SetIsMain(metadata.IsMain);
                     uploadedImageInfo.SetSortId(metadata.IsMain ? 0 : uploadedImageInfo.SortId);
 
-                    newOfferImages.Add(uploadedImageInfo);
+                    currentImages.Add(uploadedImageInfo);
                 }
             }
 
-            var mainImage = newOfferImages.Single(x => x.IsMain);
-            offer.AddImage(mainImage);
-            newOfferImages.Remove(mainImage);
+            var mainImage = currentImages.Single(x => x.IsMain);
+            currentImages.Remove(mainImage);
 
-            foreach (var imgWithIndex in newOfferImages.OrderBy(x => x.SortId).WithIndex(1))
+            var finalImages = new List<ImageInfo>();
+            foreach (var imgWithIndex in currentImages.OrderBy(x => x.SortId).WithIndex(1))
             {
                 imgWithIndex.Item.SetSortId(imgWithIndex.Index);
-                offer.AddImage(imgWithIndex.Item);
+                finalImages.Add(imgWithIndex.Item);
             }
+            finalImages.Insert(0, mainImage);
+
+            offer.SetImages(finalImages);
         }
     }
 }
