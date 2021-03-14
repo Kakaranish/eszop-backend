@@ -5,9 +5,9 @@ namespace Common.EventBus.IntegrationEvents
 {
     public class NotificationIntegrationEvent : IntegrationEvent
     {
-        public Guid UserId { get; set; }
-        public DateTime? ExpiresOn { get; set; }
-        public string Message { get; set; }
-        public IDictionary<string, string> Details { get; set; }
+        public Guid UserId { get; init; }
+        public string Message { get; init; }
+        public string Code { get; init; }
+        public IDictionary<string, string> Metadata { get; init; }
     }
 }

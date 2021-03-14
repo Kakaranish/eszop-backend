@@ -70,7 +70,7 @@ namespace Carts.API
 
             services
                 .AddRabbitMqEventBus()
-                .Subscribe<OfferChangedIntegrationEvent, OfferChangedIntegrationEventHandler>()
+                .Subscribe<ActiveOfferChangedIntegrationEvent, ActiveOfferChangedIntegrationEventHandler>()
                 .Subscribe<OfferBecameUnavailableIntegrationEvent, OfferBecameUnavailableIntegrationEventHandler>();
         }
 

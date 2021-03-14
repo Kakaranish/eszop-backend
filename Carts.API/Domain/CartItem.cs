@@ -11,6 +11,7 @@ namespace Carts.API.Domain
         public DateTime CreatedAt { get; private set; }
         public DateTime UpdatedAt { get; private set; }
         public Guid CartId { get; private set; }
+        public Guid CartOwnerId { get; private set; }
         public Guid OfferId { get; private set; }
         public Guid SellerId { get; private set; }
         public string OfferName { get; private set; }
@@ -20,7 +21,8 @@ namespace Carts.API.Domain
         public string ImageUri { get; private set; }
         [NotMapped] public decimal TotalPrice => PricePerItem * Quantity;
 
-        public CartItem(Guid cartId, Guid offerId, Guid sellerId, string offerName, decimal pricePerItem, 
+        public CartItem(Guid cartId, Guid cartOwnerId, Guid offerId, Guid sellerId, string offerName,
+            decimal pricePerItem,
             int quantity, int availableStock, string imageUri)
         {
             SetCartId(cartId);
@@ -36,21 +38,25 @@ namespace Carts.API.Domain
             UpdatedAt = CreatedAt;
         }
 
-        public void SetCartId(Guid cartId)
+        private void SetCartId(Guid cartId)
         {
             ValidateCartId(cartId);
             CartId = cartId;
-            UpdatedAt = DateTime.UtcNow;
         }
 
-        public void SetOfferId(Guid offerId)
+        private void SetCartOwnerId(Guid cartOwnerId)
+        {
+            ValidateCartOwnerId(cartOwnerId);
+            CartOwnerId = cartOwnerId;
+        }
+
+        private void SetOfferId(Guid offerId)
         {
             ValidateOfferId(offerId);
             OfferId = offerId;
-            UpdatedAt = DateTime.UtcNow;
         }
 
-        public void SetSellerId(Guid sellerId)
+        private void SetSellerId(Guid sellerId)
         {
             ValidateSellerId(sellerId);
             SellerId = sellerId;
@@ -96,12 +102,14 @@ namespace Carts.API.Domain
             }
 
             AvailableStock = availableStock;
+            UpdatedAt = DateTime.UtcNow;
         }
 
         public void SetImageUri(string imageUri)
         {
             ValidateImageUri(imageUri);
             ImageUri = imageUri;
+            UpdatedAt = DateTime.UtcNow;
         }
 
         #region Validation
@@ -111,35 +119,33 @@ namespace Carts.API.Domain
             ValidateIdAndThrow(cartId, nameof(cartId));
         }
 
+        private static void ValidateCartOwnerId(Guid cartOwnerId)
+        {
+            ValidateIdAndThrow(cartOwnerId, nameof(CartOwnerId));
+        }
+
         private static void ValidateOfferId(Guid offerId)
         {
-            ValidateIdAndThrow(offerId, nameof(offerId));
+            ValidateIdAndThrow(offerId, nameof(OfferId));
         }
         
         private static void ValidateSellerId(Guid sellerId)
         {
-            ValidateIdAndThrow(sellerId, nameof(sellerId));
+            ValidateIdAndThrow(sellerId, nameof(SellerId));
         }
 
         private static void ValidateOfferName(string offerName)
         {
             var validator = new OfferNameValidator();
             var result = validator.Validate(offerName);
-            if (!result.IsValid) throw new CartsDomainException($"{nameof(offerName)} is invalid offer name");
+            if (!result.IsValid) throw new CartsDomainException($"{nameof(OfferName)} is invalid offer name");
         }
         
         private static void ValidatePricePerItem(decimal pricePerItem)
         {
-            if (pricePerItem <= 0) throw new CartsDomainException($"{nameof(pricePerItem)} must be >= 0");
+            if (pricePerItem <= 0) throw new CartsDomainException($"{nameof(PricePerItem)} must be >= 0");
         }
 
-        private static void ValidateIdAndThrow(Guid id, string paramName)
-        {
-            var idValidator = new IdValidator();
-            var result = idValidator.Validate(id);
-            if (!result.IsValid) throw new CartsDomainException($"'{paramName}' is invalid id");
-        }
-        
         private static void ValidateAvailableStock(int availableStock)
         {
             if (availableStock < 0)
@@ -149,9 +155,16 @@ namespace Carts.API.Domain
         private static void ValidateImageUri(string imageUri)
         {
             if (string.IsNullOrWhiteSpace(imageUri))
-                throw new CartsDomainException($"{nameof(imageUri)} cannot be null or empty");
+                throw new CartsDomainException($"{nameof(ImageUri)} cannot be null or empty");
             if (!Uri.IsWellFormedUriString(imageUri, UriKind.Absolute))
-                throw new CartsDomainException($"{nameof(imageUri)} is not well formed uri");
+                throw new CartsDomainException($"{nameof(ImageUri)} is not well formed uri");
+        }
+
+        private static void ValidateIdAndThrow(Guid id, string paramName)
+        {
+            var idValidator = new IdValidator();
+            var result = idValidator.Validate(id);
+            if (!result.IsValid) throw new CartsDomainException($"'{paramName}' is invalid id");
         }
 
         #endregion

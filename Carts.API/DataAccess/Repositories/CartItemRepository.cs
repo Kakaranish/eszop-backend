@@ -1,10 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Carts.API.Domain;
+using Common.DataAccess;
+using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Carts.API.Domain;
-using Common.DataAccess;
-using Common.EventBus.IntegrationEvents;
 
 namespace Carts.API.DataAccess.Repositories
 {
@@ -23,17 +23,12 @@ namespace Carts.API.DataAccess.Repositories
             return await _appDbContext.CartItems.FirstOrDefaultAsync(x => x.Id == cartItemId);
         }
 
-        public async Task UpdateWithOfferChangedEvent(OfferChangedIntegrationEvent @event)
+        public async Task<IList<CartItem>> GetByOfferId(Guid offerId)
         {
-            await _appDbContext
+            return await _appDbContext
                 .CartItems
-                .Where(cartItem => cartItem.OfferId == @event.OfferId)
-                .ForEachAsync(cartItem =>
-                {
-                    if (@event.Price?.Changed ?? false) cartItem.SetPricePerItem((decimal)@event.Price?.NewValue.GetValueOrDefault());
-                    if (@event.AvailableStock?.Changed ?? false) cartItem.SetAvailableStock((int)@event.AvailableStock?.NewValue.GetValueOrDefault());
-                    if (@event.Name?.Changed ?? false) cartItem.SetOfferName(@event.Name.NewValue);
-                });
+                .Where(cartItem => cartItem.OfferId == offerId)
+                .ToListAsync();
         }
 
         public void Update(CartItem cartItem)

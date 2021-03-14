@@ -27,6 +27,7 @@ namespace Carts.API.Extensions
             {
                 Id = cartItem.Id,
                 CartId = cartItem.CartId,
+                CartOwnerId = cartItem.CartOwnerId,
                 OfferId = cartItem.OfferId,
                 SellerId = cartItem.SellerId,
                 OfferName = cartItem.OfferName,

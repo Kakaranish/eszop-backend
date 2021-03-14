@@ -58,7 +58,7 @@ namespace Carts.API.Application.Commands.AddToCart
             var cart = await _cartRepository.GetOrCreateByUserIdAsync(userId);
 
             var imageUri = offer.Images.FirstOrDefault(x => x.IsMain)?.Uri;
-            var cartItem = new CartItem(cart.Id, Guid.Parse(request.OfferId), offer.OwnerId,
+            var cartItem = new CartItem(cart.Id, cart.UserId, Guid.Parse(request.OfferId), offer.OwnerId,
                 offer.Name, offer.Price, request.Quantity, offer.AvailableStock, imageUri);
             cart.AddCartItem(cartItem);
 
