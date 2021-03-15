@@ -9,7 +9,8 @@ using Orders.API.Application.Commands.UpdateDeliveryInfo;
 using Orders.API.Application.Dto;
 using Orders.API.Application.Queries.GetAvailableDeliveryMethodsForOrder;
 using Orders.API.Application.Queries.GetDeliveryInfo;
-using Orders.API.Application.Queries.GetOrders;
+using Orders.API.Application.Queries.GetOrdersAsBuyer;
+using Orders.API.Application.Queries.GetOrdersAsSeller;
 using Orders.API.Application.Queries.GetOrderSummary;
 using System;
 using System.Collections.Generic;
@@ -29,11 +30,19 @@ namespace Orders.API.Controllers
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
-        [HttpGet("user")]
+        [HttpGet("buyer")]
         [JwtAuthorize]
-        public async Task<Pagination<OrderPreviewDto>> GetAllByUserId([FromQuery] BasicPaginationFilter filter)
+        public async Task<Pagination<OrderPreviewDto>> GetAllByBuyerId([FromQuery] BasicPaginationFilter filter)
         {
-            var query = new GetOrdersQuery { Filter = filter };
+            var query = new GetOrdersAsBuyerQuery { Filter = filter };
+            return await _mediator.Send(query);
+        }
+
+        [HttpGet("seller")]
+        [JwtAuthorize]
+        public async Task<Pagination<OrderPreviewDto>> GetAllBySellerId([FromQuery] BasicPaginationFilter filter)
+        {
+            var query = new GetOrdersAsSellerQuery { Filter = filter };
             return await _mediator.Send(query);
         }
 

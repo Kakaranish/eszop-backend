@@ -7,7 +7,8 @@ namespace Offers.API.Application.Dto
         public Guid Id { get; init; }
 
         public DateTime EndsAt { get; init; }
-        public DateTime? PublishedAt { get; set; }
+        public DateTime? PublishedAt { get; init; }
+        public bool IsActive { get; init; }
 
         public string Name { get; init; }
         public decimal Price { get; init; }

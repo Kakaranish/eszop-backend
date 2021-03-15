@@ -103,6 +103,7 @@ namespace Offers.API.Extensions
                 Id = offer.Id,
                 EndsAt = offer.EndsAt,
                 PublishedAt = offer.PublishedAt,
+                IsActive = offer.IsActive,
                 Name = offer.Name,
                 Price = offer.Price,
                 AvailableStock = offer.AvailableStock,

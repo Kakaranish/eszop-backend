@@ -10,7 +10,8 @@ namespace Orders.API.DataAccess.Repositories
     public interface IOrderRepository : IDomainRepository<Order>
     {
         Task<Order> GetByIdAsync(Guid orderId);
-        Task<Pagination<Order>> GetAllByUserIdAsync(Guid userId, BasicPaginationFilter filter);
+        Task<Pagination<Order>> GetAllByBuyerIdAsync(Guid userId, BasicPaginationFilter filter);
+        Task<Pagination<Order>> GetAllBySellerIdAsync(Guid userId, BasicPaginationFilter filter);
         Task<IList<Order>> GetAllStartedOrdersByOfferId(Guid offerId);
         void Add(Order order);
         void Update(Order order);

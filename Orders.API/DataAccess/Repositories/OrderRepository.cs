@@ -33,11 +33,23 @@ namespace Orders.API.DataAccess.Repositories
                 .ToListAsync();
         }
 
-        public async Task<Pagination<Order>> GetAllByUserIdAsync(Guid userId, BasicPaginationFilter filter)
+        public async Task<Pagination<Order>> GetAllByBuyerIdAsync(Guid userId, BasicPaginationFilter filter)
         {
             var orders = _appDbContext.Orders
                 .AsQueryable()
                 .Where(x => x.BuyerId == userId)
+                .OrderByDescending(x => x.CreatedAt)
+                .Include(x => x.OrderItems);
+            var pageDetails = new PageCriteria(filter.PageIndex, filter.PageSize);
+
+            return await orders.PaginateAsync(pageDetails);
+        }
+
+        public async Task<Pagination<Order>> GetAllBySellerIdAsync(Guid userId, BasicPaginationFilter filter)
+        {
+            var orders = _appDbContext.Orders
+                .AsQueryable()
+                .Where(x => x.SellerId == userId)
                 .OrderByDescending(x => x.CreatedAt)
                 .Include(x => x.OrderItems);
             var pageDetails = new PageCriteria(filter.PageIndex, filter.PageSize);

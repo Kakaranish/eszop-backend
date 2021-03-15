@@ -26,6 +26,7 @@ namespace Orders.API.Domain
         [NotMapped] public bool IsCancelled => OrderState?.IsCancelled() ?? false;
         [NotMapped] public bool IsEditable => !IsCancelled && OrderState != OrderState.Shipped;
         [NotMapped] public decimal TotalPrice => OrderItems.Sum(orderItem => orderItem.TotalPrice);
+        [NotMapped] public decimal TotalPriceWithDelivery => TotalPrice + DeliveryMethod.Price;
 
         protected Order()
         {
@@ -71,6 +72,8 @@ namespace Orders.API.Domain
             var domainEvent = new OrderCancelledDomainEvent
             {
                 OrderId = Id,
+                BuyerId = BuyerId,
+                SellerId = SellerId,
                 PreviousState = OrderState,
                 CurrentState = orderState,
                 OrderItems = OrderItems.Select(orderItem => new OrderItemDto
