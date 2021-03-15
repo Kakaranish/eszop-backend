@@ -3,6 +3,7 @@ using Common.Dto;
 using Common.Types;
 using Common.Validators;
 using Orders.API.Application.DomainEvents.OrderCancelled;
+using Orders.API.Application.DomainEvents.OrderStatusChanged;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -26,7 +27,6 @@ namespace Orders.API.Domain
         [NotMapped] public bool IsCancelled => OrderState?.IsCancelled() ?? false;
         [NotMapped] public bool IsEditable => !IsCancelled && OrderState != OrderState.Shipped;
         [NotMapped] public decimal TotalPrice => OrderItems.Sum(orderItem => orderItem.TotalPrice);
-        [NotMapped] public decimal TotalPriceWithDelivery => TotalPrice + DeliveryMethod.Price;
 
         protected Order()
         {
@@ -69,12 +69,17 @@ namespace Orders.API.Domain
         {
             ValidateCancellation(orderState);
 
+            var previousState = OrderState;
+
+            OrderState = orderState;
+            UpdatedAt = DateTime.UtcNow;
+
             var domainEvent = new OrderCancelledDomainEvent
             {
                 OrderId = Id,
                 BuyerId = BuyerId,
                 SellerId = SellerId,
-                PreviousState = OrderState,
+                PreviousState = previousState,
                 CurrentState = orderState,
                 OrderItems = OrderItems.Select(orderItem => new OrderItemDto
                 {
@@ -83,14 +88,11 @@ namespace Orders.API.Domain
                 }).ToList()
             };
             AddDomainEvent(domainEvent);
-
-            OrderState = orderState;
-            UpdatedAt = DateTime.UtcNow;
         }
 
-        public void ChangeStateToInProgress()
+        public void ConfirmOrder()
         {
-            ValidateChangeStateToInProgress();
+            ValidateConfirmOrder();
 
             OrderState = OrderState.InProgress;
             UpdatedAt = DateTime.UtcNow;
@@ -110,6 +112,34 @@ namespace Orders.API.Domain
 
             DeliveryMethod = deliveryMethod;
             UpdatedAt = DateTime.UtcNow;
+        }
+
+        public void ChangeOrderState(OrderState orderState)
+        {
+            ValidateChangeOrderState(orderState);
+
+            if (orderState == OrderState) return;
+
+            var previousOrderState = OrderState;
+
+            OrderState = orderState;
+            UpdatedAt = DateTime.UtcNow;
+
+            var domainEvent = new OrderStatusChangedDomainEvent
+            {
+                OrderId = Id,
+                BuyerId = BuyerId,
+                PreviousState = previousOrderState,
+                CurrentState = orderState
+            };
+            AddDomainEvent(domainEvent);
+        }
+
+        public decimal CalculateTotalPrice()
+        {
+            return DeliveryMethod != null
+                ? TotalPrice + DeliveryMethod.Price
+                : -1;
         }
 
         #region Validation
@@ -147,7 +177,7 @@ namespace Orders.API.Domain
                 throw new OrdersDomainException("Order is already completed");
         }
 
-        private void ValidateChangeStateToInProgress()
+        private void ValidateConfirmOrder()
         {
             if (OrderState != OrderState.Started)
                 throw new OrdersDomainException("Invalid state transition");
@@ -167,6 +197,15 @@ namespace Orders.API.Domain
         {
             if (deliveryMethod == null)
                 throw new OrdersDomainException($"'{nameof(deliveryMethod)}' cannot be null");
+        }
+
+        private void ValidateChangeOrderState(OrderState orderState)
+        {
+            if (IsCancelled)
+                throw new OrdersDomainException("Order is already cancelled so its status cannot be changed");
+
+            if (OrderState == OrderState.Started)
+                throw new OrdersDomainException($"Order has {OrderState.Started.Name} state and cannot be changed manually");
         }
 
         #endregion

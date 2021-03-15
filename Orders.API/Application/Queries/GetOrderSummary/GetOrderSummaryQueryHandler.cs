@@ -29,7 +29,8 @@ namespace Orders.API.Application.Queries.GetOrderSummary
             var orderId = Guid.Parse(request.OrderId);
 
             var order = await _orderRepository.GetByIdAsync(orderId);
-            if (order == null || order.BuyerId != userId) throw new NotFoundException();
+            if (order == null || (order.BuyerId != userId && order.SellerId != userId)) 
+                throw new NotFoundException();
 
             return order.ToDto();
         }

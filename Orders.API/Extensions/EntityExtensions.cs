@@ -30,6 +30,7 @@ namespace Orders.API.Extensions
                 Id = order.Id,
                 CreatedAt = order.CreatedAt,
                 SellerId = order.SellerId,
+                BuyerId = order.BuyerId,
                 OrderState = order.OrderState.Name,
                 TotalPrice = order.OrderItems.Sum(x => x.TotalPrice),
                 OrderItems = order.OrderItems.Select(x => x.ToDto()).ToList(),

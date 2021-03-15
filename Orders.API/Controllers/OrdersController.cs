@@ -3,6 +3,7 @@ using Common.Types;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Orders.API.Application.Commands.CancelOrder;
+using Orders.API.Application.Commands.ChangeOrderState;
 using Orders.API.Application.Commands.ConfirmOrder;
 using Orders.API.Application.Commands.GetBankTransferDetails;
 using Orders.API.Application.Commands.UpdateDeliveryInfo;
@@ -89,6 +90,15 @@ namespace Orders.API.Controllers
         public async Task<IActionResult> Cancel([FromRoute] CancelOrderCommand request)
         {
             await _mediator.Send(request);
+            return Ok();
+        }
+
+        [HttpPut("{orderId}/state")]
+        [JwtAuthorize]
+        public async Task<IActionResult> ChangeState([FromRoute] string orderId, ChangeOrderStateCommand command)
+        {
+            command.OrderId = orderId;
+            await _mediator.Send(command);
             return Ok();
         }
 

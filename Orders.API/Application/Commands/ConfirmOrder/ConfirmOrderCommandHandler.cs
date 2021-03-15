@@ -29,7 +29,7 @@ namespace Orders.API.Application.Commands.ConfirmOrder
             var order = await _orderRepository.GetByIdAsync(orderId);
             if (order == null || order.BuyerId != userId) throw new NotFoundException();
 
-            order.ChangeStateToInProgress();
+            order.ConfirmOrder();
 
             _orderRepository.Update(order);
             await _orderRepository.UnitOfWork.SaveChangesAndDispatchDomainEventsAsync(cancellationToken);

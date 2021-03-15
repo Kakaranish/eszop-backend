@@ -55,7 +55,7 @@ namespace Orders.API.Application.Commands.GetBankTransferDetails
             var bankTransferDetails = new BankTransferDetailsDto
             {
                 Title = $"Order {orderId}",
-                TransferAmount = order.TotalPriceWithDelivery,
+                TransferAmount = order.CalculateTotalPrice(),
                 AccountNumber = grpcResponse.BankAccountNumber
             };
 

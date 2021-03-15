@@ -7,6 +7,7 @@ namespace Orders.API.Application.Dto
     {
         public Guid Id { get; init; }
         public DateTime CreatedAt { get; init; }
+        public Guid BuyerId { get; init; }
         public Guid SellerId { get; init; }
         public string OrderState { get; init; }
         public decimal TotalPrice { get; init; }
