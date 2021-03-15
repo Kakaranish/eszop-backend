@@ -10,39 +10,38 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Orders.API.Application.DomainEvents.OrderStatusChanged
+namespace Orders.API.Application.DomainEvents.OrderConfirmed
 {
-    public class OrderStatusChangedDomainEventHandler : IDomainEventHandler<OrderStatusChangedDomainEvent>
+    public class OrderConfirmedDomainEventHandler : IDomainEventHandler<OrderConfirmedDomainEvent>
     {
-        private readonly ILogger<OrderStatusChangedDomainEventHandler> _logger;
+        private readonly ILogger<OrderConfirmedDomainEventHandler> _logger;
         private readonly IEventBus _eventBus;
 
-        public OrderStatusChangedDomainEventHandler(ILogger<OrderStatusChangedDomainEventHandler> logger,
+        public OrderConfirmedDomainEventHandler(ILogger<OrderConfirmedDomainEventHandler> logger,
             IEventBus eventBus)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
         }
 
-        public async Task Handle(OrderStatusChangedDomainEvent domainEvent, CancellationToken cancellationToken)
+        public async Task Handle(OrderConfirmedDomainEvent domainEvent, CancellationToken cancellationToken)
         {
             var notification = new NotificationIntegrationEvent
             {
-                UserId = domainEvent.BuyerId,
-                Code = NotificationCodes.OrderStateChanged,
-                Message = "Order changed state",
+                UserId = domainEvent.SellerId,
+                Code = NotificationCodes.OrderConfirmed,
+                Message = "Order has been confirmed",
                 Metadata = new Dictionary<string, string>
                 {
                     {"OrderId", domainEvent.OrderId.ToString()},
-                    {"PreviousOrderState", domainEvent.PreviousState.Name},
-                    {"CurrentOrderState", domainEvent.CurrentState.Name}
+                    {"BuyerId", domainEvent.BuyerId.ToString()}
                 }
             };
 
             await _eventBus.PublishAsync(notification);
 
             _logger.LogWithProps(LogLevel.Information,
-                $"Published {nameof(NotificationIntegrationEvent)} after order status change",
+                $"Published {nameof(NotificationIntegrationEvent)} after order has been confirmed",
                 "EventId".ToKvp(notification.Id),
                 "OrderId".ToKvp(domainEvent.OrderId));
         }

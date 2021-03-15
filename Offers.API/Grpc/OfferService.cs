@@ -67,7 +67,8 @@ namespace Offers.API.Grpc
                     Id = img.Id,
                     Uri = img.Uri,
                     IsMain = img.IsMain
-                }) ?? new List<ImageDto>()
+                }) ?? new List<ImageDto>(),
+                IsActive = offer.IsActive
             };
 
             return new GetOfferBasicInfoResponse { Offer = offerDto };

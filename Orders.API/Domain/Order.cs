@@ -3,6 +3,7 @@ using Common.Dto;
 using Common.Types;
 using Common.Validators;
 using Orders.API.Application.DomainEvents.OrderCancelled;
+using Orders.API.Application.DomainEvents.OrderConfirmed;
 using Orders.API.Application.DomainEvents.OrderStatusChanged;
 using System;
 using System.Collections.Generic;
@@ -96,6 +97,14 @@ namespace Orders.API.Domain
 
             OrderState = OrderState.InProgress;
             UpdatedAt = DateTime.UtcNow;
+
+            var domainEvent = new OrderConfirmedDomainEvent
+            {
+                OrderId = Id,
+                BuyerId = BuyerId,
+                SellerId = SellerId
+            };
+            AddDomainEvent(domainEvent);
         }
 
         public void SetDeliveryAddress(DeliveryAddress deliveryAddress)
