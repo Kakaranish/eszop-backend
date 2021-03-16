@@ -1,7 +1,11 @@
 ﻿using Carts.API.DataAccess.Repositories;
 using Carts.API.Domain;
+using Common.EventBus;
+using Common.EventBus.IntegrationEvents;
 using Common.Extensions;
 using Common.Grpc;
+using Common.Grpc.Services.OffersService;
+using Common.Grpc.Services.OffersService.Requests.GetOffersAvailability;
 using Common.Grpc.Services.OrdersService;
 using Common.Grpc.Services.OrdersService.CreateOrder;
 using Common.Logging;
@@ -22,13 +26,18 @@ namespace Carts.API.Application.Commands.FinalizeCart
         private readonly ILogger<FinalizeCartCommandHandler> _logger;
         private readonly ICartRepository _cartRepository;
         private readonly IGrpcServiceClientFactory<IOrdersService> _ordersServiceClientFactory;
+        private readonly IGrpcServiceClientFactory<IOffersService> _offersServiceClientFactory;
+        private readonly IEventBus _eventBus;
+        private readonly ICartItemRepository _cartItemRepository;
         private readonly HttpContext _httpContext;
         private readonly ServicesEndpointsConfig _endpointsConfig;
 
         public FinalizeCartCommandHandler(ILogger<FinalizeCartCommandHandler> logger,
             IHttpContextAccessor httpContextAccessor, ICartRepository cartRepository,
             IGrpcServiceClientFactory<IOrdersService> ordersServiceClientFactory,
-            IOptions<ServicesEndpointsConfig> options)
+            IGrpcServiceClientFactory<IOffersService> offersServiceClientFactory,
+            IOptions<ServicesEndpointsConfig> options, IEventBus eventBus,
+            ICartItemRepository cartItemRepository)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _httpContext = httpContextAccessor.HttpContext ??
@@ -36,7 +45,10 @@ namespace Carts.API.Application.Commands.FinalizeCart
             _cartRepository = cartRepository ?? throw new ArgumentNullException(nameof(cartRepository));
             _ordersServiceClientFactory = ordersServiceClientFactory ??
                                           throw new ArgumentNullException(nameof(ordersServiceClientFactory));
+            _offersServiceClientFactory = offersServiceClientFactory ?? throw new ArgumentNullException(nameof(offersServiceClientFactory));
             _endpointsConfig = options.Value ?? throw new ArgumentNullException(nameof(options.Value));
+            _eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
+            _cartItemRepository = cartItemRepository ?? throw new ArgumentNullException(nameof(cartItemRepository));
         }
 
         public async Task<Guid> Handle(FinalizeCartCommand request, CancellationToken cancellationToken)
@@ -46,8 +58,65 @@ namespace Carts.API.Application.Commands.FinalizeCart
             if (cart.IsEmpty)
                 throw new CartsDomainException($"Cart {cart.Id} cannot be finalized because it's empty");
 
+            var offersServiceClient = _offersServiceClientFactory.Create(_endpointsConfig.Offers.Grpc.ToString());
+            var offerIds = cart.CartItems.Select(x => x.OfferId).ToList();
+            var getOffersAvailabilityRequest = new GetOffersAvailabilityRequest { OfferIds = offerIds };
+            var getOffersAvailabilityResponse = await offersServiceClient.GetOffersAvailability(getOffersAvailabilityRequest);
+
+            var notActiveOffers = getOffersAvailabilityResponse.OfferAvailabilities.Where(x => x.Availability != Availability.Active).ToList();
+            if (notActiveOffers.Any())
+            {
+                foreach (var offer in notActiveOffers.Where(x => x.Availability == Availability.NotActive))
+                {
+                    await _eventBus.PublishAsync(new OfferBecameUnavailableIntegrationEvent
+                    {
+                        OfferId = offer.OfferId
+                    });
+
+                    _logger.LogWithProps(LogLevel.Error,
+                        $"Published {nameof(OfferBecameUnavailableIntegrationEvent)} integration event",
+                        "CartId".ToKvp(cart.Id),
+                        "OfferId".ToKvp(offer.OfferId));
+                }
+
+                var notExistingOffers = notActiveOffers.Where(x => x.Availability == Availability.DoesNotExist).ToList();
+                if (notExistingOffers.Any())
+                {
+                    foreach (var notExistingOffer in notExistingOffers)
+                    {
+                        _cartItemRepository.RemoveWithOfferId(notExistingOffer.OfferId);
+                    }
+
+                    await _cartItemRepository.UnitOfWork.SaveChangesAndDispatchDomainEventsAsync(cancellationToken);
+
+                    _logger.LogWithProps(LogLevel.Error,
+                        $"Removed not existing offers from cart",
+                        "CartId".ToKvp(cart.Id),
+                        "OffersIds".ToKvp(string.Join(",", notExistingOffers.Select(x => x.OfferId))));
+                }
+
+                throw new CartsDomainException("At least offer is not active");
+            }
+
             var ordersServiceClient = _ordersServiceClientFactory.Create(_endpointsConfig.Orders.Grpc.ToString());
-            var createOrderRequest = new CreateOrderRequest
+            var createOrderRequest = PrepareCreateOrderRequest(cart);
+            var createOrderResponse = await ordersServiceClient.CreateOrder(createOrderRequest);
+
+            _logger.LogWithProps(LogLevel.Debug, "Order created from cart",
+                "OrderId".ToKvp(createOrderResponse.OrderId),
+                "CartId".ToKvp(cart.Id));
+
+            _cartRepository.Remove(cart);
+            await _cartRepository.UnitOfWork.SaveChangesAndDispatchDomainEventsAsync(cancellationToken);
+
+            _logger.LogWithProps(LogLevel.Debug, "Removed cart", "CartId".ToKvp(cart.Id));
+
+            return createOrderResponse.OrderId;
+        }
+
+        private static CreateOrderRequest PrepareCreateOrderRequest(Cart cart)
+        {
+            return new()
             {
                 Id = cart.Id,
                 SellerId = cart.CartItems.First().SellerId,
@@ -65,19 +134,6 @@ namespace Carts.API.Application.Commands.FinalizeCart
                     ImageUri = x.ImageUri
                 })
             };
-
-            var createOrderResponse = await ordersServiceClient.CreateOrder(createOrderRequest);
-
-            _logger.LogWithProps(LogLevel.Debug, "Order created from cart",
-                "OrderId".ToKvp(createOrderResponse.OrderId),
-                "CartId".ToKvp(cart.Id));
-
-            _cartRepository.Remove(cart);
-            await _cartRepository.UnitOfWork.SaveChangesAndDispatchDomainEventsAsync(cancellationToken);
-
-            _logger.LogWithProps(LogLevel.Debug, "Removed cart", "CartId".ToKvp(cart.Id));
-
-            return createOrderResponse.OrderId;
         }
     }
 }

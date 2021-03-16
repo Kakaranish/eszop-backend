@@ -47,7 +47,7 @@ namespace Carts.API.Application.Commands.AddToCart
             var grpcRequest = new GetOfferBasicInfoRequest { OfferId = offerId };
             var grpcResponse = await offersServiceClient.GetOfferBasicInfo(grpcRequest);
             var offer = grpcResponse.Offer;
-            if (offer.IsActive == false) throw new CartsDomainException("Offer is not active");
+            if (!offer.IsActive) throw new CartsDomainException("Offer is not active");
 
             if (request.Quantity > offer.AvailableStock)
                 throw new CartsDomainException($"Quantity out of range. AvailableStock for offer {offer.Id} is {offer.AvailableStock}");

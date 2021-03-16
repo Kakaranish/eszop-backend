@@ -3,8 +3,11 @@ using Common.EventBus;
 using Common.EventBus.IntegrationEvents;
 using Common.Extensions;
 using Common.Logging;
+using Common.Types;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Carts.API.Application.IntegrationEventsHandlers
@@ -13,12 +16,15 @@ namespace Carts.API.Application.IntegrationEventsHandlers
     {
         private readonly ILogger<OfferBecameUnavailableIntegrationEventHandler> _logger;
         private readonly ICartItemRepository _cartItemRepository;
+        private readonly IEventBus _eventBus;
 
         public OfferBecameUnavailableIntegrationEventHandler(
-            ILogger<OfferBecameUnavailableIntegrationEventHandler> logger, ICartItemRepository cartItemRepository)
+            ILogger<OfferBecameUnavailableIntegrationEventHandler> logger,
+            ICartItemRepository cartItemRepository, IEventBus eventBus)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _cartItemRepository = cartItemRepository ?? throw new ArgumentNullException(nameof(cartItemRepository));
+            _eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
         }
 
         public override async Task Handle(OfferBecameUnavailableIntegrationEvent @event)
@@ -28,12 +34,39 @@ namespace Carts.API.Application.IntegrationEventsHandlers
                 "EventId".ToKvp(@event.Id),
                 "OfferId".ToKvp(@event.OfferId));
 
-            _cartItemRepository.RemoveWithOfferId(@event.OfferId); //TODO? Notify user
+            var cartItems = await _cartItemRepository.GetByOfferId(@event.OfferId);
+            if (!cartItems.Any()) return;
+
+            var notifications = new List<NotificationIntegrationEvent>();
+            foreach (var cartItem in cartItems)
+            {
+                var notification = new NotificationIntegrationEvent
+                {
+                    UserId = cartItem.CartOwnerId,
+                    Code = NotificationCodes.CartItemBecameUnavailable,
+                    Message = "Offer became unavailable",
+                    Metadata = new Dictionary<string, string>
+                    {
+                        {"OfferId", cartItem.OfferId.ToString()},
+                        {"OfferName", cartItem.OfferName},
+                        {"CartItemId", cartItem.Id.ToString()}
+                    }
+                };
+                notifications.Add(notification);
+
+                _cartItemRepository.Remove(cartItem);
+            }
+            _cartItemRepository.RemoveWithOfferId(@event.OfferId);
             await _cartItemRepository.UnitOfWork.SaveChangesAndDispatchDomainEventsAsync();
 
+            foreach (var notification in notifications)
+            {
+                await _eventBus.PublishAsync(notification);
+            }
+
             _logger.LogWithProps(LogLevel.Information,
-                $"Handled {nameof(OfferBecameUnavailableIntegrationEvent)} integration event",
-                "EventId".ToKvp(@event.Id),
+                $"Published {notifications.Count} {nameof(NotificationIntegrationEvent)}",
+                "SourceEventId".ToKvp(@event.Id),
                 "OfferId".ToKvp(@event.OfferId));
         }
     }

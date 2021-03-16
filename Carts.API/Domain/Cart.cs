@@ -1,10 +1,10 @@
-﻿using Common.Types;
+﻿using Common.Domain;
+using Common.Types;
+using Common.Validators;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
-using Common.Domain;
-using Common.Validators;
 
 namespace Carts.API.Domain
 {
@@ -30,7 +30,29 @@ namespace Carts.API.Domain
 
         public void AddCartItem(CartItem cartItem)
         {
+            ValidateAddCartItem(cartItem);
+
             _cartItems ??= new List<CartItem>();
+            _cartItems.Add(cartItem);
+        }
+
+        public void ClearCartItems()
+        {
+            _cartItems?.Clear();
+        }
+
+        #region Validation
+
+        private static void ValidateUserId(Guid userId)
+        {
+            var idValidator = new IdValidator();
+            var result = idValidator.Validate(userId);
+            if (!result.IsValid) throw new CartsDomainException($"'{nameof(userId)}' is invalid id");
+        }
+
+        private void ValidateAddCartItem(CartItem cartItem)
+        {
+            if (_cartItems == null) return;
 
             if (_cartItems.Any(item => item.SellerId != cartItem.SellerId))
             {
@@ -40,20 +62,8 @@ namespace Carts.API.Domain
             {
                 throw new CartsDomainException($"Offer {cartItem.OfferId} is already in cart");
             }
-
-            _cartItems.Add(cartItem);
         }
 
-        public void ClearCartItems()
-        {
-            _cartItems?.Clear();
-        }
-
-        private static void ValidateUserId(Guid userId)
-        {
-            var idValidator = new IdValidator();
-            var result = idValidator.Validate(userId);
-            if (!result.IsValid) throw new CartsDomainException($"'{nameof(userId)}' is invalid id");
-        }
+        #endregion
     }
 }
