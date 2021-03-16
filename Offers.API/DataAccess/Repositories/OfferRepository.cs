@@ -33,7 +33,7 @@ namespace Offers.API.DataAccess.Repositories
                 .AsQueryable()
                 .Where(OfferActiveExpression)
                 .ApplyFilter(filter)
-                .OrderByDescending(x => x.CreatedAt)
+                .OrderBy(x => x.EndsAt)
                 .Include(x => x.Category);
 
             var pageDetails = new PageCriteria(filter.PageIndex, filter.PageSize);
@@ -67,6 +67,7 @@ namespace Offers.API.DataAccess.Repositories
             var offers = _appDbContext.Offers.AsQueryable()
                 .Where(x => x.OwnerId == userId)
                 .Where(OfferActiveExpression)
+                .OrderBy(x => x.EndsAt)
                 .ApplyFilter(filter);
 
             var pageDetails = new PageCriteria(filter.PageIndex, filter.PageSize);
