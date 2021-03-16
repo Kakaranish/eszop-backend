@@ -20,7 +20,7 @@ namespace Offers.API.Application.Queries.GetOffer
         public async Task<OfferViewDto> Handle(GetOfferQuery request, CancellationToken cancellationToken)
         {
             var offerId = Guid.Parse(request.OfferId);
-            var offer = await _offerRepository.GetByIdAsync(offerId);
+            var offer = await _offerRepository.GetPublishedById(offerId);
 
             return offer.ToOfferViewDto();
         }

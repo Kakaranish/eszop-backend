@@ -74,6 +74,12 @@ namespace Offers.API.DataAccess.Repositories
             return await offers.PaginateAsync(pageDetails);
         }
 
+        public async Task<Offer> GetPublishedById(Guid offerId)
+        {
+            return await _appDbContext.Offers.Include(x => x.Category)
+                .FirstOrDefaultAsync(x => x.Id == offerId && x.PublishedAt != null && x.RemovedAt == null);
+        }
+
         public async Task<Offer> GetByIdAsync(Guid offerId)
         {
             return await _appDbContext.Offers.Include(x => x.Category)
