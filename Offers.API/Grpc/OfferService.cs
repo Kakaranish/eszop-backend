@@ -1,7 +1,9 @@
 ﻿using Common.Grpc.Services.OffersService;
 using Common.Grpc.Services.OffersService.Requests.GetDeliveryMethodsForOffers;
 using Common.Grpc.Services.OffersService.Requests.GetOfferBasicInfo;
+using Common.Grpc.Services.OffersService.Requests.GetOffersAvailability;
 using Offers.API.DataAccess.Repositories;
+using Offers.API.Domain;
 using ProtoBuf.Grpc;
 using System;
 using System.Collections.Generic;
@@ -72,6 +74,42 @@ namespace Offers.API.Grpc
             };
 
             return new GetOfferBasicInfoResponse { Offer = offerDto };
+        }
+
+        public async Task<GetOffersAvailabilityResponse> GetOffersAvailability(
+            GetOffersAvailabilityRequest request, CallContext context = default)
+        {
+            if (request.OfferIds == null || !request.OfferIds.Any())
+                return new GetOffersAvailabilityResponse { OfferAvailabilities = new List<OfferAvailability>() };
+
+            var offers = await _offerRepository.GetMultipleWithIds(request.OfferIds);
+            if (offers == null || offers.Count == 0)
+                return new GetOffersAvailabilityResponse { OfferAvailabilities = new List<OfferAvailability>() };
+
+            var offerAvailabilities = new List<OfferAvailability>();
+            foreach (var offerId in request.OfferIds)
+            {
+                var offer = offers.FirstOrDefault(x => x.Id == offerId);
+                offerAvailabilities.Add(new OfferAvailability
+                {
+                    OfferId = offerId,
+                    Availability = GetAvailability(offer)
+                });
+            }
+
+            return new GetOffersAvailabilityResponse
+            {
+                OfferAvailabilities = offerAvailabilities
+            };
+        }
+
+        private static Availability GetAvailability(Offer offer)
+        {
+            if (offer == null) return Availability.DoesNotExist;
+
+            return offer.IsActive
+                ? Availability.Active
+                : Availability.NotActive;
         }
     }
 }
