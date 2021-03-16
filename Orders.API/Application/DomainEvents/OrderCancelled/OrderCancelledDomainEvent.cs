@@ -9,6 +9,8 @@ namespace Orders.API.Application.DomainEvents.OrderCancelled
     public class OrderCancelledDomainEvent : IDomainEvent
     {
         public Guid OrderId { get; init; }
+        public Guid BuyerId { get; init; }
+        public Guid SellerId { get; init; }
         public OrderState PreviousState { get; init; }
         public OrderState CurrentState { get; init; }
         public IList<OrderItemDto> OrderItems { get; init; }

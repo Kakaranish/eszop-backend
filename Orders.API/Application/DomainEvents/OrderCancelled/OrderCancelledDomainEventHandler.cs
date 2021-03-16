@@ -1,11 +1,13 @@
 ﻿using Common.Domain;
-using Common.Dto;
 using Common.EventBus;
 using Common.EventBus.IntegrationEvents;
 using Common.Extensions;
 using Common.Logging;
+using Common.Types;
 using Microsoft.Extensions.Logging;
+using Orders.API.Domain;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -42,9 +44,73 @@ namespace Orders.API.Application.DomainEvents.OrderCancelled
             _logger.LogWithProps(LogLevel.Information,
                 $"Integration event {nameof(OrderCancelledIntegrationEvent)} published",
                 "EventId".ToKvp(integrationEvent.Id),
-                "PreviousState".ToKvp(integrationEvent.PreviousState.ToString()),
-                "CurrentState".ToKvp(integrationEvent.CurrentState.ToString()),
+                "PreviousState".ToKvp(integrationEvent.PreviousState),
+                "CurrentState".ToKvp(integrationEvent.CurrentState),
                 "OfferIds".ToKvp(string.Join(",", integrationEvent.OrderItems.Select(x => x.OfferId))));
+
+            var notificationIntegrationEvents = PrepareNotificationIntegrationEvents(domainEvent);
+            foreach (var notificationIntegrationEvent in notificationIntegrationEvents)
+            {
+                await _eventBus.PublishAsync(notificationIntegrationEvent);
+            }
+
+            _logger.LogWithProps(LogLevel.Information,
+                $"Published {notificationIntegrationEvents.Count} {nameof(OrderCancelledIntegrationEvent)} integration events",
+                "PublishedEventIds".ToKvp(string.Join(",", notificationIntegrationEvents.Select(x => x.Id))),
+                "ReceiverIds".ToKvp(string.Join(",", notificationIntegrationEvents.Select(x => x.UserId))));
+        }
+
+        private IList<NotificationIntegrationEvent> PrepareNotificationIntegrationEvents(
+            OrderCancelledDomainEvent domainEvent)
+        {
+            var metadata = new Dictionary<string, string>
+            {
+                {"PreviousOrderState", domainEvent.PreviousState.Name},
+                {"CurrentOrderState", domainEvent.CurrentState.Name},
+                {"OrderId", domainEvent.OrderId.ToString()}
+            };
+            var message = "Order cancelled by seller";
+
+            var notificationIntegrationEvents = new List<NotificationIntegrationEvent>();
+            if (domainEvent.CurrentState == OrderState.CancelledBySeller)
+            {
+                notificationIntegrationEvents.Add(new NotificationIntegrationEvent
+                {
+                    UserId = domainEvent.BuyerId,
+                    Code = NotificationCodes.OrderCancelledBySeller,
+                    Message = message,
+                    Metadata = metadata
+                });
+            }
+            else if (domainEvent.CurrentState == OrderState.CancelledByBuyer)
+            {
+                notificationIntegrationEvents.Add(new NotificationIntegrationEvent
+                {
+                    UserId = domainEvent.SellerId,
+                    Code = NotificationCodes.OrderCancelledByBuyer,
+                    Message = message,
+                    Metadata = metadata
+                });
+            }
+            else
+            {
+                notificationIntegrationEvents.Add(new NotificationIntegrationEvent
+                {
+                    UserId = domainEvent.BuyerId,
+                    Code = NotificationCodes.OrderCancelled,
+                    Message = message,
+                    Metadata = metadata
+                });
+                notificationIntegrationEvents.Add(new NotificationIntegrationEvent
+                {
+                    UserId = domainEvent.SellerId,
+                    Code = NotificationCodes.OrderCancelled,
+                    Message = message,
+                    Metadata = metadata
+                });
+            }
+
+            return notificationIntegrationEvents;
         }
     }
 }

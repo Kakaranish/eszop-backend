@@ -17,5 +17,9 @@
         public static readonly string OrderConfirmed = nameof(OrderConfirmed);
 
         public static readonly string OrderCancelled = nameof(OrderCancelled);
+
+        public static readonly string OrderCancelledByBuyer = nameof(OrderCancelledByBuyer);
+
+        public static readonly string OrderCancelledBySeller = nameof(OrderCancelledBySeller);
     }
 }
