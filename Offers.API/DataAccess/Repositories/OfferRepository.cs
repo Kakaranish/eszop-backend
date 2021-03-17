@@ -44,7 +44,7 @@ namespace Offers.API.DataAccess.Repositories
         public async Task<IList<Offer>> GetMultipleWithIds(IEnumerable<Guid> offerIds)
         {
             var offers = _appDbContext.Offers.AsQueryable()
-                .Where(x => offerIds.Contains(x.Id));
+                .Where(x => offerIds.Contains(x.Id) && x.RemovedAt == null);
 
             return await offers.ToListAsync();
         }
@@ -52,7 +52,7 @@ namespace Offers.API.DataAccess.Repositories
         public async Task<Pagination<Offer>> GetAllByUserIdAsync(Guid userId, OfferFilter filter)
         {
             var offers = _appDbContext.Offers.AsQueryable()
-                .Where(x => x.OwnerId == userId)
+                .Where(x => x.OwnerId == userId && x.RemovedAt == null)
                 .OrderByDescending(x => x.PublishedAt == null)
                 .ThenByDescending(x => x.CreatedAt)
                 .ApplyFilter(filter);
@@ -84,7 +84,7 @@ namespace Offers.API.DataAccess.Repositories
         public async Task<Offer> GetByIdAsync(Guid offerId)
         {
             return await _appDbContext.Offers.Include(x => x.Category)
-                .FirstOrDefaultAsync(x => x.Id == offerId);
+                .FirstOrDefaultAsync(x => x.Id == offerId && x.RemovedAt == null);
         }
 
         public async Task AddAsync(Offer offer)

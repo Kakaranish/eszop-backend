@@ -1,4 +1,5 @@
 ﻿using Common.Domain;
+using Common.EventBus.IntegrationEvents;
 using Common.Types;
 using Common.Validators;
 using Offers.API.Application.DomainEvents.ActiveOfferChanged.PartialEvents;
@@ -172,7 +173,11 @@ namespace Offers.API.Domain
             UserEndedAt = DateTime.UtcNow;
             UpdatedAt = UserEndedAt.Value;
 
-            var domainEvent = new OfferBecameUnavailableDomainEvent { OfferId = Id };
+            var domainEvent = new OfferBecameUnavailableDomainEvent
+            {
+                OfferId = Id,
+                Trigger = UnavailabilityTrigger.End
+            };
             AddDomainEvent(domainEvent);
         }
 
@@ -183,7 +188,11 @@ namespace Offers.API.Domain
             RemovedAt = DateTime.UtcNow;
             UpdatedAt = RemovedAt.Value;
 
-            var domainEvent = new OfferBecameUnavailableDomainEvent { OfferId = Id };
+            var domainEvent = new OfferBecameUnavailableDomainEvent
+            {
+                OfferId = Id,
+                Trigger = UnavailabilityTrigger.Removal
+            };
             AddDomainEvent(domainEvent);
         }
 
@@ -299,7 +308,7 @@ namespace Offers.API.Domain
 
         private void ValidateEndOffer()
         {
-            if (UserEndedAt != null || EndsAt < DateTime.UtcNow) 
+            if (UserEndedAt != null || EndsAt < DateTime.UtcNow)
                 throw new OffersDomainException("Offer is already ended");
         }
 
