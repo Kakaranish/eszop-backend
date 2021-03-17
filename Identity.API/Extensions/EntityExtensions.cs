@@ -17,7 +17,7 @@ namespace Identity.API.Extensions
                 UpdatedAt = user.UpdatedAt,
                 Email = user.Email,
                 LastLogin = user.LastLogin,
-                LockedUntil = user.LockedUntil
+                IsLocked = user.IsLocked
             };
         }
 

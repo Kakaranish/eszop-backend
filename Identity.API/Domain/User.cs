@@ -4,7 +4,6 @@ using Common.Validators;
 using Identity.API.Application.DomainEvents.UserLocked;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
 namespace Identity.API.Domain
@@ -16,7 +15,7 @@ namespace Identity.API.Domain
         public DateTime CreatedAt { get; private set; }
         public DateTime UpdatedAt { get; private set; }
         public DateTime? LastLogin { get; private set; }
-        public DateTime? LockedUntil { get; private set; }
+        public bool IsLocked { get; private set; }
         public string Email { get; private set; }
         public HashedPassword HashedPassword { get; private set; }
         public Role Role { get; private set; }
@@ -24,8 +23,6 @@ namespace Identity.API.Domain
         public IReadOnlyCollection<DeliveryAddress> DeliveryAddresses =>
             _deliveryAddresses ?? new List<DeliveryAddress>();
         public virtual SellerInfo SellerInfo { get; private set; }
-        
-        [NotMapped] public bool IsLocked => LockedUntil != null && LockedUntil > DateTime.UtcNow;
 
         protected User()
         {
@@ -81,7 +78,7 @@ namespace Identity.API.Domain
         public void UnsetPrimaryDeliveryAddress()
         {
             PrimaryDeliveryAddressId = null;
-            
+
             UpdatedAt = DateTime.UtcNow;
         }
 
@@ -90,28 +87,26 @@ namespace Identity.API.Domain
             LastLogin = DateTime.UtcNow;
         }
 
-        public void SetLockedUntil(DateTime lockedUntil)
+        public void SetLocked()
         {
-            if (lockedUntil < DateTime.UtcNow)
-                throw new IdentityDomainException($"'{nameof(lockedUntil)}' cannot be in past");
+            if (IsLocked) throw new IdentityDomainException("User is already locked");
 
-            LockedUntil = lockedUntil;
+            IsLocked = true;
             UpdatedAt = DateTime.UtcNow;
 
             var @event = new UserLockedDomainEvent
             {
                 UserId = Id,
-                LockedAt = UpdatedAt,
-                LockedUntil = lockedUntil
+                LockedAt = UpdatedAt
             };
             AddDomainEvent(@event);
         }
 
         public void SetUnlocked()
         {
-            if (!IsLocked) return;
+            if (!IsLocked) throw new IdentityDomainException("User is not locked");
 
-            LockedUntil = null;
+            IsLocked = false;
             UpdatedAt = DateTime.UtcNow;
         }
 

@@ -10,6 +10,6 @@ namespace Identity.API.Application.Dto
         public DateTime CreatedAt { get; init; }
         public DateTime UpdatedAt { get; init; }
         public DateTime? LastLogin { get; init; }
-        public DateTime? LockedUntil { get; init; }
+        public bool IsLocked { get; init; }
     }
 }
