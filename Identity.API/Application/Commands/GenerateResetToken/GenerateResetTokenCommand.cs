@@ -1,6 +1,5 @@
 ﻿using Common.Validators;
 using FluentValidation;
-using Identity.API.Domain.CommonValidators;
 using MediatR;
 
 namespace Identity.API.Application.Commands.GenerateResetToken

@@ -39,6 +39,11 @@ namespace Identity.API.Domain
             return Parse(role) != null;
         }
 
+        public bool IsAdminRole()
+        {
+            return this == Admin || this == SuperAdmin;
+        }
+
         private static void EnsureRolesCachePopulated()
         {
             _rolesCache ??= typeof(Role)

@@ -30,11 +30,10 @@ namespace Identity.API.Application.Commands.ResetPassword
             if (userIdAsBytes == null) throw new IdentityDomainException("Invalid reset token");
 
             var userIdAsStr = Encoding.UTF8.GetString(userIdAsBytes);
-            if (!Guid.TryParse(userIdAsStr, out var userId))
-                throw new IdentityDomainException("Invalid userId in reset token");
+            if (!Guid.TryParse(userIdAsStr, out var userId)) throw new IdentityDomainException("Invalid reset token");
 
             var user = await _userRepository.GetByIdAsync(userId);
-            if (user == null) throw new IdentityDomainException("No such user");
+            if (user == null || user.Email != request.Email) throw new IdentityDomainException("Invalid reset token");
 
             var password = _passwordHasher.Hash(request.NewPassword);
             user.SetPassword(password);

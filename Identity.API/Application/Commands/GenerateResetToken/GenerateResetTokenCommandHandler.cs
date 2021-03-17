@@ -27,11 +27,13 @@ namespace Identity.API.Application.Commands.GenerateResetToken
             var user = await _userRepository.GetByEmailAsync(request.Email);
             if (user == null) throw new NotFoundException("User");
 
+            if (user.Role.IsAdminRole()) throw new ForbiddenException();
+            
             var resetToken = RandomStringGenerator.Generate(50);
             var userId = Encoding.UTF8.GetBytes(user.Id.ToString());
             await _distributedCache.SetAsync(resetToken, userId, new DistributedCacheEntryOptions
             {
-                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(15)
+                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
             }, cancellationToken);
 
             return resetToken;
