@@ -4,10 +4,13 @@ using Common.EventBus.IntegrationEvents;
 using Common.Extensions;
 using Common.Grpc.Services.OrdersService;
 using Common.Grpc.Services.OrdersService.CreateOrder;
+using Common.Grpc.Services.OrdersService.GetOfferHasOrders;
+using Common.Types;
 using Microsoft.Extensions.Logging;
 using Orders.API.DataAccess.Repositories;
 using Orders.API.Domain;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -35,7 +38,7 @@ namespace Orders.API.Grpc
             _orderRepository.Add(order);
             await _orderRepository.UnitOfWork.SaveChangesAndDispatchDomainEventsAsync();
 
-            var integrationEvent = new OrderStartedIntegrationEvent
+            var orderStartedIntegrationEvent = new OrderStartedIntegrationEvent
             {
                 OrderId = order.Id,
                 OrderItems = order.OrderItems.Select(orderItem => new OrderItemDto
@@ -44,13 +47,42 @@ namespace Orders.API.Grpc
                     Quantity = orderItem.Quantity
                 }).ToList()
             };
-            await _eventBus.PublishAsync(integrationEvent);
+            await _eventBus.PublishAsync(orderStartedIntegrationEvent);
 
             _logger.LogInformation($"Integration event {nameof(OrderStartedIntegrationEvent)} published",
-                "EventId".ToKvp(integrationEvent.Id),
-                "OfferIds".ToKvp(string.Join(",", integrationEvent.OrderItems.Select(x => x.OfferId))));
+                "EventId".ToKvp(orderStartedIntegrationEvent.Id),
+                "OfferIds".ToKvp(string.Join(",", orderStartedIntegrationEvent.OrderItems.Select(x => x.OfferId))));
+
+            var notificationIntegrationEvent = new NotificationIntegrationEvent
+            {
+                UserId = order.SellerId,
+                Code = NotificationCodes.OrderStarted,
+                Message = "Order started",
+                Metadata = new Dictionary<string, string>
+                {
+                    {"OrderId",  order.Id.ToString()},
+                    {"BuyerId", order.BuyerId.ToString() },
+                    {"OfferIds", string.Join(",", request.CartItems.Select(x => x.OfferId)) }
+                }
+
+            };
+            await _eventBus.PublishAsync(notificationIntegrationEvent);
+
+            _logger.LogInformation($"Published {nameof(NotificationIntegrationEvent)}",
+                "EventId".ToKvp(orderStartedIntegrationEvent.Id),
+                "PublishedEventId".ToKvp(notificationIntegrationEvent.Id),
+                "NotifiedUserId".ToKvp(notificationIntegrationEvent.UserId));
 
             return new CreateOrderResponse { OrderId = order.Id };
+        }
+
+        public async Task<GetOfferHasOrdersResponse> GetOfferHasOrders(GetOfferHasOrdersRequest request)
+        {
+            var offerHasOrders = await _orderRepository.GetOfferHasAnyOrders(request.OfferId);
+            return new GetOfferHasOrdersResponse
+            {
+                OfferHasOrders = offerHasOrders
+            };
         }
     }
 }

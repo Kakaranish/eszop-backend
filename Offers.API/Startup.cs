@@ -3,6 +3,8 @@ using Common.ErrorHandling;
 using Common.EventBus;
 using Common.EventBus.IntegrationEvents;
 using Common.Extensions;
+using Common.Grpc;
+using Common.Grpc.Services.OrdersService;
 using Common.HealthCheck;
 using FluentValidation;
 using MediatR;
@@ -42,6 +44,7 @@ namespace Offers.API
             services.AddHttpContextAccessor();
             services.AddCodeFirstGrpc();
 
+            services.ReadServicesEndpoints();
             services.AddJwtAuthentication();
             services.AddMediatR(typeof(Startup).Assembly);
 
@@ -79,6 +82,8 @@ namespace Offers.API
             services.AddScoped<IOfferDomainEventReducer, OfferDomainEventReducer>();
 
             services.AddExceptionHandling<OffersDomainException>();
+
+            services.AddScoped<IGrpcServiceClientFactory<IOrdersService>, GrpcServiceClientFactory<IOrdersService>>();
 
             services
                 .AddRabbitMqEventBus()

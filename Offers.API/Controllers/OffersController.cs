@@ -87,9 +87,9 @@ namespace Offers.API.Controllers
             return Ok();
         }
 
-        [HttpDelete("")]
+        [HttpDelete("{offerId}")]
         [JwtAuthorize]
-        public async Task<IActionResult> Remove(RemoveOfferCommand command)
+        public async Task<IActionResult> Remove([FromRoute] RemoveOfferCommand command)
         {
             await _mediator.Send(command);
             return Ok();

@@ -33,6 +33,11 @@ namespace Orders.API.DataAccess.Repositories
                 .ToListAsync();
         }
 
+        public async Task<bool> GetOfferHasAnyOrders(Guid offerId)
+        {
+            return await _appDbContext.OrderItems.AnyAsync(x => x.OfferId == offerId);
+        }
+
         public async Task<Pagination<Order>> GetAllByBuyerIdAsync(Guid userId, BasicPaginationFilter filter)
         {
             var orders = _appDbContext.Orders

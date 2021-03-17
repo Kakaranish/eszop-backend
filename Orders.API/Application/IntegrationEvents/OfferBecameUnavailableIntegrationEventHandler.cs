@@ -30,6 +30,17 @@ namespace Orders.API.Application.IntegrationEvents
 
         public override async Task Handle(OfferBecameUnavailableIntegrationEvent @event)
         {
+            if (@event.Trigger == UnavailabilityTrigger.Removal)
+            {
+                _logger.LogWithProps(LogLevel.Information,
+                    $"Ignored {nameof(OfferBecameUnavailableIntegrationEvent)} integration event",
+                    "EventId".ToKvp(@event.Id),
+                    "OfferId".ToKvp(@event.OfferId),
+                    "Trigger".ToKvp(@event.Trigger));
+
+                return;
+            }
+
             _logger.LogWithProps(LogLevel.Information,
                 $"Handling {nameof(OfferBecameUnavailableIntegrationEvent)} integration event",
                 "EventId".ToKvp(@event.Id),

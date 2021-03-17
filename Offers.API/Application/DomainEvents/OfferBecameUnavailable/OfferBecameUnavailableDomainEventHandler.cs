@@ -28,7 +28,11 @@ namespace Offers.API.Application.DomainEvents.OfferBecameUnavailable
                 $"Handling {nameof(OfferBecameUnavailableDomainEvent)} domain event",
                 "OfferId".ToKvp(domainEvent.OfferId));
 
-            var integrationEvent = new OfferBecameUnavailableIntegrationEvent { OfferId = domainEvent.OfferId };
+            var integrationEvent = new OfferBecameUnavailableIntegrationEvent
+            {
+                OfferId = domainEvent.OfferId,
+                Trigger = domainEvent.Trigger
+            };
 
             await _eventBus.PublishAsync(integrationEvent);
 

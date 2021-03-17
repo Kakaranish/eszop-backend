@@ -1,9 +1,16 @@
 ﻿using Common.Exceptions;
 using Common.Extensions;
+using Common.Grpc;
+using Common.Grpc.Services.OrdersService;
+using Common.Grpc.Services.OrdersService.GetOfferHasOrders;
+using Common.Types;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Options;
 using Offers.API.DataAccess.Repositories;
+using Offers.API.Domain;
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -13,12 +20,18 @@ namespace Offers.API.Application.Commands.RemoveOffer
     {
         private readonly IOfferRepository _offerRepository;
         private readonly HttpContext _httpContext;
+        private readonly IGrpcServiceClientFactory<IOrdersService> _ordersServiceClientFactory;
+        private readonly ServicesEndpointsConfig _endpointsConfig;
 
-        public RemoveOfferCommandHandler(IHttpContextAccessor httpContextAccessor, IOfferRepository offerRepository)
+        public RemoveOfferCommandHandler(IHttpContextAccessor httpContextAccessor, IOfferRepository offerRepository,
+            IGrpcServiceClientFactory<IOrdersService> ordersServiceClientFactory,
+            IOptions<ServicesEndpointsConfig> options)
         {
             _httpContext = httpContextAccessor.HttpContext ??
                            throw new ArgumentNullException(nameof(httpContextAccessor.HttpContext));
             _offerRepository = offerRepository ?? throw new ArgumentNullException(nameof(offerRepository));
+            _ordersServiceClientFactory = ordersServiceClientFactory ?? throw new ArgumentNullException(nameof(ordersServiceClientFactory));
+            _endpointsConfig = options.Value ?? throw new ArgumentNullException(nameof(options.Value));
         }
 
         public async Task<Unit> Handle(RemoveOfferCommand request, CancellationToken cancellationToken)
@@ -29,9 +42,14 @@ namespace Offers.API.Application.Commands.RemoveOffer
 
             var userClaims = _httpContext.User.Claims.ToTokenPayload().UserClaims;
             var userId = userClaims.Id;
-            const string adminRole = "ADMIN";
+            var adminRoles = new List<string> { "ADMIN", "SUPER_ADMIN" };
+            if (offer.OwnerId != userId && !adminRoles.Contains(userClaims.Role)) throw new ForbiddenException();
 
-            if (offer.OwnerId != userId && userClaims.Role != adminRole) throw new NotFoundException();
+            var ordersServiceClient = _ordersServiceClientFactory.Create(_endpointsConfig.Orders.Grpc.ToString());
+            var grpcRequest = new GetOfferHasOrdersRequest { OfferId = offerId };
+            var grpcResponse = await ordersServiceClient.GetOfferHasOrders(grpcRequest);
+            if (grpcResponse.OfferHasOrders)
+                throw new OffersDomainException("Offer cannot be cancelled because it's related to at least one order");
 
             offer.MarkAsRemoved();
 
