@@ -21,7 +21,6 @@ namespace Identity.API.Domain
         public HashedPassword HashedPassword { get; private set; }
         public Role Role { get; private set; }
         public Guid? PrimaryDeliveryAddressId { get; private set; }
-        public virtual ProfileInfo ProfileInfo { get; private set; }
         public IReadOnlyCollection<DeliveryAddress> DeliveryAddresses =>
             _deliveryAddresses ?? new List<DeliveryAddress>();
         public virtual SellerInfo SellerInfo { get; private set; }

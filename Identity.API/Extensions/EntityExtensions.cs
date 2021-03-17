@@ -21,20 +21,6 @@ namespace Identity.API.Extensions
             };
         }
 
-        public static ProfileInfoDto ToDto(this ProfileInfo profileInfo)
-        {
-            if (profileInfo == null) return null;
-
-            return new ProfileInfoDto
-            {
-                UserId = profileInfo.UserId,
-                FirstName = profileInfo.FirstName,
-                LastName = profileInfo.LastName,
-                PhoneNumber = profileInfo.PhoneNumber,
-                DateOfBirth = profileInfo.DateOfBirth
-            };
-        }
-
         public static DeliveryAddressDto ToDto(this DeliveryAddress deliveryAddress)
         {
             if (deliveryAddress == null) return null;

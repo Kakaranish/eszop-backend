@@ -18,7 +18,6 @@ namespace Identity.API.DataAccess
 
         public DbSet<User> Users { get; private set; }
         public DbSet<RefreshToken> RefreshTokens { get; private set; }
-        public DbSet<ProfileInfo> ProfileInfos { get; private set; }
         public DbSet<SellerInfo> SellerInfos { get; private set; }
 
         public AppDbContext(DbContextOptions options, IServiceProvider serviceProvider, IMediator mediator)
@@ -44,9 +43,6 @@ namespace Identity.API.DataAccess
                     x => x == null ? null : JsonConvert.DeserializeObject<List<DeliveryAddress>>(x));
 
             modelBuilder.Entity<RefreshToken>()
-                .HasKey(x => x.Id);
-
-            modelBuilder.Entity<ProfileInfo>()
                 .HasKey(x => x.Id);
 
             modelBuilder.Entity<SellerInfo>()
