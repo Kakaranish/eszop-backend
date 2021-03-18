@@ -16,6 +16,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Models;
 using Orders.API.Application.IntegrationEvents;
 using Orders.API.DataAccess;
 using Orders.API.DataAccess.Repositories;
@@ -40,6 +41,14 @@ namespace Orders.API
             services.AddControllers();
             services.AddHttpContextAccessor();
             services.AddCodeFirstGrpc();
+            services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "Orders.API",
+                    Version = "v1"
+                });
+            });
 
             services.ReadServicesEndpoints();
 
@@ -94,6 +103,12 @@ namespace Orders.API
                 endpoints.MapHealthChecks("/healthcheck");
                 endpoints.MapControllers();
                 endpoints.MapGrpcService<OrdersService>();
+            });
+
+            app.UseSwagger();
+            app.UseSwaggerUI(options =>
+            {
+                options.SwaggerEndpoint("/swagger/v1/swagger.json", "Orders.API v1");
             });
         }
     }

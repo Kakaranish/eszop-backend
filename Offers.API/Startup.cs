@@ -16,6 +16,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Models;
 using Offers.API.Application.DomainEvents.Reducers;
 using Offers.API.Application.IntegrationEventHandlers;
 using Offers.API.Application.Services;
@@ -28,6 +29,7 @@ using Offers.API.Services;
 using ProtoBuf.Grpc.Server;
 using Serilog;
 using System.Globalization;
+using System.Linq;
 
 namespace Offers.API
 {
@@ -50,6 +52,14 @@ namespace Offers.API
             services.AddControllers();
             services.AddHttpContextAccessor();
             services.AddCodeFirstGrpc();
+            services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "Offers.API",
+                    Version = "v1"
+                });
+            });
 
             services.ReadServicesEndpoints();
             services.AddJwtAuthentication();
@@ -122,6 +132,12 @@ namespace Offers.API
                 endpoints.MapHealthChecks("/healthcheck");
                 endpoints.MapControllers();
                 endpoints.MapGrpcService<OfferService>();
+            });
+
+            app.UseSwagger();
+            app.UseSwaggerUI(options =>
+            {
+                options.SwaggerEndpoint("/swagger/v1/swagger.json", "Offers.API v1");
             });
         }
     }

@@ -13,16 +13,17 @@
       ]
     },
     {
-      "UpstreamPathTemplate": "/offers-api/{url}",
+      "UpstreamPathTemplate": "/offers-api/{everything}",
       "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete" ],
-      "DownstreamPathTemplate": "/api/{url}",
+      "DownstreamPathTemplate": "/api/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
           "Port": 5000
         }
-      ]
+      ],
+      "SwaggerKey": "offers"
     },
     {
       "UpstreamPathTemplate": "/identity-api/healthcheck",
@@ -37,16 +38,17 @@
       ]
     },
     {
-      "UpstreamPathTemplate": "/identity-api/{url}",
+      "UpstreamPathTemplate": "/identity-api/{everything}",
       "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete" ],
-      "DownstreamPathTemplate": "/api/{url}",
+      "DownstreamPathTemplate": "/api/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
           "Port": 6000
         }
-      ]
+      ],
+      "SwaggerKey": "identity"
     },
     {
       "UpstreamPathTemplate": "/carts-api/healthcheck",
@@ -61,16 +63,17 @@
       ]
     },
     {
-      "UpstreamPathTemplate": "/carts-api/{url}",
+      "UpstreamPathTemplate": "/carts-api/{everything}",
       "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete" ],
-      "DownstreamPathTemplate": "/api/{url}",
+      "DownstreamPathTemplate": "/api/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
           "Port": 7000
         }
-      ]
+      ],
+      "SwaggerKey": "carts"
     },
     {
       "UpstreamPathTemplate": "/orders-api/healthcheck",
@@ -85,16 +88,17 @@
       ]
     },
     {
-      "UpstreamPathTemplate": "/orders-api/{url}",
+      "UpstreamPathTemplate": "/orders-api/{everything}",
       "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete" ],
-      "DownstreamPathTemplate": "/api/{url}",
+      "DownstreamPathTemplate": "/api/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
           "Port": 8000
         }
-      ]
+      ],
+      "SwaggerKey": "orders"
     },
     {
       "UpstreamPathTemplate": "/{catchAll}",
@@ -104,6 +108,48 @@
         {
           "Host": "localhost",
           "Port": 9000
+        }
+      ]
+    }
+  ],
+  "SwaggerEndPoints": [
+    {
+      "Key": "offers",
+      "Config": [
+        {
+          "Name": "Offers.API",
+          "Version": "v1",
+          "Url": "http://localhost:5000/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "identity",
+      "Config": [
+        {
+          "Name": "Identity.API",
+          "Version": "v1",
+          "Url": "http://localhost:6000/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "carts",
+      "Config": [
+        {
+          "Name": "Carts.API",
+          "Version": "v1",
+          "Url": "http://localhost:7000/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "orders",
+      "Config": [
+        {
+          "Name": "Orders.API",
+          "Version": "v1",
+          "Url": "http://localhost:8000/swagger/v1/swagger.json"
         }
       ]
     }

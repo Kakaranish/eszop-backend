@@ -16,6 +16,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Models;
 using ProtoBuf.Grpc.Server;
 using Serilog;
 
@@ -35,6 +36,14 @@ namespace Identity.API
             services.AddControllers();
             services.AddHttpContextAccessor();
             services.AddCodeFirstGrpc();
+            services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "Identity.API",
+                    Version = "v1"
+                });
+            });
 
             services.Configure<JwtConfig>(Configuration.GetSection("JwtConfig"));
             services.AddJwtAuthentication();
@@ -92,6 +101,12 @@ namespace Identity.API
                 endpoints.MapHealthChecks("/healthcheck");
                 endpoints.MapControllers();
                 endpoints.MapGrpcService<IdentityService>();
+            });
+
+            app.UseSwagger();
+            app.UseSwaggerUI(options =>
+            {
+                options.SwaggerEndpoint("/swagger/v1/swagger.json", "Identity.API v1");
             });
         }
     }

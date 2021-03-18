@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Common.Dto;
+using System;
 using System.Collections.Generic;
 
 namespace Orders.API.Application.Dto

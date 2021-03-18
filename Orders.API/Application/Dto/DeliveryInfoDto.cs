@@ -1,4 +1,6 @@
-﻿namespace Orders.API.Application.Dto
+﻿using Common.Dto;
+
+namespace Orders.API.Application.Dto
 {
     public class DeliveryInfoDto
     {

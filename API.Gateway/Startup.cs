@@ -21,8 +21,11 @@ namespace API.Gateway
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddMvc();
             services.AddGlobalCors();
+
             services.AddOcelot(Configuration);
+            services.AddSwaggerForOcelot(Configuration);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -31,6 +34,8 @@ namespace API.Gateway
             app.UseCors();
             app.UseCookieTokenMiddleware();
             app.UseWebSockets();
+
+            app.UseSwaggerForOcelotUI();
             app.UseOcelot().Wait();
         }
     }

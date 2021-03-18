@@ -1,6 +1,8 @@
-﻿using Orders.API.Application.Dto;
+﻿using Common.Dto;
+using Orders.API.Application.Dto;
 using Orders.API.Domain;
 using System.Linq;
+using OrderItemDto = Orders.API.Application.Dto.OrderItemDto;
 
 namespace Orders.API.Extensions
 {

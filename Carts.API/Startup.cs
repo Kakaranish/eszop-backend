@@ -20,6 +20,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Models;
 using Serilog;
 
 namespace Carts.API
@@ -37,6 +38,14 @@ namespace Carts.API
         {
             services.AddControllers();
             services.AddHttpContextAccessor();
+            services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "Carts.API",
+                    Version = "v1"
+                });
+            });
 
             services.ReadServicesEndpoints();
 
@@ -94,6 +103,13 @@ namespace Carts.API
             {
                 endpoints.MapHealthChecks("/healthcheck");
                 endpoints.MapControllers();
+            });
+
+
+            app.UseSwagger();
+            app.UseSwaggerUI(options =>
+            {
+                options.SwaggerEndpoint("/swagger/v1/swagger.json", "Carts.API v1");
             });
         }
     }
