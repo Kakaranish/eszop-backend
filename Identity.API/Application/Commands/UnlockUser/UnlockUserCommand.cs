@@ -14,7 +14,7 @@ namespace Identity.API.Application.Commands.UnlockUser
         public UnlockUserCommandValidator()
         {
             RuleFor(x => x.UserId)
-                .IsGuid();
+                .IsNotEmptyGuid();
         }
     }
 }

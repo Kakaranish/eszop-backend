@@ -10,6 +10,7 @@ using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -26,6 +27,7 @@ using Offers.API.Grpc;
 using Offers.API.Services;
 using ProtoBuf.Grpc.Server;
 using Serilog;
+using System.Globalization;
 
 namespace Offers.API
 {
@@ -40,6 +42,11 @@ namespace Offers.API
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddRequestLocalization(options =>
+            {
+                options.DefaultRequestCulture = new RequestCulture(CultureInfo.InvariantCulture);
+            });
+
             services.AddControllers();
             services.AddHttpContextAccessor();
             services.AddCodeFirstGrpc();
@@ -88,7 +95,8 @@ namespace Offers.API
             services
                 .AddRabbitMqEventBus()
                 .Subscribe<OrderStartedIntegrationEvent, OrderStartedIntegrationEventHandler>()
-                .Subscribe<OrderCancelledIntegrationEvent, OrderCancelledIntegrationEventHandler>();
+                .Subscribe<OrderCancelledIntegrationEvent, OrderCancelledIntegrationEventHandler>()
+                .Subscribe<UserLockedIntegrationEvent, UserLockedIntegrationEventHandler>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -97,6 +105,8 @@ namespace Offers.API
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseRequestLocalization();
 
             app.UseSerilogRequestLogging();
 

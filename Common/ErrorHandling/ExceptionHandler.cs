@@ -24,7 +24,7 @@ namespace Common.ErrorHandling
             if (exception is TDomainException ordersDomainException)
                 return new ErrorActionResult(ordersDomainException.Message);
             if (exception is UnauthorizedException) return new UnauthorizedResult();
-            if (exception is ForbiddenException) return new ForbidResult();
+            if (exception is ForbiddenException) return new StatusCodeResult(403);
             if (exception is NotFoundException notFoundException) return new ErrorActionResult(notFoundException.Message, 400); // It's not possible to return 404 :)
             if (exception is IntegrationEventException integrationEventException)
             {

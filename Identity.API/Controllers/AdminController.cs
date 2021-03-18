@@ -40,16 +40,16 @@ namespace Identity.API.Controllers
         }
 
         [JwtAuthorize("Admin")]
-        [HttpPost("lock")]
-        public async Task<IActionResult> LockUser(LockUserCommand request)
+        [HttpPost("users/{userId}/lock")]
+        public async Task<IActionResult> LockUser([FromRoute] LockUserCommand request)
         {
             await _mediator.Send(request);
             return Ok();
         }
 
         [JwtAuthorize("Admin")]
-        [HttpPost("unlock")]
-        public async Task<IActionResult> UnlockUser(UnlockUserCommand request)
+        [HttpPost("users/{userId}/unlock")]
+        public async Task<IActionResult> UnlockUser([FromRoute] UnlockUserCommand request)
         {
             await _mediator.Send(request);
             return Ok();

@@ -40,7 +40,6 @@ namespace Offers.API.Application.Commands.UpdateActiveOffer
             RuleFor(x => x.Price)
                 .Must(price =>
                 {
-                    if (price == null) return true;
                     var validator = new OfferPriceValidator();
                     return validator.Validate(price.Value).IsValid;
                 })
