@@ -13,7 +13,6 @@
       "commandName": "Project",
       "launchUrl": "swagger",
       "dotnetRunMessages": "true",
-      "applicationUrl": "http://localhost:5000",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "DevelopmentLocal"
       }
@@ -21,11 +20,7 @@
     "Docker": {
       "commandName": "Docker",
       "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/swagger",
-      "publishAllPorts": true,
-      "useSSL": true
-    },
-    "DockerComposeTest": {
-      "commandName": "Docker"
+      "publishAllPorts": true
     }
   }
 }

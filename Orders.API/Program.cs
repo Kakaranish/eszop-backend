@@ -37,7 +37,7 @@ namespace Orders.API
                         builderContext.Configuration.GetSection("ListeningPorts").Bind(listeningPorts);
 
                         options.ListenAnyIP(listeningPorts.Api, o => o.Protocols = HttpProtocols.Http1);
-                        options.ListenLocalhost(listeningPorts.Grpc, o => o.Protocols = HttpProtocols.Http2);
+                        options.ListenAnyIP(listeningPorts.Grpc, o => o.Protocols = HttpProtocols.Http2);
                     });
                 });
     }

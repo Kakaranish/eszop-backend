@@ -16,12 +16,10 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "DevelopmentLocal"
       },
-      "dotnetRunMessages": "true",
-      "applicationUrl": "http://localhost:9000"
+      "dotnetRunMessages": "true"
     },
     "Docker": {
       "commandName": "Docker",
-      "launchBrowser": true,
       "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/swagger",
       "publishAllPorts": true
     }

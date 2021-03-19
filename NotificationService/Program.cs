@@ -32,7 +32,7 @@ namespace NotificationService
                         var listeningPorts = new ListeningPortsConfig();
                         builderContext.Configuration.GetSection("ListeningPorts").Bind(listeningPorts);
 
-                        options.ListenLocalhost(listeningPorts.Api, o => o.Protocols = HttpProtocols.Http1);
+                        options.ListenAnyIP(listeningPorts.Api, o => o.Protocols = HttpProtocols.Http1);
                     });
                 });
     }
