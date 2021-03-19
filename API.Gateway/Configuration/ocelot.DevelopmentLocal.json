@@ -1,18 +1,6 @@
 {
   "Routes": [
     {
-      "UpstreamPathTemplate": "/offers-api/healthcheck",
-      "UpstreamHttpMethod": [ "Post" ],
-      "DownstreamPathTemplate": "/healthcheck",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 5000
-        }
-      ]
-    },
-    {
       "UpstreamPathTemplate": "/offers-api/{everything}",
       "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete" ],
       "DownstreamPathTemplate": "/api/{everything}",
@@ -24,18 +12,6 @@
         }
       ],
       "SwaggerKey": "offers"
-    },
-    {
-      "UpstreamPathTemplate": "/identity-api/healthcheck",
-      "UpstreamHttpMethod": [ "Post" ],
-      "DownstreamPathTemplate": "/healthcheck",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 6000
-        }
-      ]
     },
     {
       "UpstreamPathTemplate": "/identity-api/{everything}",
@@ -51,18 +27,6 @@
       "SwaggerKey": "identity"
     },
     {
-      "UpstreamPathTemplate": "/carts-api/healthcheck",
-      "UpstreamHttpMethod": [ "Post" ],
-      "DownstreamPathTemplate": "/healthcheck",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 7000
-        }
-      ]
-    },
-    {
       "UpstreamPathTemplate": "/carts-api/{everything}",
       "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete" ],
       "DownstreamPathTemplate": "/api/{everything}",
@@ -76,18 +40,6 @@
       "SwaggerKey": "carts"
     },
     {
-      "UpstreamPathTemplate": "/orders-api/healthcheck",
-      "UpstreamHttpMethod": [ "Post" ],
-      "DownstreamPathTemplate": "/healthcheck",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 8000
-        }
-      ]
-    },
-    {
       "UpstreamPathTemplate": "/orders-api/{everything}",
       "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete" ],
       "DownstreamPathTemplate": "/api/{everything}",
@@ -99,6 +51,54 @@
         }
       ],
       "SwaggerKey": "orders"
+    },
+    {
+      "UpstreamPathTemplate": "/offers-api/healthcheck",
+      "UpstreamHttpMethod": [ "Post" ],
+      "DownstreamPathTemplate": "/healthcheck",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5000
+        }
+      ]
+    },
+    {
+      "UpstreamPathTemplate": "/identity-api/healthcheck",
+      "UpstreamHttpMethod": [ "Post" ],
+      "DownstreamPathTemplate": "/healthcheck",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 6000
+        }
+      ]
+    },
+    {
+      "UpstreamPathTemplate": "/carts-api/healthcheck",
+      "UpstreamHttpMethod": [ "Post" ],
+      "DownstreamPathTemplate": "/healthcheck",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7000
+        }
+      ]
+    },
+    {
+      "UpstreamPathTemplate": "/orders-api/healthcheck",
+      "UpstreamHttpMethod": [ "Post" ],
+      "DownstreamPathTemplate": "/healthcheck",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 8000
+        }
+      ]
     },
     {
       "UpstreamPathTemplate": "/{catchAll}",
