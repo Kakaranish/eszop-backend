@@ -1,5 +1,8 @@
 using Common.Logging;
+using Common.Types;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using System;
@@ -28,6 +31,13 @@ namespace Carts.API
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
+                    webBuilder.ConfigureKestrel((builderContext, options) =>
+                    {
+                        var listeningPorts = new ListeningPortsConfig();
+                        builderContext.Configuration.GetSection("ListeningPorts").Bind(listeningPorts);
+
+                        options.ListenLocalhost(listeningPorts.Api, o => o.Protocols = HttpProtocols.Http1);
+                    });
                 });
     }
 }
