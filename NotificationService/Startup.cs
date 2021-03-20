@@ -48,7 +48,8 @@ namespace NotificationService
                         .UseSqlServer(connectionString)
                         .UseLoggerFactory(LoggerFactory.Create(loggingBuilder => loggingBuilder.AddDebug()));
                 },
-                ServiceLifetime.Transient
+                contextLifetime: ServiceLifetime.Transient, 
+                optionsLifetime: ServiceLifetime.Transient
             );
             services.AddHealthChecks()
                 .AddCheck(
