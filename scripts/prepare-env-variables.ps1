@@ -1,0 +1,1 @@
+$env:ESZOP_LOGS_DIR='/logs'

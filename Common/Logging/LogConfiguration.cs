@@ -21,8 +21,16 @@ namespace Common.Logging
                 .Build();
 
             var logsDir = configuration.GetValue<string>("LogsDir");
+            if (string.IsNullOrWhiteSpace(logsDir)) logsDir = Environment.GetEnvironmentVariable("ESZOP_LOGS_DIR");
+            if (string.IsNullOrWhiteSpace(logsDir)) Directory.GetCurrentDirectory();
+
             var logPath = GetLogPath(logsDir);
 
+            ConfigureLogger(logPath);
+        }
+
+        private static void ConfigureLogger(string logPath)
+        {
             Log.Logger = new LoggerConfiguration()
                 .Enrich.WithMachineName()
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)

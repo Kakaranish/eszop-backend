@@ -17,11 +17,6 @@
         "ASPNETCORE_ENVIRONMENT": "DevelopmentLocal"
       },
       "dotnetRunMessages": "true"
-    },
-    "Docker": {
-      "commandName": "Docker",
-      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/swagger",
-      "publishAllPorts": true
     }
   }
 }
