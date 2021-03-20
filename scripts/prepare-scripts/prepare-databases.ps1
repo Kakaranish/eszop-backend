@@ -1,11 +1,9 @@
-[CmdletBinding()]
-param (
-    [string] $ConfigEnv = "DevelopmentLocal"
-)
+$default_environment = "Development"
+$environment = $env:ASPNETCORE_ENVIRONMENT
+if(-not($environment)) {
+    $environment = $default_environment
+}
 
-$previous_env = $env:ASPNETCORE_ENVIRONMENT
-
-$env:ASPNETCORE_ENVIRONMENT=$ConfigEnv
 $env:ESZOP_DB_SEED=$true
 $lookup_dirs = @(
     "$PSScriptRoot\..\..\Carts.API",
@@ -22,4 +20,3 @@ foreach ($dir in $lookup_dirs) {
 }
 
 $env:ESZOP_DB_SEED=$false
-$env:ASPNETCORE_ENVIRONMENT=$previous_env

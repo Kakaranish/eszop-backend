@@ -30,6 +30,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Update="appsettings.Staging.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Update="appsettings.DevelopmentLocal.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
