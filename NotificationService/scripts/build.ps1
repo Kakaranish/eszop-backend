@@ -1,0 +1,1 @@
+docker build -f $PSScriptRoot/../Dockerfile -t eszop-notification-service $PSScriptRoot/../..
