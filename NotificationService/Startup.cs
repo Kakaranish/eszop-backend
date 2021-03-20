@@ -3,6 +3,7 @@ using Common.EventBus;
 using Common.EventBus.IntegrationEvents;
 using Common.Extensions;
 using Common.HealthCheck;
+using Common.Helpers;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -48,7 +49,7 @@ namespace NotificationService
                         .UseSqlServer(connectionString)
                         .UseLoggerFactory(LoggerFactory.Create(loggingBuilder => loggingBuilder.AddDebug()));
                 },
-                contextLifetime: ServiceLifetime.Transient, 
+                contextLifetime: ServiceLifetime.Transient,
                 optionsLifetime: ServiceLifetime.Transient
             );
             services.AddHealthChecks()
@@ -70,7 +71,10 @@ namespace NotificationService
             services.AddSingleton<INotificationCache, NotificationCache>();
             services.AddTransient<INotificationRepository, NotificationRepository>();
 
-            services.AddRabbitMqEventBus();
+            if (!EnvironmentHelpers.IsSeedingDatabase())
+            {
+                services.AddRabbitMqEventBus();
+            }
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

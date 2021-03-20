@@ -6,6 +6,7 @@ using Common.Extensions;
 using Common.Grpc;
 using Common.Grpc.Services.OrdersService;
 using Common.HealthCheck;
+using Common.Helpers;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
@@ -29,7 +30,6 @@ using Offers.API.Services;
 using ProtoBuf.Grpc.Server;
 using Serilog;
 using System.Globalization;
-using System.Linq;
 
 namespace Offers.API
 {
@@ -102,11 +102,14 @@ namespace Offers.API
 
             services.AddScoped<IGrpcServiceClientFactory<IOrdersService>, GrpcServiceClientFactory<IOrdersService>>();
 
-            services
+            if (!EnvironmentHelpers.IsSeedingDatabase())
+            {
+                services
                 .AddRabbitMqEventBus()
                 .Subscribe<OrderStartedIntegrationEvent, OrderStartedIntegrationEventHandler>()
                 .Subscribe<OrderCancelledIntegrationEvent, OrderCancelledIntegrationEventHandler>()
                 .Subscribe<UserLockedIntegrationEvent, UserLockedIntegrationEventHandler>();
+            }
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

@@ -7,6 +7,7 @@ using Common.Grpc;
 using Common.Grpc.Services.IdentityService;
 using Common.Grpc.Services.OffersService;
 using Common.HealthCheck;
+using Common.Helpers;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
@@ -78,8 +79,11 @@ namespace Orders.API
 
             services.AddExceptionHandling<OrdersDomainException>();
 
-            services.AddRabbitMqEventBus()
-                .Subscribe<OfferBecameUnavailableIntegrationEvent, OfferBecameUnavailableIntegrationEventHandler>();
+            if (!EnvironmentHelpers.IsSeedingDatabase())
+            {
+                services.AddRabbitMqEventBus()
+                    .Subscribe<OfferBecameUnavailableIntegrationEvent, OfferBecameUnavailableIntegrationEventHandler>();
+            }
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

@@ -3,6 +3,7 @@ using Common.ErrorHandling;
 using Common.EventBus;
 using Common.Extensions;
 using Common.HealthCheck;
+using Common.Helpers;
 using FluentValidation;
 using Identity.API.DataAccess;
 using Identity.API.Domain;
@@ -77,7 +78,10 @@ namespace Identity.API
 
             services.AddInternalServices();
 
-            services.AddRabbitMqEventBus();
+            if(!EnvironmentHelpers.IsSeedingDatabase())
+            {
+                services.AddRabbitMqEventBus();
+            }
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

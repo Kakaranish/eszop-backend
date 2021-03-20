@@ -11,6 +11,7 @@ using Common.Grpc;
 using Common.Grpc.Services.OffersService;
 using Common.Grpc.Services.OrdersService;
 using Common.HealthCheck;
+using Common.Helpers;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
@@ -77,10 +78,13 @@ namespace Carts.API
 
             services.AddExceptionHandling<CartsDomainException>();
 
-            services
-                .AddRabbitMqEventBus()
-                .Subscribe<ActiveOfferChangedIntegrationEvent, ActiveOfferChangedIntegrationEventHandler>()
-                .Subscribe<OfferBecameUnavailableIntegrationEvent, OfferBecameUnavailableIntegrationEventHandler>();
+            if(!EnvironmentHelpers.IsSeedingDatabase())
+            {
+                services
+                    .AddRabbitMqEventBus()
+                    .Subscribe<ActiveOfferChangedIntegrationEvent, ActiveOfferChangedIntegrationEventHandler>()
+                    .Subscribe<OfferBecameUnavailableIntegrationEvent, OfferBecameUnavailableIntegrationEventHandler>();
+            }
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
