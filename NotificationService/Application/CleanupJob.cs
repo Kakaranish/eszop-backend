@@ -1,5 +1,6 @@
 ﻿using CronScheduler.Extensions.Scheduler;
 using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using NotificationService.Application.Commands.RefreshCacheAndSeedUsers;
@@ -14,26 +15,29 @@ namespace NotificationService.Application
     public class CleanupJob : IScheduledJob
     {
         private readonly ILogger<CleanupJob> _logger;
-        private readonly INotificationRepository _notificationRepository;
         private readonly NotificationSettings _notificationSettings;
         private readonly IMediator _mediator;
+        private readonly IServiceProvider _serviceProvider;
         public string Name => nameof(CleanupJob);
 
-        public CleanupJob(ILogger<CleanupJob> logger, INotificationRepository notificationRepository,
-            IOptions<NotificationSettings> options, IMediator mediator)
+        public CleanupJob(ILogger<CleanupJob> logger, IOptions<NotificationSettings> options,
+            IMediator mediator, IServiceProvider serviceProvider)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _notificationRepository = notificationRepository ?? throw new ArgumentNullException(nameof(notificationRepository));
             _notificationSettings = options.Value ?? throw new ArgumentNullException(nameof(options.Value));
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+            _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
         }
 
         public async Task ExecuteAsync(CancellationToken cancellationToken)
         {
-            var expiration = TimeSpan.FromMinutes(_notificationSettings.ExpirationInMinutes);
-            var impactedUsers = (await _notificationRepository.RemoveAllExpired(expiration)).ToList();
+            using var scope = _serviceProvider.CreateScope();
+            var notificationRepository = scope.ServiceProvider.GetRequiredService<INotificationRepository>();
 
-            await _notificationRepository.UnitOfWork.SaveChangesAndDispatchDomainEventsAsync(cancellationToken);
+            var expiration = TimeSpan.FromMinutes(_notificationSettings.ExpirationInMinutes);
+            var impactedUsers = (await notificationRepository.RemoveAllExpired(expiration)).ToList();
+
+            await notificationRepository.UnitOfWork.SaveChangesAndDispatchDomainEventsAsync(cancellationToken);
 
             if (impactedUsers.Any())
             {

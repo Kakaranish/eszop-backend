@@ -105,7 +105,6 @@ namespace Carts.API
                 endpoints.MapControllers();
             });
 
-
             app.UseSwagger();
             app.UseSwaggerUI(options =>
             {

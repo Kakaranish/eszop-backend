@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.DependencyInjection;
 using NotificationService.Application.Domain;
 using NotificationService.DataAccess.Repositories;
 using System;
@@ -9,26 +10,29 @@ namespace NotificationService.Application.Services
 {
     public class NotificationCache : INotificationCache
     {
+        private readonly IServiceProvider _serviceProvider;
         public static readonly TimeSpan CacheExpiration = TimeSpan.FromMinutes(60);
 
         private static readonly MemoryCacheEntryOptions CacheEntryOptions = new MemoryCacheEntryOptions()
             .SetPriority(CacheItemPriority.High)
             .SetSlidingExpiration(CacheExpiration);
 
-        private readonly INotificationRepository _notificationRepository;
         private readonly MemoryCache _cache = new(new MemoryCacheOptions());
 
-        public NotificationCache(INotificationRepository notificationRepository)
+        public NotificationCache(IServiceProvider serviceProvider)
         {
-            _notificationRepository = notificationRepository ?? throw new ArgumentNullException(nameof(notificationRepository));
+            _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
         }
 
         public async Task<IList<Notification>> Get(Guid userId)
         {
             if (!_cache.TryGetValue(userId, out IList<Notification> notificationsResult))
             {
+                using var scope = _serviceProvider.CreateScope();
+                var notificationRepository = scope.ServiceProvider.GetRequiredService<INotificationRepository>();
+
                 const int notificationsNum = 50;
-                var notifications = await _notificationRepository.GetByUserId(userId, notificationsNum);
+                var notifications = await notificationRepository.GetByUserId(userId, notificationsNum);
 
                 _cache.Set(userId, notifications, CacheEntryOptions);
 

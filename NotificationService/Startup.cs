@@ -69,7 +69,6 @@ namespace NotificationService
             services.AddSingleton<INotificationCache, NotificationCache>();
             services.AddTransient<INotificationRepository, NotificationRepository>();
 
-            services.AddScoped<NotificationIntegrationEventHandler>();
             services.AddRabbitMqEventBus();
         }
 
