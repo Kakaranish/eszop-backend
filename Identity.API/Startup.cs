@@ -80,7 +80,7 @@ namespace Identity.API
 
             if(!EnvironmentHelpers.IsSeedingDatabase())
             {
-                services.AddRabbitMqEventBus();
+                services.AddEventBus();
             }
         }
 

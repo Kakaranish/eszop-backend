@@ -73,7 +73,7 @@ namespace NotificationService
 
             if (!EnvironmentHelpers.IsSeedingDatabase())
             {
-                services.AddRabbitMqEventBus();
+                services.AddEventBus();
             }
         }
 

@@ -105,10 +105,10 @@ namespace Offers.API
             if (!EnvironmentHelpers.IsSeedingDatabase())
             {
                 services
-                .AddRabbitMqEventBus()
-                .Subscribe<OrderStartedIntegrationEvent, OrderStartedIntegrationEventHandler>()
-                .Subscribe<OrderCancelledIntegrationEvent, OrderCancelledIntegrationEventHandler>()
-                .Subscribe<UserLockedIntegrationEvent, UserLockedIntegrationEventHandler>();
+                    .AddEventBus()
+                    .Subscribe<OrderStartedIntegrationEvent, OrderStartedIntegrationEventHandler>()
+                    .Subscribe<OrderCancelledIntegrationEvent, OrderCancelledIntegrationEventHandler>()
+                    .Subscribe<UserLockedIntegrationEvent, UserLockedIntegrationEventHandler>();
             }
         }
 

@@ -81,7 +81,7 @@ namespace Orders.API
 
             if (!EnvironmentHelpers.IsSeedingDatabase())
             {
-                services.AddRabbitMqEventBus()
+                services.AddEventBus()
                     .Subscribe<OfferBecameUnavailableIntegrationEvent, OfferBecameUnavailableIntegrationEventHandler>();
             }
         }

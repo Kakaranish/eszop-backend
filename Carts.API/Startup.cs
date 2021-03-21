@@ -81,7 +81,7 @@ namespace Carts.API
             if(!EnvironmentHelpers.IsSeedingDatabase())
             {
                 services
-                    .AddRabbitMqEventBus()
+                    .AddEventBus()
                     .Subscribe<ActiveOfferChangedIntegrationEvent, ActiveOfferChangedIntegrationEventHandler>()
                     .Subscribe<OfferBecameUnavailableIntegrationEvent, OfferBecameUnavailableIntegrationEventHandler>();
             }

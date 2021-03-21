@@ -2,16 +2,16 @@
 
 namespace Common.EventBus
 {
-    public class RabbitMqEventBusBuilder
+    public class EventBusBuilder
     {
         private readonly IEventBus _eventBus;
 
-        public RabbitMqEventBusBuilder(IEventBus eventBus)
+        public EventBusBuilder(IEventBus eventBus)
         {
             _eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
         }
 
-        public RabbitMqEventBusBuilder Subscribe<TIntegrationEvent, TIntegrationEventHandler>()
+        public EventBusBuilder Subscribe<TIntegrationEvent, TIntegrationEventHandler>()
             where TIntegrationEvent : IntegrationEvent
             where TIntegrationEventHandler : IntegrationEventHandler<TIntegrationEvent>
         {
