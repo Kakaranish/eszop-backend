@@ -1,10 +1,10 @@
 ﻿using Common.Logging;
 using Microsoft.Azure.ServiceBus;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -18,6 +18,7 @@ namespace Common.EventBus
         private readonly IServiceProvider _serviceProvider;
         private readonly SubscriptionClient _subscriptionClient;
         private readonly TopicClient _topicClient;
+        private readonly ISet<string> _subscribedEvents = new HashSet<string>();
 
         public AzureEventBus(ILogger<AzureEventBus> logger, IOptions<AzureEventBusConfig> options, IServiceProvider serviceProvider)
         {
@@ -29,7 +30,12 @@ namespace Common.EventBus
             _subscriptionClient = new SubscriptionClient(eventBusConfig.ConnectionString, eventBusConfig.TopicName,
                 eventBusConfig.SubscriptionName);
 
-            _subscriptionClient.RegisterMessageHandler(ProcessEvent, ExceptionReceivedHandler);
+            var messageHandlerOptions = new MessageHandlerOptions(ExceptionReceivedHandler)
+            {
+                MaxConcurrentCalls = 5,
+                AutoComplete = false
+            };
+            _subscriptionClient.RegisterMessageHandler(ProcessEvent, messageHandlerOptions);
         }
 
         public async Task SubscribeAsync<TEvent, TEventHandler>()
@@ -39,27 +45,30 @@ namespace Common.EventBus
             try
             {
                 var eventTypeName = typeof(TEvent).Name;
+                if (!_subscribedEvents.Add(eventTypeName))
+                {
+                    _logger.LogWarning($"Event {eventTypeName} is already subscribed");
+                    return;
+                }
+
                 await _subscriptionClient.AddRuleAsync(new RuleDescription
                 {
                     Filter = new CorrelationFilter { Label = eventTypeName },
                     Name = eventTypeName
                 });
-                _logger.LogInformation($"Added subscription rule for {nameof(TEvent)}");
+                _logger.LogInformation($"Created service bus subscription rule for {typeof(TEvent).Name}");
             }
-            catch (ServiceBusException e)
-            {
-                _logger.LogWarning(e.Message);
-            }
+            catch (ServiceBusException) { }
         }
 
         public async Task PublishAsync<TEvent>(TEvent integrationEvent) where TEvent : IntegrationEvent
         {
             if (_topicClient.IsClosedOrClosing)
             {
-                _logger.LogError($"Cannot publish event - service bus topic client is closed or closing");
+                _logger.LogError("Cannot publish event - service bus topic client is closed or closing");
                 return;
             }
-            
+
             var eventStr = JsonConvert.SerializeObject(integrationEvent);
             var eventBytes = Encoding.UTF8.GetBytes(eventStr);
             var message = new Message
@@ -67,7 +76,7 @@ namespace Common.EventBus
                 Body = eventBytes,
                 Label = typeof(TEvent).Name
             };
-            
+
             await _topicClient.SendAsync(message);
         }
 
@@ -76,26 +85,31 @@ namespace Common.EventBus
             var eventTypeName = message.Label;
             var eventType = typeof(AzureEventBus).Assembly.GetTypes().FirstOrDefault(x => x.Name == eventTypeName);
 
-            var integrationEventStr = Encoding.UTF8.GetString(message.Body);
-            var integrationEvent = JsonConvert.DeserializeObject(integrationEventStr, eventType);
-
             var eventHandlerType = typeof(IntegrationEventHandler<>).MakeGenericType(eventType);
-            using var scope = _serviceProvider.CreateScope();
-            var handler = scope.ServiceProvider.GetService(eventHandlerType);
-            if (handler == null)
+            var handler = _serviceProvider.GetService(eventHandlerType);
+
+            if (!_subscribedEvents.Contains(eventTypeName) || handler == null)
             {
                 _logger.LogWithProps(LogLevel.Critical,
-                    $"Unable to process {nameof(eventTypeName)} because there is no corresponding handler");
+                    $"Unable to process {eventTypeName} because there is no corresponding handler");
+                return;
             }
+
+            var integrationEventStr = Encoding.UTF8.GetString(message.Body);
+            var integrationEvent = JsonConvert.DeserializeObject(integrationEventStr, eventType);
 
             const string methodName = nameof(IntegrationEventHandler<IntegrationEvent>.Handle);
             var method = eventHandlerType.GetMethod(methodName);
             await (Task)method.Invoke(handler, new[] { integrationEvent });
+
+            await _subscriptionClient.CompleteAsync(message.SystemProperties.LockToken);
         }
 
-        private async Task ExceptionReceivedHandler(ExceptionReceivedEventArgs arg)
+        private Task ExceptionReceivedHandler(ExceptionReceivedEventArgs arg)
         {
-            // Noop
+            _logger.LogError(arg.Exception, "Error while handling integration event");
+
+            return Task.CompletedTask;
         }
     }
 }

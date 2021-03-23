@@ -78,12 +78,9 @@ namespace Carts.API
 
             services.AddExceptionHandling<CartsDomainException>();
 
-            if(!EnvironmentHelpers.IsSeedingDatabase())
+            if (!EnvironmentHelpers.IsSeedingDatabase())
             {
-                services
-                    .AddEventBus()
-                    .Subscribe<ActiveOfferChangedIntegrationEvent, ActiveOfferChangedIntegrationEventHandler>()
-                    .Subscribe<OfferBecameUnavailableIntegrationEvent, OfferBecameUnavailableIntegrationEventHandler>();
+                services.AddEventBus();
             }
         }
 
@@ -113,6 +110,12 @@ namespace Carts.API
             app.UseSwaggerUI(options =>
             {
                 options.SwaggerEndpoint("/swagger/v1/swagger.json", "Carts.API v1");
+            });
+
+            app.UseEventHandling(async eventBus =>
+            {
+                await eventBus.SubscribeAsync<ActiveOfferChangedIntegrationEvent, ActiveOfferChangedIntegrationEventHandler>();
+                await eventBus.SubscribeAsync<OfferBecameUnavailableIntegrationEvent, OfferBecameUnavailableIntegrationEventHandler>();
             });
         }
     }

@@ -22,7 +22,7 @@ namespace Common.EventBus
         {
             _busClient.SubscribeAsync<TEvent>(async (@event, _) =>
             {
-                var handler = ActivatorUtilities.CreateInstance<TEventHandler>(_provider);
+                var handler = _provider.GetRequiredService<IntegrationEventHandler<TEvent>>();
                 await handler.Handle(@event);
             });
 

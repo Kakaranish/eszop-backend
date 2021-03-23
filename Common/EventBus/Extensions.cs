@@ -2,44 +2,36 @@
 using Microsoft.Extensions.DependencyInjection;
 using RawRabbit;
 using RawRabbit.Configuration;
-using RawRabbit.Logging;
 using RawRabbit.vNext;
-using System;
 using System.Linq;
 using System.Reflection;
+using ILoggerFactory = RawRabbit.Logging.ILoggerFactory;
 
 namespace Common.EventBus
 {
     public static class Extensions
     {
-        public static EventBusBuilder AddEventBus(this IServiceCollection services)
+        public static void AddEventBus(this IServiceCollection services)
         {
-            RegisterIntegrationEventHandlers(services);
+            services.RegisterIntegrationEventHandlers(Assembly.GetEntryAssembly());
 
-            return UseAzureEventBus(services)
-                ? services.AddAzureEventBus()
-                : services.AddRabbitMqEventBus();
+            if (UseAzureEventBus(services)) services.AddAzureEventBus();
+            else services.AddRabbitMqEventBus();
         }
 
-        public static EventBusBuilder AddAzureEventBus(this IServiceCollection services)
+        public static IServiceCollection AddAzureEventBus(this IServiceCollection services)
         {
             var serviceProvider = services.BuildServiceProvider();
             var configuration = serviceProvider.GetRequiredService<IConfiguration>();
             services.Configure<AzureEventBusConfig>(configuration.GetSection("EventBus:AzureEventBus"));
 
             services.AddSingleton<IEventBus, AzureEventBus>();
-
-            serviceProvider = services.BuildServiceProvider();
-            var eventBus = serviceProvider.GetRequiredService<IEventBus>();
-
-            return new EventBusBuilder(eventBus);
+            return services;
         }
 
-        public static EventBusBuilder AddRabbitMqEventBus(this IServiceCollection services)
+        public static IServiceCollection AddRabbitMqEventBus(this IServiceCollection services)
         {
             var serviceProvider = services.BuildServiceProvider();
-
-            services.AddSingleton<IServiceProvider>();
 
             var rabbitMqConfig = new RawRabbitConfiguration();
             rabbitMqConfig.Hostnames.Clear();
@@ -56,15 +48,11 @@ namespace Common.EventBus
             services.AddSingleton<IBusClient>(busClient);
             services.AddSingleton<IEventBus, RabbitMqEventBus>();
 
-            serviceProvider = services.BuildServiceProvider();
-            var eventBus = serviceProvider.GetRequiredService<IEventBus>();
-
-            return new EventBusBuilder(eventBus);
+            return services;
         }
 
-        private static void RegisterIntegrationEventHandlers(IServiceCollection services)
+        public static IServiceCollection RegisterIntegrationEventHandlers(this IServiceCollection services, Assembly assembly)
         {
-            var assembly = Assembly.GetEntryAssembly();
             var implementingTypes = assembly.GetTypes().Where(t =>
                 t.IsClass &&
                 !t.IsAbstract &&
@@ -79,6 +67,8 @@ namespace Common.EventBus
                 var handlerType = typeof(IntegrationEventHandler<>).MakeGenericType(integrationEventType);
                 services.AddScoped(handlerType, implementingType);
             }
+
+            return services;
         }
 
         private static bool UseAzureEventBus(IServiceCollection services)
