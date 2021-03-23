@@ -4,10 +4,7 @@ param(
 )
 
 # ---  CONFIGURATION  ----------------------------------------------------------
-
 $default_connection_string = "ANYTHING"
-$bus_topic = "eszop-event-bus-topic"
-$bus_sub = "eszop-event-bus-sub"
 
 # ------------------------------------------------------------------------------
 
@@ -39,14 +36,6 @@ if ($choice -ne "y") {
     exit
 }
 
-$event_bus_section = @"
-{
-    "ConnectionString": "$ConnectionString",
-    "TopicName": "$bus_topic",
-    "SubscriptionName": "$bus_sub"
-}
-"@
-
 foreach ($appsettings_file in $appsettings_files) {
     if (-not(Test-Path $appsettings_file)) {
         Write-Warning "[SKIP] File $appsettings_file does not exist"
@@ -54,8 +43,10 @@ foreach ($appsettings_file in $appsettings_files) {
     }
 
     $app_settings_json = Get-Content -Path $appsettings_file | ConvertFrom-Json
-    $app_settings_json.EventBus | Add-Member -Name "AzureEventBus" -MemberType NoteProperty -Value (ConvertFrom-Json $event_bus_section) -Force
+
+    $app_settings_json.EventBus.AzureEventBus | Add-Member -Name "ConnectionString" -MemberType NoteProperty -Value $ConnectionString -Force
     $app_settings_json.EventBus | Add-Member -Name "UseAzureEventBus" -MemberType NoteProperty -Value $UseAzureEventBus.IsPresent -Force
+    
     $app_settings_json | ConvertTo-Json -Depth 9 | Set-Content $appsettings_file
 }
 
