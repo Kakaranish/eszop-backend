@@ -104,11 +104,7 @@ namespace Offers.API
 
             if (!EnvironmentHelpers.IsSeedingDatabase())
             {
-                services
-                    .AddEventBus()
-                    .Subscribe<OrderStartedIntegrationEvent, OrderStartedIntegrationEventHandler>()
-                    .Subscribe<OrderCancelledIntegrationEvent, OrderCancelledIntegrationEventHandler>()
-                    .Subscribe<UserLockedIntegrationEvent, UserLockedIntegrationEventHandler>();
+                services.AddEventBus();
             }
         }
 
@@ -141,6 +137,13 @@ namespace Offers.API
             app.UseSwaggerUI(options =>
             {
                 options.SwaggerEndpoint("/swagger/v1/swagger.json", "Offers.API v1");
+            });
+
+            app.UseEventHandling(async bus =>
+            {
+                await bus.SubscribeAsync<OrderStartedIntegrationEvent, OrderStartedIntegrationEventHandler>();
+                await bus.SubscribeAsync<OrderCancelledIntegrationEvent, OrderCancelledIntegrationEventHandler>();
+                await bus.SubscribeAsync<UserLockedIntegrationEvent, UserLockedIntegrationEventHandler>();
             });
         }
     }

@@ -81,8 +81,7 @@ namespace Orders.API
 
             if (!EnvironmentHelpers.IsSeedingDatabase())
             {
-                services.AddEventBus()
-                    .Subscribe<OfferBecameUnavailableIntegrationEvent, OfferBecameUnavailableIntegrationEventHandler>();
+                services.AddEventBus();
             }
         }
 
@@ -113,6 +112,11 @@ namespace Orders.API
             app.UseSwaggerUI(options =>
             {
                 options.SwaggerEndpoint("/swagger/v1/swagger.json", "Orders.API v1");
+            });
+
+            app.UseEventHandling(async bus =>
+            {
+                await bus.SubscribeAsync<OfferBecameUnavailableIntegrationEvent, OfferBecameUnavailableIntegrationEventHandler>();
             });
         }
     }

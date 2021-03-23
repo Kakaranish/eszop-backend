@@ -8,6 +8,5 @@ namespace NotificationService.Application.Hubs
     {
         Task SeedNotifications(IEnumerable<NotificationDto> notifications);
         Task ReceiveNotification(NotificationDto notification);
-        Task ClearNotifications();
     }
 }

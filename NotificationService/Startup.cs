@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Common.Authentication;
 using Common.EventBus;
 using Common.EventBus.IntegrationEvents;
@@ -34,7 +35,8 @@ namespace NotificationService
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddSignalR();
+            services.AddSignalR().AddJsonProtocol(options => 
+                options.PayloadSerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase);
             services.AddJwtAuthentication();
             services.AddHttpContextAccessor();
 
@@ -73,6 +75,7 @@ namespace NotificationService
 
             if (!EnvironmentHelpers.IsSeedingDatabase())
             {
+                services.Configure<AzureEventBusConfig>(Configuration.GetSection("EventBus:AzureEventBus"));
                 services.AddEventBus();
             }
         }
@@ -98,13 +101,10 @@ namespace NotificationService
                 endpoints.MapHub<NotificationHub>("/hubs/notification");
             });
 
-            SubscribeDirectly(app);
-        }
-
-        private static void SubscribeDirectly(IApplicationBuilder app)
-        {
-            var eventBus = app.ApplicationServices.GetRequiredService<IEventBus>();
-            eventBus.SubscribeAsync<NotificationIntegrationEvent, NotificationIntegrationEventHandler>();
+            app.UseEventHandling(async bus =>
+            {
+                await bus.SubscribeAsync<NotificationIntegrationEvent, NotificationIntegrationEventHandler>();
+            });
         }
     }
 }
