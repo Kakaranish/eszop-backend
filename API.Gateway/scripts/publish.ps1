@@ -1,0 +1,1 @@
+docker push eszopregistry.azurecr.io/eszop-api-gateway
