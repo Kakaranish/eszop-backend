@@ -1,1 +1,1 @@
-docker build -f $PSScriptRoot/../Dockerfile -t eszop-carts-api $PSScriptRoot/../..
+docker build -f $PSScriptRoot/../Dockerfile -t eszopregistry.azurecr.io/eszop-carts-api $PSScriptRoot/../..

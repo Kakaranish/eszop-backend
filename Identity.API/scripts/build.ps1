@@ -1,1 +1,1 @@
-docker build -f $PSScriptRoot/../Dockerfile -t eszop-identity-api $PSScriptRoot/../..
+docker build -f $PSScriptRoot/../Dockerfile -t eszopregistry.azurecr.io/eszop-identity-api $PSScriptRoot/../..

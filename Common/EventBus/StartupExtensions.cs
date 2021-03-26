@@ -9,7 +9,7 @@ using ILoggerFactory = RawRabbit.Logging.ILoggerFactory;
 
 namespace Common.EventBus
 {
-    public static class Extensions
+    public static class StartupExtensions
     {
         public static void AddEventBus(this IServiceCollection services)
         {

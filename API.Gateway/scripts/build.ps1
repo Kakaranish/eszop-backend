@@ -1,1 +1,1 @@
-docker build -f $PSScriptRoot/../Dockerfile -t eszop-api-gateway $PSScriptRoot/../..
+docker build -f $PSScriptRoot/../Dockerfile -t eszopregistry.azurecr.io/eszop-api-gateway $PSScriptRoot/../..
