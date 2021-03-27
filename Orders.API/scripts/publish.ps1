@@ -1,1 +1,5 @@
-docker push eszopregistry.azurecr.io/eszop-orders-api
+param(
+    [string] $ImageTag = "latest"
+)
+
+docker push "eszopregistry.azurecr.io/eszop-orders-api:$ImageTag"

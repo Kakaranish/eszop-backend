@@ -1,3 +1,7 @@
+param(
+    [string] $ImageTag = "latest"
+)
+
 $environment = $env:ASPNETCORE_ENVIRONMENT
 if (-not($environment)) {
     $environment = "Development"
@@ -18,4 +22,4 @@ docker run `
     -v "$pwd\..\logs:/logs" `
     --network eszop-network `
     --name eszop-api-gateway `
-    eszopregistry.azurecr.io/eszop-api-gateway
+    "eszopregistry.azurecr.io/eszop-api-gateway:$ImageTag"

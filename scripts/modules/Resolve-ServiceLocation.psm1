@@ -5,6 +5,7 @@ function Resolve-ServiceLocation {
     )
 
     $services = @{
+        "gateway" = "$PSScriptRoot\..\..\API.Gateway";
         "carts" = "$PSScriptRoot\..\..\Carts.API";
         "identity" = "$PSScriptRoot\..\..\Identity.API";
         "notification" = "$PSScriptRoot\..\..\NotificationService";
