@@ -19,4 +19,4 @@ docker run `
     -v "$pwd\..\logs:/logs" `
     --network eszop-network `
     --name eszop-orders-api `
-    eszop-orders-api
+    eszopregistry.azurecr.io/eszop-orders-api

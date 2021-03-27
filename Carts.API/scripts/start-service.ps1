@@ -18,4 +18,4 @@ docker run `
     -v "$pwd\..\logs:/logs" `
     --network eszop-network `
     --name eszop-carts-api `
-    eszop-carts-api
+    eszopregistry.azurecr.io/eszop-carts-api

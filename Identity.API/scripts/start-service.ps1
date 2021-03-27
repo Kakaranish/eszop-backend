@@ -19,4 +19,4 @@ docker run `
     -v "$pwd\..\logs:/logs" `
     --network eszop-network `
     --name eszop-identity-api `
-    eszop-identity-api
+    eszopregistry.azurecr.io/eszop-identity-api

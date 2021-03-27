@@ -19,4 +19,4 @@ docker run `
     -v "$pwd\..\logs:/logs" `
     --network eszop-network `
     --name eszop-offers-api `
-    eszop-offers-api
+    eszopregistry.azurecr.io/eszop-offers-api

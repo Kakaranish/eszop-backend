@@ -18,4 +18,4 @@ docker run `
     -v "$pwd\..\logs:/logs" `
     --network eszop-network `
     --name eszop-api-gateway `
-    eszop-api-gateway
+    eszopregistry.azurecr.io/eszop-api-gateway

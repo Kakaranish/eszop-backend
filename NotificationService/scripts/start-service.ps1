@@ -18,4 +18,4 @@ docker run `
     -v "$pwd\..\logs:/logs" `
     --network eszop-network `
     --name eszop-notification-service `
-    eszop-notification-service
+    eszopregistry.azurecr.io/eszop-notification-service
