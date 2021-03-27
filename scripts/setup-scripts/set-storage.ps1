@@ -1,6 +1,8 @@
 param(
     [Parameter(Mandatory = $true)]
-    [string] $ConnectionString
+    [string] $ConnectionString,
+
+    [switch] $AutoApprove
 )
 
 Import-Module $PSScriptRoot\..\modules\Resolve-ServiceLocation.psm1 -Force
@@ -20,11 +22,13 @@ $appsettings_path = Resolve-Path -Path (Join-Path $service_location $appsettings
 
 #-------------------------------------------------------------------------------
 
-Write-Host "This file will be changed:"
-Write-Host $appsettings_path
-$choice = Read-Host "Do you want to continue (y/n)"
-if ($choice -ne "y") {
-    exit
+if (-not($AutoApprove.IsPresent)) {
+    Write-Host "This file will be changed:"
+    Write-Host $appsettings_path
+    $choice = Read-Host "Do you want to continue (y/n)"
+    if ($choice -ne "y") {
+        exit
+    }
 }
 
 if (-not(Test-Path -Path $appsettings_path)) {

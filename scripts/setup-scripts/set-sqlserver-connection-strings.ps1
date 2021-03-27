@@ -3,7 +3,9 @@ param(
     [string] $DbUsername,
 
     [Parameter(Mandatory = $true)]
-    [string] $DbPassword
+    [string] $DbPassword,
+
+    [switch] $AutoApprove
 )
 
 Import-Module $PSScriptRoot\..\modules\Resolve-EnvPrefix.psm1 -Force
@@ -27,14 +29,16 @@ $connection_string_template = "Server=tcp:eszop-{env_prefix}-{service}-sqlserver
 
 # ------------------------------------------------------------------------------
 
-Write-Host "Those files will be changed:"
-foreach ($service in $services) {
-    $service_location = Resolve-ServiceLocation -ServiceName $service
-    Write-Host (Resolve-Path -Path (Join-Path $service_location $appsettings_filename))
-}
-$choice = Read-Host "Do you want to continue (y/n)"
-if ($choice -ne "y") {
-    exit
+if (-not($AutoApprove.IsPresent)) {
+    Write-Host "Those files will be changed:"
+    foreach ($service in $services) {
+        $service_location = Resolve-ServiceLocation -ServiceName $service
+        Write-Host (Resolve-Path -Path (Join-Path $service_location $appsettings_filename))
+    }
+    $choice = Read-Host "Do you want to continue (y/n)"
+    if ($choice -ne "y") {
+        exit
+    }
 }
 
 foreach ($service in $services) {
