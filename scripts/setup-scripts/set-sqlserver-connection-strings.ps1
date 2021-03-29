@@ -25,7 +25,7 @@ if (-not($environment)) {
 $environment_prefix = Resolve-EnvPrefix -Environment $environment
 $appsettings_filename = "appsettings.$environment.json"
 
-$connection_string_template = "Server=tcp:eszop-{env_prefix}-{service}-sqlserver.database.windows.net,1433;Initial Catalog=eszop;Persist Security Info=False;User ID={db_username};Password={db_password};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
+$connection_string_template = "Server=tcp:eszop-{env_prefix}-sqlserver.database.windows.net,1433;Initial Catalog=eszop-{env_prefix}-{service_name}-db;Persist Security Info=False;User ID={db_username};Password={db_password};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
 
 # ------------------------------------------------------------------------------
 
@@ -51,7 +51,7 @@ foreach ($service in $services) {
 
     $connection_string = $connection_string_template `
         -replace "{env_prefix}", $environment_prefix `
-        -replace "{service}", $service `
+        -replace "{service_name}", $service `
         -replace "{db_username}", $DbUsername `
         -replace "{db_password}", $DbPassword
 

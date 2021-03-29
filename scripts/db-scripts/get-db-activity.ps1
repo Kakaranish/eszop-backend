@@ -1,5 +1,6 @@
 param (
     [Parameter(Mandatory = $true)]
+    [ValidateSet("offers", "identity", "carts", "orders", "notification")] 
     [string] $Service,
 
     [int] $Num = 5,
@@ -14,12 +15,12 @@ if (-not($environment)) {
     $environment = "DevelopmentLocal"
 }
 $environment_prefix = Resolve-EnvPrefix -Environment $environment
-
-$server_name = "eszop-$environment_prefix-$Service-sqlserver"
+$server_name = "eszop-$environment_prefix-sqlserver"
+$db_name = "eszop-$environment_prefix-$Service-db"
 
 $activities = (Get-AzSqlDatabaseActivity `
         -ServerName $server_name `
-        -DatabaseName "eszop" `
+        -DatabaseName $db_name `
         -ResourceGroupName "eszop-$environment_prefix") | `
     Sort-Object -Descending StartTime
 
