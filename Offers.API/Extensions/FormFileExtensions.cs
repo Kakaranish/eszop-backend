@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -18,12 +17,12 @@ namespace Offers.API.Extensions
         // https://stackoverflow.com/questions/11063900/determine-if-uploaded-file-is-image-any-format-on-mvc
         public static bool IsImage(this IFormFile file)
         {
-            var validContentTypes = new[] { "image/jpg", "image/jpeg", "image/pjpeg", 
+            var validContentTypes = new[] { "image/jpg", "image/jpeg", "image/pjpeg",
                 "image/gif", "image/x-png", "image/png" };
             if (!validContentTypes.Contains(file.ContentType.ToLower())) return false;
 
             var fileExtension = Path.GetExtension(file.FileName).ToLower();
-            var validFileExtensions = new[] {".jpg", ".png", ".gif", ".jpeg"};
+            var validFileExtensions = new[] { ".jpg", ".png", ".gif", ".jpeg" };
             if (!validFileExtensions.Contains(fileExtension)) return false;
 
             const int imageMinimumBytes = 512;
@@ -43,19 +42,6 @@ namespace Offers.API.Extensions
             catch (Exception)
             {
                 return false;
-            }
-
-            try
-            {
-                using var bitmap = new Bitmap(file.OpenReadStream());
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-            finally
-            {
-                file.OpenReadStream().Position = 0;
             }
 
             return true;

@@ -66,6 +66,7 @@ namespace Offers.API.Application.Services
                     var metadata = imagesMetadataDict[id];
 
                     var uploadedImage = await _imageStorage.UploadAsync(requestImageFile);
+                    if (uploadedImage == null) throw new OffersDomainException("Image upload failed");
                     var uploadedImageInfo = uploadedImage.ToImageInfo();
 
                     uploadedImageInfo.SetIsMain(metadata.IsMain);

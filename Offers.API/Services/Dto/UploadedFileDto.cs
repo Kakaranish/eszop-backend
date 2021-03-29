@@ -13,6 +13,7 @@ namespace Offers.API.Services.Dto
     {
         public static ImageInfo ToImageInfo(this UploadedFileDto uploadedFileDto)
         {
+            if (uploadedFileDto == null) return null;
             return new ImageInfo(uploadedFileDto.Filename, uploadedFileDto.ContainerName, uploadedFileDto.Uri);
         }
     }
