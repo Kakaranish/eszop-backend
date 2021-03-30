@@ -4,6 +4,10 @@ param(
 
 Import-Module $PSScriptRoot\modules\Resolve-ServiceLocation.psm1 -Force
 
+if(-not($env:ESZOP_AZURE_EVENTBUS_CONN_STR)) {
+    Write-Error 'Env variable ESZOP_AZURE_EVENTBUS_CONN_STR is not set' -ErrorAction Stop
+}
+
 $services = @("gateway", "carts", "identity", "notification", "offers", "orders")
 
 foreach ($service in $services) {
