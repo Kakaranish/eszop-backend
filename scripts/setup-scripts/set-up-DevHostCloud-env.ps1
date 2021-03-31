@@ -3,6 +3,7 @@ param(
 )
 
 Import-Module $PSScriptRoot\..\modules\Resolve-ServiceLocation.psm1 -Force
+Import-Module $PSScriptRoot\..\modules\Prepare-SqlConnectionString.psm1 -Force -DisableNameChecking
 
 # ---  CONFIG  -----------------------------------------------------------------
 
@@ -12,7 +13,6 @@ $ESZOP_REDIS_CONN_STR = ""
 
 $db_username = ""
 $db_password = ""
-$ESZOP_SQLSERVER_CONN_STR_template = ""
 
 $cloud_env_prefix = "staging"
 
@@ -39,16 +39,18 @@ foreach ($service in $services) {
         Write-Warning "[SKIP] File $launch_settings_path does not exist"
         continue
     }
+    
+    Write-Host "[Setting up $service]"
 
     $env_variables_to_set = @{
         "ESZOP_AZURE_STORAGE_CONN_STR"  = $ESZOP_AZURE_STORAGE_CONN_STR;
         "ESZOP_AZURE_EVENTBUS_CONN_STR" = $ESZOP_AZURE_EVENTBUS_CONN_STR;
         "ESZOP_REDIS_CONN_STR"          = $ESZOP_REDIS_CONN_STR;
-        "ESZOP_SQLSERVER_CONN_STR"      = $ESZOP_SQLSERVER_CONN_STR_template `
-            -replace "{env_prefix}", $cloud_env_prefix `
-            -replace "{service_name}", $service `
-            -replace "{db_username}", $db_username `
-            -replace "{db_password}", $db_password;
+        "ESZOP_SQLSERVER_CONN_STR"      = Prepare-SqlConnectionString `
+            -EnvironmentPrefix $cloud_env_prefix `
+            -ServiceName $service `
+            -DbUsername $db_username `
+            -DbPassword $db_password;
     }
 
     $launch_settings_json = Get-Content -Path $launch_settings_path | ConvertFrom-Json -Depth 9
@@ -61,6 +63,8 @@ foreach ($service in $services) {
             $val_to_set = $env_variables_to_set.$env_variable_to_set
             $launch_settings_json.profiles.$cloud_profile_name.environmentVariables | `
                 Add-Member -Name $env_variable_to_set -MemberType NoteProperty -Value $val_to_set -Force
+            
+            Write-Host "Updated $env_variable_to_set"
         }
     }
     $launch_settings_json | ConvertTo-Json -Depth 9 | Set-Content $launch_settings_path

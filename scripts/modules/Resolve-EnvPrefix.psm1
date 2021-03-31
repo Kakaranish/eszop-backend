@@ -4,15 +4,13 @@ function Resolve-EnvPrefix {
         [string] $Environment
     )
 
-    $env_lowercase = $Environment.ToLowerInvariant()
-
     $env_prefix_dict = @{
-        "development"      = "dev";
-        "developmentlocal" = "dev-local";
-        "staging"          = "staging"
+        "DevHostCloud"   = "dev";
+        "DevDockerCloud" = "dev";
+        "Staging"        = "staging";
     }
 
-    Write-Output $env_prefix_dict[$env_lowercase]
+    Write-Output $env_prefix_dict[$Environment]
 }
 
 Export-ModuleMember -Function Resolve-EnvPrefix
