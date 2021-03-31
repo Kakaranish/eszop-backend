@@ -1,8 +1,7 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
-using Offers.API.Services.Dto;
 
-namespace Offers.API.Services
+namespace Common.ImageStorage
 {
     public interface IBlobStorage
     {

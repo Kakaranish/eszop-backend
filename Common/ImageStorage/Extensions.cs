@@ -1,10 +1,9 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Offers.API.Services;
 
-namespace Offers.API.Extensions
+namespace Common.ImageStorage
 {
-    public static class StartupExtensions
+    public static class Extensions
     {
         public static IServiceCollection AddBlobStorage(this IServiceCollection services)
         {

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace Offers.API.Extensions
+namespace Common.ImageStorage
 {
     public static class FormFileExtensions
     {

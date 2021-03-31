@@ -1,11 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Offers.API.Extensions;
-using Offers.API.Services.Dto;
 using System;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace Offers.API.Services
+namespace Common.ImageStorage
 {
     public class ImageStorage : IImageStorage
     {

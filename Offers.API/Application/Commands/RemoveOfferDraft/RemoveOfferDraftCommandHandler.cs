@@ -1,10 +1,10 @@
 ﻿using Common.Exceptions;
 using Common.Extensions;
+using Common.ImageStorage;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Offers.API.DataAccess.Repositories;
 using Offers.API.Domain;
-using Offers.API.Services;
 using System;
 using System.Threading;
 using System.Threading.Tasks;

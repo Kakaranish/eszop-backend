@@ -1,9 +1,8 @@
-﻿using Offers.API.Services.Dto;
-using System.IO;
+﻿using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace Offers.API.Services
+namespace Common.ImageStorage
 {
     public class LocalBlobStorage : IBlobStorage
     {

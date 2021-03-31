@@ -1,9 +1,9 @@
 ﻿using Common.Extensions;
+using Common.ImageStorage;
 using Microsoft.AspNetCore.Http;
 using Offers.API.Application.Types;
 using Offers.API.Domain;
-using Offers.API.Services;
-using Offers.API.Services.Dto;
+using Offers.API.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;

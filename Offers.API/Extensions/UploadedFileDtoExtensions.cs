@@ -1,14 +1,8 @@
-﻿using Offers.API.Domain;
+﻿using Common.ImageStorage;
+using Offers.API.Domain;
 
-namespace Offers.API.Services.Dto
+namespace Offers.API.Extensions
 {
-    public class UploadedFileDto
-    {
-        public string Uri { get; init; }
-        public string Filename { get; init; }
-        public string ContainerName { get; init; }
-    }
-
     public static class UploadedFileDtoExtensions
     {
         public static ImageInfo ToImageInfo(this UploadedFileDto uploadedFileDto)
