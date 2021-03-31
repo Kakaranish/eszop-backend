@@ -14,7 +14,8 @@
       "launchUrl": "swagger",
       "dotnetRunMessages": "true",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "DevelopmentLocal"
+        "ASPNETCORE_ENVIRONMENT": "DevelopmentLocal",
+        "ESZOP_AZURE_STORAGE_CONN_STR": ""
       }
     },
     "Docker": {

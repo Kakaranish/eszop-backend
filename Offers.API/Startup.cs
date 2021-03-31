@@ -64,11 +64,10 @@ namespace Offers.API
             services.AddJwtAuthentication();
             services.AddMediatR(typeof(Startup).Assembly);
 
-            services.Configure<AzureStorageConfig>(Configuration.GetSection("AzureStorage"));
             services.AddBlobStorage();
             services.AddSingleton<IImageStorage, ImageStorage>();
 
-            var connectionString = Configuration.GetConnectionString("SqlServer");
+            var connectionString = services.GetSqlServerConnectionString();
             services.AddDbContext<AppDbContext>(builder =>
                 builder
                     .UseSqlServer(connectionString)

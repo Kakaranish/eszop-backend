@@ -1,4 +1,3 @@
-using System.Text.Json;
 using Common.Authentication;
 using Common.EventBus;
 using Common.EventBus.IntegrationEvents;
@@ -20,6 +19,7 @@ using NotificationService.Application.Services;
 using NotificationService.DataAccess;
 using NotificationService.DataAccess.Repositories;
 using Serilog;
+using System.Text.Json;
 
 namespace NotificationService
 {
@@ -35,7 +35,7 @@ namespace NotificationService
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddSignalR().AddJsonProtocol(options => 
+            services.AddSignalR().AddJsonProtocol(options =>
                 options.PayloadSerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase);
             services.AddJwtAuthentication();
             services.AddHttpContextAccessor();
@@ -44,7 +44,7 @@ namespace NotificationService
 
             services.AddMediatR(typeof(Startup).Assembly);
 
-            var connectionString = Configuration.GetConnectionString("SqlServer");
+            var connectionString = services.GetSqlServerConnectionString();
             services.AddDbContext<AppDbContext>(builder =>
                 {
                     builder

@@ -53,7 +53,7 @@ namespace Carts.API
             services.AddJwtAuthentication();
             services.AddMediatR(typeof(Startup).Assembly);
 
-            var connectionString = Configuration.GetConnectionString("SqlServer");
+            var connectionString = services.GetSqlServerConnectionString();
             services.AddDbContext<AppDbContext>(builder =>
                 builder
                     .UseSqlServer(connectionString)

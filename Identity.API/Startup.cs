@@ -6,9 +6,11 @@ using Common.HealthCheck;
 using Common.Helpers;
 using FluentValidation;
 using Identity.API.DataAccess;
+using Identity.API.DataAccess.Repositories;
 using Identity.API.Domain;
 using Identity.API.Extensions;
 using Identity.API.Grpc;
+using Identity.API.Services;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -50,16 +52,17 @@ namespace Identity.API
             services.AddJwtAuthentication();
             services.AddMediatR(typeof(Startup).Assembly);
 
-            var sqlServerConnectionString = Configuration.GetConnectionString("SqlServer");
+            var sqlServerConnectionString = services.GetSqlServerConnectionString();
             services.AddDbContext<AppDbContext>(builder =>
                 builder
                     .UseSqlServer(sqlServerConnectionString)
                     .UseLazyLoadingProxies()
                     .UseLoggerFactory(LoggerFactory.Create(loggingBuilder => loggingBuilder.AddDebug()))
             );
-            var redisConnectionString = Configuration.GetConnectionString("Redis");
-            services.AddDistributedRedisCache(options => options.Configuration = redisConnectionString);
 
+            var redisConnectionString = services.GetRedisConnectionString();
+            services.AddDistributedRedisCache(options => options.Configuration = redisConnectionString);
+            
             services.AddHealthChecks()
                 .AddCheck(
                     name: "SqlServerCheck",
@@ -76,9 +79,21 @@ namespace Identity.API
 
             services.AddExceptionHandling<IdentityDomainException>();
 
-            services.AddInternalServices();
+            services.AddSingleton<PasswordValidatorBase, PasswordValidator>();
+            services.AddSingleton<IPasswordHasher, PasswordHasher>();
 
-            if(!EnvironmentHelpers.IsSeedingDatabase())
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+
+            services.AddSingleton<IAccessTokenService, AccessTokenService>();
+            services.AddScoped<IRefreshTokenService, RefreshTokenService>();
+
+            services.AddSingleton<IAccessTokenDecoder, AccessTokenDecoder>();
+            services.AddSingleton<IRefreshTokenDecoder, RefreshTokenDecoder>();
+
+            services.AddScoped<ISellerInfoRepository, SellerInfoRepository>();
+
+            if (!EnvironmentHelpers.IsSeedingDatabase())
             {
                 services.AddEventBus();
             }

@@ -17,6 +17,21 @@ namespace Common.Extensions
             "DevelopmentLocal"
         };
 
+        public static string GetSqlServerConnectionString(this IServiceCollection services)
+        {
+            using var servicesProvider = services.BuildServiceProvider();
+            var configuration = servicesProvider.GetRequiredService<IConfiguration>();
+
+            const string connStrEnvVarName = "ESZOP_SQLSERVER_CONN_STR";
+            var connectionStr = Environment.GetEnvironmentVariable(connStrEnvVarName);
+            if (string.IsNullOrWhiteSpace(connectionStr))
+                connectionStr = configuration.GetConnectionString("SqlServer");
+            if (string.IsNullOrWhiteSpace(connectionStr))
+                throw new InvalidOperationException("Connection string provided neither in env variable nor appsettings");
+
+            return connectionStr;
+        }
+
         public static IServiceCollection ReadServicesEndpoints(this IServiceCollection services)
         {
             using var servicesProvider = services.BuildServiceProvider();

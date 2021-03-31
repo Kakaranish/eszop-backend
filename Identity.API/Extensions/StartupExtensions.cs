@@ -1,29 +1,24 @@
-using Common.Authentication;
-using Identity.API.DataAccess.Repositories;
-using Identity.API.Services;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 
 namespace Identity.API.Extensions
 {
     public static class StartupExtensions
     {
-        public static IServiceCollection AddInternalServices(this IServiceCollection services)
+        public static string GetRedisConnectionString(this IServiceCollection services)
         {
-            services.AddSingleton<PasswordValidatorBase, PasswordValidator>();
-            services.AddSingleton<IPasswordHasher, PasswordHasher>();
+            var serviceProvider = services.BuildServiceProvider();
+            var configuration = serviceProvider.GetRequiredService<IConfiguration>();
 
-            services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+            const string connStrEnvVarName = "ESZOP_REDIS_CONN_STR";
+            var connectionStr = Environment.GetEnvironmentVariable(connStrEnvVarName);
+            if (string.IsNullOrWhiteSpace(connectionStr))
+                connectionStr = configuration.GetConnectionString("Redis");
+            if (string.IsNullOrWhiteSpace(connectionStr))
+                throw new InvalidOperationException("Connection string provided neither in env variable nor appsettings");
 
-            services.AddSingleton<IAccessTokenService, AccessTokenService>();
-            services.AddScoped<IRefreshTokenService, RefreshTokenService>();
-
-            services.AddSingleton<IAccessTokenDecoder, AccessTokenDecoder>();
-            services.AddSingleton<IRefreshTokenDecoder, RefreshTokenDecoder>();
-
-            services.AddScoped<ISellerInfoRepository, SellerInfoRepository>();
-
-            return services;
+            return connectionStr;
         }
     }
 }
