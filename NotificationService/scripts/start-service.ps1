@@ -25,7 +25,7 @@ docker run `
     -e ESZOP_LOGS_DIR="$logs_dir" `
     -e ASPNETCORE_ENVIRONMENT="$env:ASPNETCORE_ENVIRONMENT" `
     -e ESZOP_AZURE_EVENTBUS_CONN_STR="$env:ESZOP_AZURE_EVENTBUS_CONN_STR" `
-    -e ESZOP_SQLSERVER_CONN_STR="$env:ESZOP_SQLSERVER_CONN_STR" `
+    -e ESZOP_SQLSERVER_CONN_STR="$env:ESZOP_SQLSERVER_CONN_STR_NOTIFICATION" `
     -v "$pwd\..\logs:/logs" `
     --network eszop-network `
     --name eszop-notification-service `
