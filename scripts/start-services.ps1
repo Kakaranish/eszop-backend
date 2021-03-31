@@ -3,10 +3,17 @@ param(
 )
 
 Import-Module $PSScriptRoot\modules\Resolve-ServiceLocation.psm1 -Force
+Import-Module $PSScriptRoot\modules\Require-EnvironmentVariables.psm1 -Force -DisableNameChecking
 
-if(-not($env:ESZOP_AZURE_EVENTBUS_CONN_STR)) {
-    Write-Error 'Env variable ESZOP_AZURE_EVENTBUS_CONN_STR is not set' -ErrorAction Stop
-}
+$required_env_variables = @(
+    "ASPNETCORE_ENVIRONMENT",
+    "ESZOP_AZURE_EVENTBUS_CONN_STR",
+    "ESZOP_SQLSERVER_CONN_STR",
+    "ESZOP_REDIS_CONN_STR",
+    "ESZOP_AZURE_STORAGE_CONN_STR"
+)
+
+Require-EnvironmentVariables -EnvironmentVariables $required_env_variables
 
 $services = @("gateway", "carts", "identity", "notification", "offers", "orders")
 

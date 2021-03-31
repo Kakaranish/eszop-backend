@@ -1,10 +1,8 @@
 Import-Module $PSScriptRoot\..\modules\Resolve-ServiceLocation.psm1 -Force
+Import-Module $PSScriptRoot\..\modules\Require-EnvironmentVariables.psm1 -Force -DisableNameChecking
 
-$default_environment = "Development"
-$environment = $env:ASPNETCORE_ENVIRONMENT
-if (-not($environment)) {
-    $environment = $default_environment
-}
+$required_env_variables = @( "ASPNETCORE_ENVIRONMENT" )
+Require-EnvironmentVariables -EnvironmentVariables $required_env_variables
 
 # To avoid RabbitMq start
 $env:ESZOP_DB_SEED = $true

@@ -1,6 +1,8 @@
 $environments = @(
-    "DevelopmentLocal",
-    "Development",
+    "DevHostLocal",
+    "DevHostCloud",
+    "DevDockerLocal",
+    "DevDockerCloud",
     "Staging"
 )
 Write-Host "Choose environment:"
