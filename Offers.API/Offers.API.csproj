@@ -35,7 +35,7 @@
     <Content Update="appsettings.Staging.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Update="appsettings.DevLocal.json">
+    <Content Update="appsettings.DevHostLocal.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Update="appsettings.DevDockerLocal.json">

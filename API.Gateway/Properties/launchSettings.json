@@ -11,14 +11,16 @@
     "API.Gateway": {
       "commandName": "Project",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "DevelopmentLocal"
+        "ASPNETCORE_ENVIRONMENT": "DevHostLocal"
       },
       "dotnetRunMessages": "true"
     },
-    "Docker": {
-      "commandName": "Docker",
-      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
-      "publishAllPorts": true
+    "API.Gateway.Cloud": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "DevHostCloud"
+      },
+      "dotnetRunMessages": "true"
     }
   }
 }

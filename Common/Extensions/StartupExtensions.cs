@@ -13,8 +13,10 @@ namespace Common.Extensions
     public static class StartupExtensions
     {
         private static readonly string[] DevelopmentEnvironments = {
-            "Development",
-            "DevelopmentLocal"
+            "DevHostLocal",
+            "DevHostCloud",
+            "DevDockerLocal",
+            "DevDockerCloud"
         };
 
         public static string GetSqlServerConnectionString(this IServiceCollection services)

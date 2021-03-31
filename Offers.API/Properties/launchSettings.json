@@ -14,14 +14,19 @@
       "launchUrl": "swagger",
       "dotnetRunMessages": "true",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "DevelopmentLocal",
-        "ESZOP_AZURE_STORAGE_CONN_STR": ""
+        "ASPNETCORE_ENVIRONMENT": "DevHostLocal",
       }
     },
-    "Docker": {
-      "commandName": "Docker",
-      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/swagger",
-      "publishAllPorts": true
+    "Offers.API.Cloud": {
+      "commandName": "Project",
+      "launchUrl": "swagger",
+      "dotnetRunMessages": "true",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "DevHostCloud",
+        "ESZOP_AZURE_STORAGE_CONN_STR": "",
+        "ESZOP_SQLSERVER_CONN_STR": "",
+        "ESZOP_AZURE_EVENTBUS_CONN_STR": ""
+      }
     }
   }
 }
