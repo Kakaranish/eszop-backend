@@ -1,18 +1,14 @@
-$lookup_dirs = @(
-    "..\API.Gateway",
-    "..\Carts.API",
-    "..\Identity.API",
-    "..\NotificationService",
-    "..\Offers.API",
-    "..\Orders.API" 
-);
+Import-Module $PSScriptRoot\modules\Resolve-ServiceLocation.psm1 -Force
 
-foreach ($dir in $lookup_dirs) {
-    $scripts_dir = Join-Path (Resolve-Path $dir) "scripts"
-    $build_script = Join-Path $scripts_dir "stop-service.ps1"
+$services = @("gateway", "carts", "identity", "notification", "offers", "orders")
 
-    if(Test-Path $build_script) {
-        Write-Host "Run $build_script"
-        & $build_script
+foreach ($service in $services) {
+    $service_dir = Resolve-ServiceLocation -ServiceName $service
+    $scripts_dir = Join-Path (Resolve-Path $service_dir) "scripts"
+    $stop_script = Join-Path $scripts_dir "stop-service.ps1"
+
+    if(Test-Path $stop_script) {
+        Write-Host "Run $stop_script"
+        & $stop_script
     }
 }

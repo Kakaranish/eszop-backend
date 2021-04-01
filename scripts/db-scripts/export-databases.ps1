@@ -9,11 +9,10 @@ param (
 )
 
 Import-Module $PSScriptRoot\..\modules\Resolve-EnvPrefix.psm1 -Force
+Import-Module $PSScriptRoot\..\modules\Require-EnvironmentVariables.psm1 -Force -DisableNameChecking
 
-$environment = $env:ASPNETCORE_ENVIRONMENT
-if (-not($environment)) {
-    $environment = "DevelopmentLocal"
-}
+$required_env_variables = @( "ASPNETCORE_ENVIRONMENT" )
+Require-EnvironmentVariables -EnvironmentVariables $required_env_variables
 
 if (-not($AutoApprove.IsPresent)) {
     Write-Host "You're going to commision export databases on $environment environment"
