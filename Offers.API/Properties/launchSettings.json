@@ -9,23 +9,23 @@
   },
   "$schema": "http://json.schemastore.org/launchsettings.json",
   "profiles": {
-    "Offers.API": {
-      "commandName": "Project",
-      "launchUrl": "swagger",
-      "dotnetRunMessages": "true",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "DevHostLocal",
-      }
-    },
     "Offers.API.Cloud": {
       "commandName": "Project",
       "launchUrl": "swagger",
       "dotnetRunMessages": "true",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "DevHostCloud",
+        "ESZOP_AZURE_EVENTBUS_CONN_STR": "",
         "ESZOP_AZURE_STORAGE_CONN_STR": "",
-        "ESZOP_SQLSERVER_CONN_STR": "",
-        "ESZOP_AZURE_EVENTBUS_CONN_STR": ""
+        "ESZOP_SQLSERVER_CONN_STR": ""
+      }
+    },
+    "Offers.API": {
+      "commandName": "Project",
+      "launchUrl": "swagger",
+      "dotnetRunMessages": "true",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "DevHostLocal"
       }
     }
   }

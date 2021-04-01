@@ -8,17 +8,17 @@
     }
   },
   "profiles": {
-    "API.Gateway": {
-      "commandName": "Project",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "DevHostLocal"
-      },
-      "dotnetRunMessages": "true"
-    },
     "API.Gateway.Cloud": {
       "commandName": "Project",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "DevHostCloud"
+      },
+      "dotnetRunMessages": "true"
+    },
+    "API.Gateway": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "DevHostLocal"
       },
       "dotnetRunMessages": "true"
     }
