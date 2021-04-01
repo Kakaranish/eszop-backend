@@ -2,7 +2,7 @@
 {
     public class AzureStorageConfig
     {
-        public string ConnectionString { get; init; }
-        public string ContainerName { get; init; }
+        public string ConnectionString { get; set; }
+        public string ContainerName { get; set; }
     }
 }

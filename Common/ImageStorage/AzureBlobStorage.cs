@@ -60,7 +60,11 @@ namespace Common.ImageStorage
         {
             if (_ensured) return;
 
-            await _containerClient.CreateIfNotExistsAsync(PublicAccessType.BlobContainer);
+            if (!await _containerClient.ExistsAsync())
+            {
+                throw new InvalidOperationException($"Blob container '{ContainerName}' does not exist");
+            }
+
             _ensured = true;
         }
     }

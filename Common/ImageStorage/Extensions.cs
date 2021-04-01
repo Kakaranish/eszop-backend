@@ -34,11 +34,8 @@ namespace Common.ImageStorage
 
             services.Configure<AzureStorageConfig>(config =>
             {
-                config = new AzureStorageConfig
-                {
-                    ConnectionString = connectionStr,
-                    ContainerName = containerName
-                };
+                config.ConnectionString = connectionStr;
+                config.ContainerName = containerName;
             });
 
             services.AddSingleton<IBlobStorage, AzureBlobStorage>();
