@@ -15,14 +15,14 @@ $required_env_variables = @( "ASPNETCORE_ENVIRONMENT" )
 Require-EnvironmentVariables -EnvironmentVariables $required_env_variables
 
 if (-not($AutoApprove.IsPresent)) {
-    Write-Host "You're going to commision export databases on $environment environment"
+    Write-Host "You're going to commision export databases on $env:ASPNETCORE_ENVIRONMENT environment"
     $choice = Read-Host "Do you want to continue (y/n)"
     if ($choice -ne "y") {
         exit
     }
 }
 
-$environment_prefix = Resolve-EnvPrefix -Environment $environment
+$environment_prefix = Resolve-EnvPrefix -Environment $env:ASPNETCORE_ENVIRONMENT
 $services = @("offers", "identity", "carts", "orders", "notification")
 $db_sa_password = (ConvertTo-SecureString $DbPassword -AsPlainText)
 $storage_account_key = $(Get-AzStorageAccountKey `

@@ -14,7 +14,7 @@ Import-Module $PSScriptRoot\..\modules\Require-EnvironmentVariables.psm1 -Force 
 $required_env_variables = @( "ASPNETCORE_ENVIRONMENT" )
 Require-EnvironmentVariables -EnvironmentVariables $required_env_variables
 
-$environment_prefix = Resolve-EnvPrefix -Environment $environment
+$environment_prefix = Resolve-EnvPrefix -Environment $env:ASPNETCORE_ENVIRONMENT
 $server_name = "eszop-$environment_prefix-sqlserver"
 $db_name = "eszop-$environment_prefix-$Service-db"
 
