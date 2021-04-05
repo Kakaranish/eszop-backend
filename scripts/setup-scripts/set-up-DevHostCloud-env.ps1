@@ -14,6 +14,7 @@ $ESZOP_REDIS_CONN_STR = ""
 $db_username = ""
 $db_password = ""
 
+$env_name = "DevHostCloud"
 $cloud_env_prefix = "staging"
 
 # ------------------------------------------------------------------------------
