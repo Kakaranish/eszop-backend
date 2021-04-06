@@ -2,8 +2,8 @@ param(
     [string] $ImageTag = "latest"
 )
 
-Import-Module $PSScriptRoot\modules\Resolve-ServiceLocation.psm1 -Force
-Import-Module $PSScriptRoot\modules\Require-EnvironmentVariables.psm1 -Force -DisableNameChecking
+Import-Module $PSScriptRoot\..\modules\Resolve-ServiceLocation.psm1 -Force
+Import-Module $PSScriptRoot\..\modules\Require-EnvironmentVariables.psm1 -Force -DisableNameChecking
 
 $required_env_variables = @(
     "ASPNETCORE_ENVIRONMENT",
@@ -19,7 +19,7 @@ $services = @("gateway", "carts", "identity", "notification", "offers", "orders"
 
 foreach ($service in $services) {
     $service_dir = Resolve-ServiceLocation -ServiceName $service
-    $scripts_dir = Join-Path (Resolve-Path $service_dir) "scripts"
+    $scripts_dir = Join-Path (Resolve-Path $service_dir) "scripts" "docker"
     $start_script = Join-Path $scripts_dir "start-service.ps1"
 
     if(Test-Path $start_script) {

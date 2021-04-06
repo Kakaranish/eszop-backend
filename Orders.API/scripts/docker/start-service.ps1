@@ -2,7 +2,7 @@ param(
     [string] $ImageTag = "latest"
 )
 
-Import-Module $PSScriptRoot\..\..\scripts\modules\Require-EnvironmentVariables.psm1 -Force -DisableNameChecking
+Import-Module $PSScriptRoot\..\..\..\scripts\modules\Require-EnvironmentVariables.psm1 -Force -DisableNameChecking
 
 $required_env_variables = @(
     "ASPNETCORE_ENVIRONMENT",
@@ -27,7 +27,7 @@ docker run `
     -e ASPNETCORE_ENVIRONMENT="$env:ASPNETCORE_ENVIRONMENT" `
     -e ESZOP_AZURE_EVENTBUS_CONN_STR="$env:ESZOP_AZURE_EVENTBUS_CONN_STR" `
     -e ESZOP_SQLSERVER_CONN_STR="$env:ESZOP_SQLSERVER_CONN_STR_ORDERS" `
-    -v "$pwd\..\logs:/logs" `
+    -v "$pwd\..\..\logs:/logs" `
     --network eszop-network `
     --name eszop-orders-api `
     "eszopregistry.azurecr.io/eszop-orders-api:$ImageTag"

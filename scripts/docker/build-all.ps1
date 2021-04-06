@@ -2,13 +2,13 @@ param(
     [string] $ImageTag = "latest"
 )
 
-Import-Module $PSScriptRoot\modules\Resolve-ServiceLocation.psm1 -Force
+Import-Module $PSScriptRoot\..\modules\Resolve-ServiceLocation.psm1 -Force
 
 $services = @("gateway", "carts", "identity", "notification", "offers", "orders")
 
 foreach ($service in $services) {
     $service_dir = Resolve-ServiceLocation -ServiceName $service
-    $scripts_dir = Join-Path (Resolve-Path $service_dir) "scripts"
+    $scripts_dir = Join-Path (Resolve-Path $service_dir) "scripts" "docker"
     $build_script = Join-Path $scripts_dir "build.ps1"
 
     if(Test-Path $build_script) {
