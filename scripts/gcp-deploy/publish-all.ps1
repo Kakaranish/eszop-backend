@@ -12,7 +12,7 @@ $GCS_BUCKET_NAME = "eszop-app-storage"
 
 # ------------------------------------------------------------------------------
 
-if(-not(Test-Path $BuildDirectory)) {
+if (-not(Test-Path $BuildDirectory)) {
     Write-Error "There is no such directory" -ErrorAction Stop
 }
 
@@ -21,7 +21,7 @@ $services = @("gateway", "offers", "identity", "carts", "orders", "notification"
 foreach ($service in $services) {
     $service_build_filename = "$service`_$BuildSuffix.zip"
     $service_build_path = Join-Path $BuildDirectory $service_build_filename
-    if(-not(Test-Path $service_build_path)) {
+    if (-not(Test-Path $service_build_path)) {
         Write-Warning "$service_build_filename cannot be published because does not exist"
         continue
     }

@@ -11,7 +11,8 @@
     "API.Gateway.Cloud": {
       "commandName": "Project",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "DevHostCloud"
+        "ASPNETCORE_ENVIRONMENT": "DevHostCloud",
+        "ESZOP_CLIENT_URI": "http://localhost:3000"
       },
       "dotnetRunMessages": "true"
     },

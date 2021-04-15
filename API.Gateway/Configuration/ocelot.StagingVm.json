@@ -1,0 +1,157 @@
+{
+  "Routes": [
+    {
+      "UpstreamPathTemplate": "/api/offers-api/healthcheck",
+      "UpstreamHttpMethod": [ "Post" ],
+      "DownstreamPathTemplate": "/healthcheck",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "offers.eszop",
+          "Port": 80
+        }
+      ]
+    },
+    {
+      "UpstreamPathTemplate": "/api/identity-api/healthcheck",
+      "UpstreamHttpMethod": [ "Post" ],
+      "DownstreamPathTemplate": "/healthcheck",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "identity.eszop",
+          "Port": 80
+        }
+      ]
+    },
+    {
+      "UpstreamPathTemplate": "/api/carts-api/healthcheck",
+      "UpstreamHttpMethod": [ "Post" ],
+      "DownstreamPathTemplate": "/healthcheck",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "carts.eszop",
+          "Port": 80
+        }
+      ]
+    },
+    {
+      "UpstreamPathTemplate": "/api/orders-api/healthcheck",
+      "UpstreamHttpMethod": [ "Post" ],
+      "DownstreamPathTemplate": "/healthcheck",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "orders.eszop",
+          "Port": 80
+        }
+      ]
+    },
+    {
+      "UpstreamPathTemplate": "/api/offers-api/{everything}",
+      "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete" ],
+      "DownstreamPathTemplate": "/api/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "offers.eszop",
+          "Port": 80
+        }
+      ],
+      "SwaggerKey": "offers"
+    },
+    {
+      "UpstreamPathTemplate": "/api/identity-api/{everything}",
+      "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete" ],
+      "DownstreamPathTemplate": "/api/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "identity.eszop",
+          "Port": 80
+        }
+      ],
+      "SwaggerKey": "identity"
+    },
+    {
+      "UpstreamPathTemplate": "/api/carts-api/{everything}",
+      "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete" ],
+      "DownstreamPathTemplate": "/api/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "carts.eszop",
+          "Port": 80
+        }
+      ],
+      "SwaggerKey": "carts"
+    },
+    {
+      "UpstreamPathTemplate": "/api/orders-api/{everything}",
+      "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete" ],
+      "DownstreamPathTemplate": "/api/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "orders.eszop",
+          "Port": 80
+        }
+      ],
+      "SwaggerKey": "orders"
+    },
+    {
+      "UpstreamPathTemplate": "/api/{catchAll}",
+      "DownstreamPathTemplate": "/{catchAll}",
+      "DownstreamScheme": "ws",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "notification-service.eszop",
+          "Port": 80
+        }
+      ]
+    }
+  ],
+  "SwaggerEndPoints": [
+    {
+      "Key": "offers",
+      "Config": [
+        {
+          "Name": "Offers.API",
+          "Version": "v1",
+          "Url": "http://offers.eszop/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "identity",
+      "Config": [
+        {
+          "Name": "Identity.API",
+          "Version": "v1",
+          "Url": "http://identity.eszop/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "carts",
+      "Config": [
+        {
+          "Name": "Carts.API",
+          "Version": "v1",
+          "Url": "http://carts.eszop/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "orders",
+      "Config": [
+        {
+          "Name": "Orders.API",
+          "Version": "v1",
+          "Url": "http://orders.eszop/swagger/v1/swagger.json"
+        }
+      ]
+    }
+  ]
+}

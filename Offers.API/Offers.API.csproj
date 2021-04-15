@@ -29,6 +29,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Update="appsettings.StagingVm.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Update="appsettings.DevDockerCloud.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
