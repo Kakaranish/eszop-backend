@@ -1,4 +1,5 @@
 ﻿using Common.DataAccess;
+using Common.Extensions;
 using Dapper;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -14,14 +15,14 @@ namespace NotificationService.DataAccess.Repositories
     public class NotificationRepository : INotificationRepository
     {
         private readonly AppDbContext _appDbContext;
-        private readonly string _connectionString;
+        private readonly IConfiguration _configuration;
 
         public IUnitOfWork UnitOfWork => _appDbContext;
 
         public NotificationRepository(AppDbContext appDbContext, IConfiguration configuration)
         {
             _appDbContext = appDbContext ?? throw new ArgumentNullException(nameof(appDbContext));
-            _connectionString = configuration.GetConnectionString("SqlServer");
+            _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         }
 
         public async Task<IList<Notification>> GetByUserId(Guid userId, int itemsNum)
@@ -40,7 +41,8 @@ namespace NotificationService.DataAccess.Repositories
 
         public async Task MarkAllAsRead(Guid userId)
         {
-            await using var connection = new SqlConnection(_connectionString);
+            var sqlConnectionString = _configuration.GetSqlServerConnectionString();
+            await using var connection = new SqlConnection(sqlConnectionString);
             await connection.OpenAsync();
 
             var query = $"UPDATE Notifications SET {nameof(Notification.IsRead)}=@IsRead WHERE {nameof(Notification.UserId)}=@UserId";

@@ -19,6 +19,18 @@ namespace Common.Extensions
             "DevDockerCloud"
         };
 
+        public static string GetSqlServerConnectionString(this IConfiguration configuration)
+        {
+            const string connStrEnvVarName = "ESZOP_SQLSERVER_CONN_STR";
+            var connectionStr = Environment.GetEnvironmentVariable(connStrEnvVarName);
+            if (string.IsNullOrWhiteSpace(connectionStr))
+                connectionStr = configuration.GetConnectionString("SqlServer");
+            if (string.IsNullOrWhiteSpace(connectionStr))
+                throw new InvalidOperationException("Connection string provided neither in env variable nor appsettings");
+
+            return connectionStr;
+        }
+
         public static string GetSqlServerConnectionString(this IServiceCollection services)
         {
             using var servicesProvider = services.BuildServiceProvider();

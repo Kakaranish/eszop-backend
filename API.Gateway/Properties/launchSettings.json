@@ -12,7 +12,7 @@
       "commandName": "Project",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "DevHostCloud",
-        "ESZOP_CLIENT_URI": "http://localhost:3000"
+        "ESZOP_CLIENT_URI": "https://localhost:3000"
       },
       "dotnetRunMessages": "true"
     },
