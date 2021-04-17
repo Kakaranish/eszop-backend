@@ -19,6 +19,14 @@ namespace Common.Extensions
             "DevDockerCloud"
         };
 
+        public static string GetSqlServerConnectionString(this IServiceCollection services)
+        {
+            using var servicesProvider = services.BuildServiceProvider();
+            var configuration = servicesProvider.GetRequiredService<IConfiguration>();
+
+            return configuration.GetSqlServerConnectionString();
+        }
+
         public static string GetSqlServerConnectionString(this IConfiguration configuration)
         {
             const string connStrEnvVarName = "ESZOP_SQLSERVER_CONN_STR";
@@ -31,15 +39,20 @@ namespace Common.Extensions
             return connectionStr;
         }
 
-        public static string GetSqlServerConnectionString(this IServiceCollection services)
+        public static string GetRedisConnectionString(this IServiceCollection services)
         {
-            using var servicesProvider = services.BuildServiceProvider();
-            var configuration = servicesProvider.GetRequiredService<IConfiguration>();
+            var serviceProvider = services.BuildServiceProvider();
+            var configuration = serviceProvider.GetRequiredService<IConfiguration>();
 
-            const string connStrEnvVarName = "ESZOP_SQLSERVER_CONN_STR";
+            return configuration.GetRedisConnectionString();
+        }
+
+        public static string GetRedisConnectionString(this IConfiguration configuration)
+        {
+            const string connStrEnvVarName = "ESZOP_REDIS_CONN_STR";
             var connectionStr = Environment.GetEnvironmentVariable(connStrEnvVarName);
             if (string.IsNullOrWhiteSpace(connectionStr))
-                connectionStr = configuration.GetConnectionString("SqlServer");
+                connectionStr = configuration.GetConnectionString("Redis");
             if (string.IsNullOrWhiteSpace(connectionStr))
                 throw new InvalidOperationException("Connection string provided neither in env variable nor appsettings");
 

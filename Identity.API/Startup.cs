@@ -8,7 +8,6 @@ using FluentValidation;
 using Identity.API.DataAccess;
 using Identity.API.DataAccess.Repositories;
 using Identity.API.Domain;
-using Identity.API.Extensions;
 using Identity.API.Grpc;
 using Identity.API.Services;
 using MediatR;
@@ -60,9 +59,9 @@ namespace Identity.API
                     .UseLoggerFactory(LoggerFactory.Create(loggingBuilder => loggingBuilder.AddDebug()))
             );
 
-            var redisConnectionString = services.GetRedisConnectionString();
+            var redisConnectionString = Configuration.GetRedisConnectionString();
             services.AddDistributedRedisCache(options => options.Configuration = redisConnectionString);
-            
+
             services.AddHealthChecks()
                 .AddCheck(
                     name: "SqlServerCheck",

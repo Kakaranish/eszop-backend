@@ -18,8 +18,8 @@ using NotificationService.Application.IntegrationEventHandlers;
 using NotificationService.Application.Services;
 using NotificationService.DataAccess;
 using NotificationService.DataAccess.Repositories;
+using NotificationService.Extensions;
 using Serilog;
-using System.Text.Json;
 
 namespace NotificationService
 {
@@ -35,10 +35,9 @@ namespace NotificationService
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddSignalR().AddJsonProtocol(options =>
-                options.PayloadSerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase);
             services.AddJwtAuthentication();
             services.AddHttpContextAccessor();
+            services.ConfigureSignalR();
 
             services.Configure<NotificationSettings>(Configuration.GetSection("NotificationSettings"));
 
