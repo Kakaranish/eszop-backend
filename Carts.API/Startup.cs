@@ -10,7 +10,6 @@ using Common.Extensions;
 using Common.Grpc;
 using Common.Grpc.Services.OffersService;
 using Common.Grpc.Services.OrdersService;
-using Common.HealthCheck;
 using Common.Helpers;
 using FluentValidation;
 using MediatR;
@@ -19,7 +18,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Serilog;
@@ -61,10 +59,7 @@ namespace Carts.API
                     .UseLoggerFactory(LoggerFactory.Create(loggingBuilder => loggingBuilder.AddDebug()))
             );
             services.AddHealthChecks()
-                .AddCheck(
-                    name: "SqlServerCheck",
-                    instance: new SqlConnectionHealthCheck(connectionString),
-                    failureStatus: HealthStatus.Unhealthy);
+                .AddSqlServer(connectionString);
 
             AssemblyScanner.FindValidatorsInAssembly(typeof(Startup).Assembly)
                 .ForEach(item => services.AddScoped(item.InterfaceType, item.ValidatorType));

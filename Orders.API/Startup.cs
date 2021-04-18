@@ -6,7 +6,6 @@ using Common.Extensions;
 using Common.Grpc;
 using Common.Grpc.Services.IdentityService;
 using Common.Grpc.Services.OffersService;
-using Common.HealthCheck;
 using Common.Helpers;
 using FluentValidation;
 using MediatR;
@@ -64,10 +63,7 @@ namespace Orders.API
                         .UseLoggerFactory(LoggerFactory.Create(loggingBuilder => loggingBuilder.AddDebug())) // DEBUG PURPOSES
             );
             services.AddHealthChecks()
-                .AddCheck(
-                    name: "SqlServerCheck",
-                    instance: new SqlConnectionHealthCheck(connectionString),
-                    failureStatus: HealthStatus.Unhealthy);
+                .AddSqlServer(connectionString);
 
             AssemblyScanner.FindValidatorsInAssembly(typeof(Startup).Assembly)
                 .ForEach(item => services.AddScoped(item.InterfaceType, item.ValidatorType));

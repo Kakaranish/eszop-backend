@@ -2,7 +2,6 @@ using Common.Authentication;
 using Common.ErrorHandling;
 using Common.EventBus;
 using Common.Extensions;
-using Common.HealthCheck;
 using Common.Helpers;
 using FluentValidation;
 using Identity.API.DataAccess;
@@ -16,7 +15,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using ProtoBuf.Grpc.Server;
@@ -63,14 +61,8 @@ namespace Identity.API
             services.AddDistributedRedisCache(options => options.Configuration = redisConnectionString);
 
             services.AddHealthChecks()
-                .AddCheck(
-                    name: "SqlServerCheck",
-                    instance: new SqlConnectionHealthCheck(sqlServerConnectionString),
-                    failureStatus: HealthStatus.Unhealthy)
-                .AddCheck(
-                    name: "RedisCheck",
-                    instance: new RedisConnectionHealthCheck(redisConnectionString),
-                    failureStatus: HealthStatus.Unhealthy);
+                .AddSqlServer(sqlServerConnectionString)
+                .AddRedis(redisConnectionString);
 
             AssemblyScanner.FindValidatorsInAssembly(typeof(Startup).Assembly)
                 .ForEach(item => services.AddScoped(item.InterfaceType, item.ValidatorType));

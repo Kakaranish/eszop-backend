@@ -2,7 +2,6 @@ using Common.Authentication;
 using Common.EventBus;
 using Common.EventBus.IntegrationEvents;
 using Common.Extensions;
-using Common.HealthCheck;
 using Common.Helpers;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
@@ -10,7 +9,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
 using NotificationService.Application;
 using NotificationService.Application.Hubs;
@@ -53,11 +51,7 @@ namespace NotificationService
                 contextLifetime: ServiceLifetime.Transient,
                 optionsLifetime: ServiceLifetime.Transient
             );
-            services.AddHealthChecks()
-                .AddCheck(
-                    name: "SqlServerCheck",
-                    instance: new SqlConnectionHealthCheck(connectionString),
-                    failureStatus: HealthStatus.Unhealthy);
+            services.ConfigureHealthchecks();
 
             var notificationOptions = Configuration.GetSection("NotificationSettings").Get<NotificationSettings>();
             services.AddScheduler(builder =>

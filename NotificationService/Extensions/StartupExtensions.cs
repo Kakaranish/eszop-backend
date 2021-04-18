@@ -23,5 +23,23 @@ namespace NotificationService.Extensions
 
             return services;
         }
+
+        public static IServiceCollection ConfigureHealthchecks(this IServiceCollection services)
+        {
+            using var servicesProvider = services.BuildServiceProvider();
+            var configuration = servicesProvider.GetRequiredService<IConfiguration>();
+
+            var sqlServerConnectionStr = configuration.GetSqlServerConnectionString();
+            var healthcheckBuilder = services.AddHealthChecks()
+                .AddSqlServer(sqlServerConnectionStr);
+
+            if (configuration.GetValue<bool>("IsScaledOutService"))
+            {
+                var redisConnectionStr = configuration.GetRedisConnectionString();
+                healthcheckBuilder.AddRedis(redisConnectionStr);
+            }
+
+            return services;
+        }
     }
 }
