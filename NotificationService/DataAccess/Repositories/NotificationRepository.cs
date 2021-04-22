@@ -5,6 +5,7 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using NotificationService.Application.Domain;
+using Polly;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,7 +47,14 @@ namespace NotificationService.DataAccess.Repositories
             await connection.OpenAsync();
 
             var query = $"UPDATE Notifications SET {nameof(Notification.IsRead)}=@IsRead WHERE {nameof(Notification.UserId)}=@UserId";
-            await connection.ExecuteAsync(query, new { UserId = userId, IsRead = true });
+
+            var retryPolicy = Policy
+                .Handle<DbUpdateException>()
+                .Or<DbUpdateConcurrencyException>()
+                .WaitAndRetryAsync(3, attempt => TimeSpan.FromSeconds(Math.Pow(2, attempt)));
+
+            await retryPolicy.ExecuteAsync(async ()
+                => await connection.ExecuteAsync(query, new { UserId = userId, IsRead = true }));
         }
 
         public async Task RemoveById(Guid notificationId)
