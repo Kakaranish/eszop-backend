@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Polly;
 
 namespace Common.Extensions
 {
@@ -36,6 +37,17 @@ namespace Common.Extensions
             {
                 entity.ClearDomainEvents();
             }
+        }
+
+        public static async Task<bool> SaveChangesWithRetriesAsync(this DbContext context, CancellationToken cancellationToken = default)
+        {
+            var retryPolicy = Policy
+                .Handle<DbUpdateException>()
+                .Or<DbUpdateConcurrencyException>()
+                .WaitAndRetryAsync(3, attempt => TimeSpan.FromSeconds(Math.Pow(2, attempt)));
+
+            var result = await retryPolicy.ExecuteAsync(async () => await context.SaveChangesAsync(cancellationToken));
+            return result > 0;
         }
     }
 }

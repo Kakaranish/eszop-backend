@@ -1,4 +1,5 @@
 ﻿using Common.DataAccess;
+using Common.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using NotificationService.Application.Domain;
@@ -30,7 +31,7 @@ namespace NotificationService.DataAccess
 
         public async Task<bool> SaveChangesAndDispatchDomainEventsAsync(CancellationToken cancellationToken = default)
         {
-            return await base.SaveChangesAsync(cancellationToken) > 0;
+            return await this.SaveChangesWithRetriesAsync(cancellationToken);
         }
     }
 }

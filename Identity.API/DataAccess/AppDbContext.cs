@@ -54,7 +54,7 @@ namespace Identity.API.DataAccess
         public async Task<bool> SaveChangesAndDispatchDomainEventsAsync(CancellationToken cancellationToken = default)
         {
             await this.DispatchDomainEvents(_mediator, cancellationToken);
-            return await base.SaveChangesAsync(cancellationToken) > 0;
+            return await this.SaveChangesWithRetriesAsync(cancellationToken);
         }
     }
 }

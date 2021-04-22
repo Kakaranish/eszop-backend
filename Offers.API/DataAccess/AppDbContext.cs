@@ -58,7 +58,7 @@ namespace Offers.API.DataAccess
             var changedEntities = this.GetChangedEntities();
             await _eventDispatcher.Dispatch(changedEntities);
 
-            return await base.SaveChangesAsync(cancellationToken) > 0;
+            return await this.SaveChangesWithRetriesAsync(cancellationToken);
         }
     }
 }

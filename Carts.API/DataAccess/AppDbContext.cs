@@ -1,19 +1,19 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-using Carts.API.Domain;
+﻿using Carts.API.Domain;
 using Common.DataAccess;
 using Common.Extensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Carts.API.DataAccess
 {
     public class AppDbContext : DbContext, IUnitOfWork
     {
         private readonly IMediator _mediator;
-        
-        public DbSet<Cart> Carts{ get; private set; }
+
+        public DbSet<Cart> Carts { get; private set; }
         public DbSet<CartItem> CartItems { get; private set; }
 
         public AppDbContext(DbContextOptions options, IMediator mediator) : base(options)
@@ -36,7 +36,7 @@ namespace Carts.API.DataAccess
         public async Task<bool> SaveChangesAndDispatchDomainEventsAsync(CancellationToken cancellationToken = default)
         {
             await this.DispatchDomainEvents(_mediator, cancellationToken);
-            return await base.SaveChangesAsync(cancellationToken) > 0;
+            return await this.SaveChangesWithRetriesAsync(cancellationToken);
         }
     }
 }
