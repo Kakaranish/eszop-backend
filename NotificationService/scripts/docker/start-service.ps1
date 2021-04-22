@@ -2,7 +2,8 @@ param(
     [string] $ImageTag = "latest"
 )
 
-Import-Module $PSScriptRoot\..\..\..\scripts\modules\Require-EnvironmentVariables.psm1 -Force -DisableNameChecking
+Import-Module "$PSScriptRoot\..\..\..\scripts\modules\Require-EnvironmentVariables.psm1" -Force -DisableNameChecking
+Import-Module "$PSScriptRoot\..\..\..\scripts\AzureConfig.psm1" -Force
 
 $required_env_variables = @(
     "ASPNETCORE_ENVIRONMENT",
@@ -13,9 +14,11 @@ $required_env_variables = @(
 Require-EnvironmentVariables -EnvironmentVariables $required_env_variables
 
 $logs_dir = $env:ESZOP_LOGS_DIR
-if(-not($logs_dir)) {
+if (-not($logs_dir)) {
     $logs_dir = "/logs"
 }
+
+$container_repo = if ($ContainerRepository) { $ContainerRepository } else { $ESZOP_AZURE_CONTAINER_REPO }
 
 docker run `
     --rm `
@@ -29,4 +32,4 @@ docker run `
     -v "$pwd\..\..\logs:/logs" `
     --network eszop-network `
     --name eszop-notification-service `
-    "eszopregistry.azurecr.io/eszop-notification-service:$ImageTag"
+    "${container_repo}/eszop-notification-service:$ImageTag"

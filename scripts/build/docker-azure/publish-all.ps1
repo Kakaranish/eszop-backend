@@ -1,9 +1,12 @@
 param(
-    [string] $ImageTag = "latest"
+    [string] $ImageTag = "latest",
+    [string] $ContainerRepository
 )
 
-Import-Module $PSScriptRoot\..\modules\Resolve-ServiceLocation.psm1 -Force
+Import-Module "$PSScriptRoot\..\..\modules\Resolve-ServiceLocation.psm1" -Force
+Import-Module "$PSScriptRoot\..\..\AzureConfig.psm1" -Force
 
+$container_repo = if ($ContainerRepository) { $ContainerRepository } else { $ESZOP_AZURE_CONTAINER_REPO }
 $services = @("gateway", "carts", "identity", "notification", "offers", "orders")
 
 foreach ($service in $services) {
@@ -13,6 +16,6 @@ foreach ($service in $services) {
 
     if (Test-Path $publish_script) {
         Write-Host "Run $publish_script"
-        & $publish_script -ImageTag $ImageTag
+        & $publish_script -ImageTag $ImageTag -ContainerRepository $container_repo
     }
 }
