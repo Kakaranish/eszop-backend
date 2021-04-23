@@ -1,9 +1,17 @@
+# ------------------------------------------------------------------------------
+#
+# This script builds solution and creates .zip packages with services' binaries.
+# An output of the script is build suffix for created packages.
+# The build suffix can be used to publish packages to GCS with 'publish-all.ps1' script.
+#
+# ------------------------------------------------------------------------------
+
 param (
     [Parameter(Mandatory = $true)]
     [string] $OutputDirectory
 )
 
-Import-Module $PSScriptRoot\..\modules\Resolve-ServiceLocation.psm1 -Force
+Import-Module "$PSScriptRoot\..\..\modules\Resolve-ServiceLocation.psm1" -Force
 
 if(-not(Test-Path $OutputDirectory)) {
     Write-Error "There is no such directory" -ErrorAction Stop

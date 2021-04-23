@@ -1,3 +1,10 @@
+# ------------------------------------------------------------------------------
+#
+# This script publishes packages created with build-all.ps1
+# GoogleCloudStorage bucket name for storing packages is specified in scripts/GcpConfig.psm1
+#
+# ------------------------------------------------------------------------------
+
 param (
     [Parameter(Mandatory = $true)]
     [string] $BuildSuffix,
@@ -6,11 +13,7 @@ param (
     [string] $BuildDirectory
 )
 
-# ---  FILL VALUES BELOW vvv  --------------------------------------------------
-
-$GCS_BUCKET_NAME = "eszop-app-storage"
-
-# ------------------------------------------------------------------------------
+Import-Module "$PSScriptRoot\..\..\GcpConfig.psm1" -Force
 
 if (-not(Test-Path $BuildDirectory)) {
     Write-Error "There is no such directory" -ErrorAction Stop
