@@ -19,6 +19,22 @@ namespace Common.Extensions
             "DevDockerCloud"
         };
 
+        public static string GetRequiredConfigValue(this IConfiguration configuration,
+            string environmentVariableName, string appsettingsPath)
+        {
+            var configValue = Environment.GetEnvironmentVariable(environmentVariableName);
+            if (string.IsNullOrWhiteSpace(configValue))
+                configValue = configuration.GetValue<string>(appsettingsPath);
+            if (string.IsNullOrWhiteSpace(configValue))
+            {
+                var errorMsg = "Configuration value provided neither in " +
+                               $"environment variable ({environmentVariableName}) nor appsettings ({appsettingsPath})";
+                throw new InvalidOperationException(errorMsg);
+            }
+
+            return configValue;
+        }
+
         public static string GetSqlServerConnectionString(this IServiceCollection services)
         {
             using var servicesProvider = services.BuildServiceProvider();
@@ -29,14 +45,7 @@ namespace Common.Extensions
 
         public static string GetSqlServerConnectionString(this IConfiguration configuration)
         {
-            const string connStrEnvVarName = "ESZOP_SQLSERVER_CONN_STR";
-            var connectionStr = Environment.GetEnvironmentVariable(connStrEnvVarName);
-            if (string.IsNullOrWhiteSpace(connectionStr))
-                connectionStr = configuration.GetConnectionString("SqlServer");
-            if (string.IsNullOrWhiteSpace(connectionStr))
-                throw new InvalidOperationException("Connection string provided neither in env variable nor appsettings");
-
-            return connectionStr;
+            return configuration.GetRequiredConfigValue("ESZOP_SQLSERVER_CONN_STR", "ConnectionStrings:SqlServer");
         }
 
         public static string GetRedisConnectionString(this IServiceCollection services)
@@ -49,14 +58,7 @@ namespace Common.Extensions
 
         public static string GetRedisConnectionString(this IConfiguration configuration)
         {
-            const string connStrEnvVarName = "ESZOP_REDIS_CONN_STR";
-            var connectionStr = Environment.GetEnvironmentVariable(connStrEnvVarName);
-            if (string.IsNullOrWhiteSpace(connectionStr))
-                connectionStr = configuration.GetConnectionString("Redis");
-            if (string.IsNullOrWhiteSpace(connectionStr))
-                throw new InvalidOperationException("Connection string provided neither in env variable nor appsettings");
-
-            return connectionStr;
+            return configuration.GetRequiredConfigValue("ESZOP_REDIS_CONN_STR", "ConnectionStrings:Redis");
         }
 
         public static IServiceCollection ReadServicesEndpoints(this IServiceCollection services)
@@ -85,12 +87,6 @@ namespace Common.Extensions
             return services;
         }
 
-        public static IServiceCollection AddEventDispatching(this IServiceCollection services)
-        {
-            services.AddEventDispatching<DefaultEventReducer>();
-
-            return services;
-        }
         public static IServiceCollection AddEventDispatching<TReducer>(this IServiceCollection services) where TReducer : class, IEventReducer
         {
             services.AddScoped<IEventDispatcher, EventDispatcher>();

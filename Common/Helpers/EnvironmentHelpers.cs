@@ -10,5 +10,14 @@ namespace Common.Helpers
             return !string.IsNullOrWhiteSpace(str)
                    && bool.TryParse(str, out var isSeeding) && isSeeding;
         }
+
+        public static string GetRequiredEnvVariable(string environmentVariableName)
+        {
+            var envVarValue = Environment.GetEnvironmentVariable(environmentVariableName);
+            if (string.IsNullOrWhiteSpace(envVarValue))
+                throw new InvalidOperationException($"Environment variable {environmentVariableName} is not set");
+
+            return envVarValue;
+        }
     }
 }

@@ -1,10 +1,10 @@
 ﻿using Common.Extensions;
+using Common.Helpers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using RawRabbit;
 using RawRabbit.Configuration;
 using RawRabbit.vNext;
-using System;
 using System.Linq;
 using System.Reflection;
 using ILoggerFactory = RawRabbit.Logging.ILoggerFactory;
@@ -27,14 +27,18 @@ namespace Common.EventBus
             var configuration = serviceProvider.GetRequiredService<IConfiguration>();
 
             const string connStrEnvVarName = "ESZOP_AZURE_EVENTBUS_CONN_STR";
-            var eventBusConnStr = Environment.GetEnvironmentVariable(connStrEnvVarName);
-            if (string.IsNullOrWhiteSpace(eventBusConnStr))
-                throw new InvalidOperationException($"Environment variable {connStrEnvVarName} is not set");
+            const string topicNameVarName = "ESZOP_AZURE_EVENTBUS_TOPIC_NAME";
+            const string subNameVarName = "ESZOP_AZURE_EVENTBUS_SUB_NAME";
+
+            var connStr = EnvironmentHelpers.GetRequiredEnvVariable(connStrEnvVarName);
+            var topicName = configuration.GetRequiredConfigValue(topicNameVarName, "EventBus:AzureEventBus:TopicName");
+            var subName = configuration.GetRequiredConfigValue(subNameVarName, "EventBus:AzureEventBus:SubscriptionName");
 
             services.Configure<AzureEventBusConfig>(config =>
             {
-                configuration.GetSection("EventBus:AzureEventBus").Bind(config);
-                config.ConnectionString = eventBusConnStr;
+                config.ConnectionString = connStr;
+                config.TopicName = topicName;
+                config.SubscriptionName = subName;
             });
 
             services.AddSingleton<IEventBus, AzureEventBus>();
