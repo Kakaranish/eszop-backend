@@ -15,9 +15,11 @@
       "dotnetRunMessages": "true",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "DevHostCloud",
+        "ESZOP_SQLSERVER_CONN_STR": "",
+        "ESZOP_AZURE_EVENTBUS_TOPIC_NAME": "",
         "ESZOP_AZURE_EVENTBUS_CONN_STR": "",
         "ESZOP_AZURE_STORAGE_CONN_STR": "",
-        "ESZOP_SQLSERVER_CONN_STR": ""
+        "ESZOP_AZURE_EVENTBUS_SUB_NAME": ""
       }
     },
     "Offers.API": {

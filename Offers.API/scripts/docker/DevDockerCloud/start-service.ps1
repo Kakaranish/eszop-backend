@@ -1,15 +1,21 @@
 param(
     [string] $ImageTag = "latest",
+
+    [Parameter(Mandatory = $true)]    
+    [ValidateSet("dev", "staging")]
+    [string] $TargetCloudEnvPrefix = "staging",
+
     [string] $ContainerRepository
 )
 
-Import-Module "$PSScriptRoot\..\..\..\scripts\modules\Require-EnvironmentVariables.psm1" -Force -DisableNameChecking
-Import-Module "$PSScriptRoot\..\..\..\scripts\AzureConfig.psm1" -Force
+$scripts_dir = "$PSScriptRoot\..\..\..\..\scripts"
+Import-Module "${scripts_dir}\modules\Require-EnvironmentVariables.psm1" -Force -DisableNameChecking
+Import-Module "${scripts_dir}\AzureConfig.psm1" -Force
 
 $required_env_variables = @(
     "ASPNETCORE_ENVIRONMENT",
     "ESZOP_AZURE_EVENTBUS_CONN_STR",
-    "ESZOP_SQLSERVER_CONN_STR",
+    "ESZOP_SQLSERVER_CONN_STR_OFFERS",
     "ESZOP_AZURE_STORAGE_CONN_STR"
 )
 
@@ -33,7 +39,9 @@ docker run `
     -e ESZOP_AZURE_EVENTBUS_CONN_STR="$env:ESZOP_AZURE_EVENTBUS_CONN_STR" `
     -e ESZOP_SQLSERVER_CONN_STR="$env:ESZOP_SQLSERVER_CONN_STR_OFFERS" `
     -e ESZOP_AZURE_STORAGE_CONN_STR="$env:ESZOP_AZURE_STORAGE_CONN_STR" `
-    -v "$pwd\..\..\logs:/logs" `
+    -e ESZOP_AZURE_EVENTBUS_TOPIC_NAME="eszop-${TargetCloudEnvPrefix}-event-bus-topic" `
+    -e ESZOP_AZURE_EVENTBUS_SUB_NAME="eszop-${TargetCloudEnvPrefix}-event-bus-offers-sub" `
+    -v "$pwd\..\..\..\logs:/logs" `
     --network eszop-network `
     --name eszop-offers-api `
     "${container_repo}/eszop-offers-api:$ImageTag"

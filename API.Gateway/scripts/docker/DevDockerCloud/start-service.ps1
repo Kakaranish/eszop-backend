@@ -1,9 +1,16 @@
 param(
-    [string] $ImageTag = "latest"
+    [string] $ImageTag = "latest",
+
+    [Parameter(Mandatory = $true)]    
+    [ValidateSet("dev", "staging")]
+    [string] $TargetCloudEnvPrefix = "staging",
+
+    [string] $ContainerRepository
 )
 
-Import-Module "$PSScriptRoot\..\..\..\scripts\modules\Require-EnvironmentVariables.psm1" -Force -DisableNameChecking
-Import-Module "$PSScriptRoot\..\..\..\scripts\AzureConfig.psm1" -Force
+$scripts_dir = "$PSScriptRoot\..\..\..\..\scripts"
+Import-Module "${scripts_dir}\modules\Require-EnvironmentVariables.psm1" -Force -DisableNameChecking
+Import-Module "${scripts_dir}\AzureConfig.psm1" -Force
 
 $required_env_variables = @(
     "ASPNETCORE_ENVIRONMENT",
@@ -27,7 +34,7 @@ docker run `
     -e ESZOP_CLIENT_URI="$env:ESZOP_CLIENT_URI" `
     -e ASPNETCORE_URLS='http://+' `
     -e ESZOP_LOGS_DIR="$logs_dir" `
-    -v "$pwd\..\..\logs:/logs" `
+    -v "$pwd\..\..\..\logs:/logs" `
     --network eszop-network `
     --name eszop-api-gateway `
     "${container_repo}/eszop-api-gateway:$ImageTag"

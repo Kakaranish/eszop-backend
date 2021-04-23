@@ -8,6 +8,7 @@ function Resolve-EnvPrefix {
         "DevHostCloud"   = "dev";
         "DevDockerCloud" = "dev";
         "Staging"        = "staging";
+        "DevCloud"       = "dev"
     }
 
     Write-Output $env_prefix_dict[$Environment]
