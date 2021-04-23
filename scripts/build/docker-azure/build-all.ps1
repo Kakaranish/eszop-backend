@@ -1,3 +1,13 @@
+# ------------------------------------------------------------------------------
+#
+# This script builds all services and creates docker images.
+# Built docker images are targeted for specific AzureContainerRepository that
+# can be specified either in AzureConfig.psm1 or as script argument.
+# When "$ContainerRepository" is not present, value from "AzureConfig.psm1"
+# is taken.
+#
+# ------------------------------------------------------------------------------
+
 param(
     [string] $ImageTag = "latest",
     [string] $ContainerRepository

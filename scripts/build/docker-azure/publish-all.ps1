@@ -1,3 +1,12 @@
+# ------------------------------------------------------------------------------
+#
+# This script publishes docker images with given tag and targeted for 
+# specific AzureContainerRepository.
+# If "$ContainerRepository" is not present then value from "AzureConfig.psm1"
+# is taken.
+#
+# ------------------------------------------------------------------------------
+
 param(
     [string] $ImageTag = "latest",
     [string] $ContainerRepository
