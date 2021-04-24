@@ -13,7 +13,7 @@ param (
 
 Import-Module "$PSScriptRoot\..\..\modules\Resolve-ServiceLocation.psm1" -Force
 
-if(-not(Test-Path $OutputDirectory)) {
+if (-not(Test-Path $OutputDirectory)) {
     Write-Error "There is no such directory" -ErrorAction Stop
 }
 
@@ -24,7 +24,7 @@ $build_dir = Resolve-Path $OutputDirectory
 foreach ($service in $services) {
     $service_path = Resolve-ServiceLocation -ServiceName $service
     $publish_path = (Join-Path $build_dir $service)
-    if(-not(Test-Path -Path $publish_path)) {
+    if (-not(Test-Path -Path $publish_path)) {
         New-Item -ItemType Directory -Path $publish_path | Out-Null
     }
 
@@ -38,3 +38,11 @@ foreach ($service in $services) {
 }
 
 Write-Host "[INFO] Build $build_suffix succeeded" -ForegroundColor Green
+
+$resolved_build_dir = Resolve-Path $OutputDirectory
+$build_info = @{ 
+    "BuildSuffix"    = $build_suffix;
+    "BuildDirectory" = $resolved_build_dir.Path;
+}
+New-Item -ItemType File -Path "$PSScriptRoot\.last_build" -Force | Out-Null
+$build_info | ConvertTo-Yaml | Set-Content "$PSScriptRoot\.last_build" -NoNewline

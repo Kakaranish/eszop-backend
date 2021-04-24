@@ -1,3 +1,3 @@
-$GCS_BUCKET_NAME = "eszop-app-storage"
+$GCP_PACKAGES_STORAGE = "eszop-package-storage"
 
 Export-ModuleMember -Variable *
