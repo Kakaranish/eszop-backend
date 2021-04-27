@@ -1,0 +1,6 @@
+AZ_RESOURCE_GROUP: eszop
+AZ_GLOBAL_STORAGE_NAME: eszopstorage
+AZ_BACKUPS_CONTAINER_NAME: eszop-db-backups
+AZ_CONTAINER_REPO: eszopregistry.azurecr.io
+
+GCP_PACKAGES_STORAGE: eszop-package-storage
