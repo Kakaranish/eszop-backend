@@ -1,20 +1,10 @@
-$environments = @(
-    "dev"
-    "staging",
-    "prod"
-)
-Write-Host "Choose environment:"
-For ($i=0; $i -lt $environments.Count; $i++)  {
-  Write-Host "$($i+1): $($environments[$i])"
-}
+Import-Module "$PSScriptRoot\..\modules\Make-Choice.psm1" -Force -DisableNameChecking
 
-[int]$choice = Read-Host "Press the number to select an environment"
+$environments = @("dev", "staging", "prod")
+$choice = Make-Choice `
+    -Title "Choose environment" `
+    -Choices $environments
 
-if($choice -lt 1 -or $choice -gt $environments.Count) {
-    Write-Host "Invalid choice"
-    exit
-}
-
-$environment = $environments[$choice-1]
-$env:ESZOP_CLOUD_ENV = $environment
-Write-Host "Set environment to $environment"
+$env:ESZOP_CLOUD_ENV = $choice
+    
+Write-Host "Set cloud environment to $choice"
