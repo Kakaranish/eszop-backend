@@ -1,7 +1,7 @@
 # ------------------------------------------------------------------------------
 #
-# This script publishes packages created with build-all.ps1
-# GoogleCloudStorage bucket name for storing packages is specified in scripts/GcpConfig.psm1
+# This script publishes packages created with 'Build-Packages.ps1' to
+# GoogleCloudStorage bucket. Name of bucket is specified in config/global.yaml
 #
 # ------------------------------------------------------------------------------
 
@@ -13,11 +13,16 @@ param (
   [string] $BuildDirectory
 )
 
-Import-Module "$PSScriptRoot\..\..\GcpConfig.psm1" -Force
+$scripts_dir = "$PSScriptRoot\..\.."
+Import-Module "${scripts_dir}\modules\Get-GlobalConfig.psm1" -Force
+
+# ------------------------------------------------------------------------------
 
 if (-not(Test-Path $BuildDirectory)) {
   Write-Error "There is no such directory" -ErrorAction Stop
 }
+
+$global_config = Get-GlobalConfig
 
 $services = @("gateway", "offers", "identity", "carts", "orders", "notification")
 
@@ -29,6 +34,6 @@ foreach ($service in $services) {
     continue
   }
 
-  Write-Host "[INFO] Publishing $service_build_filename in gcs bucket $GCP_PACKAGES_STORAGE" -ForegroundColor DarkGreen
-  New-GcsObject -Bucket $GCP_PACKAGES_STORAGE -File $service_build_path | Out-Null
+  Write-Host "[INFO] Publishing ${service_build_filename} in gcs bucket $($global_config.GCP_PACKAGES_STORAGE)" -ForegroundColor DarkGreen
+  New-GcsObject -Bucket $global_config.GCP_PACKAGES_STORAGE -File $service_build_path | Out-Null
 }
