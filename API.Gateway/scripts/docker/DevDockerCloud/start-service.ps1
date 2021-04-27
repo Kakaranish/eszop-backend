@@ -15,7 +15,6 @@ Import-Module "${scripts_dir}\modules\Get-GlobalConfig.psm1" -Force
 # ------------------------------------------------------------------------------
 
 $required_env_variables = @(
-  "ASPNETCORE_ENVIRONMENT",
   "ESZOP_CLIENT_URI"
 )
 
@@ -33,7 +32,7 @@ docker run `
   --rm `
   -itd `
   -p 10000:80 `
-  -e ASPNETCORE_ENVIRONMENT="$env:ASPNETCORE_ENVIRONMENT" `
+  -e ASPNETCORE_ENVIRONMENT="DevDockerCloud" `
   -e ESZOP_CLIENT_URI="$env:ESZOP_CLIENT_URI" `
   -e ASPNETCORE_URLS='http://+' `
   -e ESZOP_LOGS_DIR="$logs_dir" `
