@@ -15,5 +15,4 @@ function Prepare-SqlConnectionString {
         -replace "{db_password}", $DbPassword)
 }
 
-
 Export-ModuleMember -Function Prepare-SqlConnectionString
