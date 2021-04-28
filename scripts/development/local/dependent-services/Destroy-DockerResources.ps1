@@ -1,6 +1,6 @@
-$reply = Read-Host -Prompt "All databases data will be lost. Continue?[y/n]"
+$reply = Read-Host -Prompt "All databases data will be lost. Continue? [y/n]"
 if ( -not($reply -match "[yY]") ) { 
-    exit
+  exit
 }
 
 docker network rm eszop-network
