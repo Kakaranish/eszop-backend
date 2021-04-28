@@ -1,3 +1,17 @@
+# ------------------------------------------------------------------------------
+#
+# This script starts dependent services for eszop applications.
+# Those services are:
+# - SQL Server DBs - for apps: Offers, Identity, Carts, Orders, Notification
+# - RedisDb - for apps: Identity
+# - RabbitMq - for apps: Offers, Identity, Carts, Orders, Notification
+# 
+# NOTE:
+# When first run, use '-ApplyMigrations' flag to apply migrations to newly created
+# databases. Without this applications will throw exceptions.
+#
+# ------------------------------------------------------------------------------
+
 param (
   [switch] $ApplyMigrations
 )

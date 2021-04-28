@@ -1,3 +1,13 @@
+# ------------------------------------------------------------------------------
+#
+# This script initializes docker resources that are required before
+# 'Start-DependentServices.ps1' execution.
+# There is created docker network to which all dependent services and applications
+# are connected. There are also created docker volumes which are used as 
+# persistent storage for databases.
+#
+# ------------------------------------------------------------------------------
+
 docker network create eszop-network
 
 docker volume create eszop-servicebus-rabbitmq
