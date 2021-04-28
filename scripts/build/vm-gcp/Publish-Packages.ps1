@@ -3,6 +3,9 @@
 # This script publishes packages created with 'Build-Packages.ps1' to
 # GoogleCloudStorage bucket. Name of bucket is specified in config/global.yaml
 #
+# Sample script call:
+# $ .\Publish-Packages.ps1 -BuildDirectory ..\..\..\build -BuildSuffix 20210428_185025
+#
 # ------------------------------------------------------------------------------
 
 param (

@@ -1,3 +1,22 @@
+# ------------------------------------------------------------------------------
+#
+# This script applies migrations to local/cloud databases.
+#
+# If 'local' option is chosen then local databases (started using 
+# scripts/development/local/dependent-services/Start-DependentServices.ps1)
+# are affected.
+#
+# If 'cloud' option is chosen then cloud environment must be selected. 
+# Depending on the cloud env (and corresponding /config/environemnts/{cloud_env}.yaml), 
+# specific databases are migrated.
+#
+# Sample script call:
+# $ .\Apply-DbMigrations.ps1
+# *TYPE 2* (cloud)
+# *TYPE 2* (staging)
+#
+# ------------------------------------------------------------------------------
+
 param (
   [switch] $Local
 )

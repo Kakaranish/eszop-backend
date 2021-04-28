@@ -1,9 +1,12 @@
 # ------------------------------------------------------------------------------
 #
-# This script publishes docker images with given tag and targeted for 
-# specific AzureContainerRepository.
-# If "$ContainerRepository" is not present then value from /config/global.yaml
+# This script publishes docker images built with Build-Images.ps1
+# These images are targeted for specific Azure Container Repository.
+# If "$ContainerRepository" is not present then value from config/global.yaml
 # is taken.
+#
+# Sample script call:
+# $ .\Publish-Images.ps1 -ImageTag latest
 #
 # ------------------------------------------------------------------------------
 

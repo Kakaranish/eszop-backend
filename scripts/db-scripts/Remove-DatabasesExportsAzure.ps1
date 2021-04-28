@@ -1,3 +1,13 @@
+# ------------------------------------------------------------------------------
+#
+# This script removes .bacpac files with specific BACKUP PREFIX(ES) which
+# are stored in Azure global storage (specified in config/global.yaml)
+#
+# Sample script call:
+# $ .\Remove-DatabasesExportsAzure.ps1 -CloudEnv "staging"-BackupPrefixes 2021_04_28T19_06, 2021_04_28T19_07
+#
+# ------------------------------------------------------------------------------
+
 param (
   [Parameter(Mandatory = $true)]
   [string[]] $BackupPrefixes,

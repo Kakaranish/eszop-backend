@@ -1,3 +1,18 @@
+# ------------------------------------------------------------------------------
+#
+# This script exports Azure Sql Server databases to .bacpac files
+# which are stored in Azure global storage (specified in config/global.yaml).
+# Each exported .bacpac file contains BACKUP PREFIX in name.
+# The backup prefix is returned on script output.
+#
+# Example backup filename looks like this:
+# eszop-staging-carts-db-backup-2021_04_28T19_06.bacpac
+# 
+# Sample script call:
+# $ .\Export-DatabasesAzure.ps1 -CloudEnv "staging"
+#
+# ------------------------------------------------------------------------------
+
 param (
   [Parameter(Mandatory = $true)]
   [ValidateSet("dev", "staging", "prod")]

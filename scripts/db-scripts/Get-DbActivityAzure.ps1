@@ -1,3 +1,13 @@
+# ------------------------------------------------------------------------------
+#
+# As an output of this script, it's returned complex information about 
+# database activity for specific environment and service.
+#
+# Sample script call:
+# $ .\Get-DbActivityAzure.ps1 -CloudEnv "staging" -Service "notification"
+#
+# ------------------------------------------------------------------------------
+
 param (
   [Parameter(Mandatory = $true)]
   [ValidateSet("offers", "identity", "carts", "orders", "notification")] 

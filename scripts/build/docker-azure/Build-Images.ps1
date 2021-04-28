@@ -2,9 +2,12 @@
 #
 # This script builds all services and creates docker images.
 # Built docker images are targeted for specific AzureContainerRepository that
-# can be specified either in /config/global.yaml or as script argument.
-# When "$ContainerRepository" is not present, value from /config/global.yaml
+# can be specified either in config/global.yaml or as script argument.
+# When "$ContainerRepository" arg is not present, value from /config/global.yaml
 # is taken.
+#
+# Sample script call:
+# $ .\Build-Images.ps1 -ImageTag latest
 #
 # ------------------------------------------------------------------------------
 

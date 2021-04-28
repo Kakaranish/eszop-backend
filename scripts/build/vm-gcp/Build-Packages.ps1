@@ -5,6 +5,9 @@
 # The build suffix can be used to publish packages to GCS with 
 # 'Publish-Packages.ps1' script.
 #
+# Sample script call:
+# $ .\Build-Packages.ps1 -OutputDirectory ..\..\..\build
+#
 # ------------------------------------------------------------------------------
 
 param (
