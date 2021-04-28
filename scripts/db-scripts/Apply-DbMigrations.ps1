@@ -1,14 +1,24 @@
+param (
+  [switch] $Local
+)
+
 Import-Module "$PSScriptRoot\..\modules\Resolve-ServiceLocation.psm1" -Force
 Import-Module "$PSScriptRoot\..\modules\Make-Choice.psm1" -Force -DisableNameChecking
 Import-Module "$PSScriptRoot\..\modules\Get-MultipleEnvVariables.psm1" -Force -DisableNameChecking
 Import-Module "$PSScriptRoot\..\modules\Set-MultipleEnvVariables.psm1" -Force -DisableNameChecking
+Import-Module "$PSScriptRoot\..\modules\Set-AppEnvVariables.psm1" -Force -DisableNameChecking
 
 # ------------------------------------------------------------------------------
 
-$env_type_choices = @("local", "cloud")
-$env_type = Make-Choice `
-  -Title "Choose environment type" `
-  -Choices $env_type_choices
+if (-not($Local.IsPresent)) {
+  $env_type_choices = @("local", "cloud")
+  $env_type = Make-Choice `
+    -Title "Choose environment type" `
+    -Choices $env_type_choices    
+}
+else {
+  $env_type = "local"
+}
 
 $env_vars_to_backup = @(
   "ESZOP_CLIENT_URI",
@@ -44,10 +54,11 @@ else {
         
   $env:ASPNETCORE_ENVIRONMENT = $target_cloud_envs[$target_cloud_env]
 
-  . "$PSScriptRoot\..\setup-scripts\Set-AppEnvVariables.ps1" -CloudEnv $target_cloud_env
+  Set-AppEnvVariables -CloudEnv $target_cloud_env
 }
     
 $services = @("carts", "identity", "notification", "offers", "orders")
+$sql_conn_str_name_prefix = "ESZOP_SQLSERVER_CONN_STR_"
 foreach ($service in $services) {
   if ($env_type -eq "cloud") {
     $var_name = "${sql_conn_str_name_prefix}$($service.ToUpperInvariant())"
@@ -57,7 +68,7 @@ foreach ($service in $services) {
 
   $service_location = Resolve-ServiceLocation -ServiceName $service
   $db_update_command = "dotnet ef database update --project $service_location"
-  Write-Host "RUN: $db_update_command"
+  Write-Host "[INFO] RUN: $db_update_command" -ForegroundColor Green
   Invoke-Expression $db_update_command
 }
 

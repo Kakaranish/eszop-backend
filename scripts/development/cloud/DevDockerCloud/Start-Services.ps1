@@ -10,6 +10,7 @@ $scripts_dir = "$PSScriptRoot\..\..\.."
 Import-Module "${scripts_dir}\modules\Resolve-ServiceLocation.psm1" -Force
 Import-Module "${scripts_dir}\modules\Get-MultipleEnvVariables.psm1" -Force -DisableNameChecking
 Import-Module "${scripts_dir}\modules\Set-MultipleEnvVariables.psm1" -Force -DisableNameChecking
+Import-Module "${scripts_dir}\modules\Set-AppEnvVariables.psm1" -Force -DisableNameChecking
 
 # ------------------------------------------------------------------------------
 
@@ -26,11 +27,10 @@ $env_vars_to_backup = @(
   "ESZOP_SQLSERVER_CONN_STR",
   "ASPNETCORE_ENVIRONMENT"
 )
-
 $env_vars_backup = Get-MultipleEnvVariables -Variables $env_vars_to_backup
 
 $env:ASPNETCORE_ENVIRONMENT = "DevDockerCloud"
-. "${scripts_dir}\setup-scripts\Set-AppEnvVariables.ps1" -CloudEnv $CloudEnv
+Set-AppEnvVariables -CloudEnv $CloudEnv
 
 Write-Host $env:ESZOP_CLIENT_URI
 

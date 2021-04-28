@@ -2,6 +2,10 @@ param (
   [switch] $ApplyMigrations
 )
 
+$scripts_dir = "$PSScriptRoot\..\..\.."
+
+# ------------------------------------------------------------------------------
+
 Write-Host "[INFO] Starting services" -ForegroundColor Green
 
 Get-ChildItem -Recurse | `
@@ -12,9 +16,7 @@ Get-ChildItem -Recurse | `
   & $_
 }
 
-# TODO:
-# if ($ApplyMigrations.IsPresent) {
-#   Write-Host "[INFO] Applying migrations to the databases" -ForegroundColor Green
-
-#   & "$PSScriptRoot\apply-db-migrations.ps1"
-# }
+if ($ApplyMigrations.IsPresent) {
+  Write-Host "[INFO] Applying migrations to the local databases" -ForegroundColor Green
+  & "${scripts_dir}\db-scripts\Apply-DbMigrations.ps1" -Local
+}
