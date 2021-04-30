@@ -27,7 +27,8 @@
       "launchUrl": "swagger",
       "dotnetRunMessages": "true",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "DevHostLocal"
+        "ASPNETCORE_ENVIRONMENT": "DevHostLocal",
+        "ESZOP_LOCAL_BLOB_STORAGE_WWWROOT_DIR": ""
       }
     }
   }

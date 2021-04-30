@@ -1,29 +1,32 @@
-﻿using System.IO;
-using System.Reflection;
+﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace Common.ImageStorage
 {
     public class LocalBlobStorage : IBlobStorage
     {
-        private bool _ensured = false;
+        private readonly string _uploadDir;
 
         public string ContainerName => "wwwroot";
 
-        public string UploadDir => Path.Combine(
-            Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? string.Empty, ContainerName);
+        public LocalBlobStorage(string uploadDir)
+        {
+            if (!Directory.Exists(uploadDir))
+                throw new DirectoryNotFoundException($"{uploadDir} does not exist");
+            
+            _uploadDir = uploadDir ?? throw new ArgumentNullException(nameof(uploadDir));
+        }
 
         public async Task<UploadedFileDto> UploadAsync(Stream content, string blobName)
         {
-            EnsureUploadDirExists();
-
-            var path = Path.Combine(UploadDir, blobName);
+            var path = Path.Combine(_uploadDir, blobName);
             await using var stream = new FileStream(path, FileMode.Create);
             await content.CopyToAsync(stream);
 
             return new UploadedFileDto
             {
-                Uri = path,
+                Uri = $"/{ContainerName}/{blobName}",
                 ContainerName = ContainerName,
                 Filename = blobName
             };
@@ -31,9 +34,7 @@ namespace Common.ImageStorage
 
         public Task<bool> DeleteAsync(string blobName)
         {
-            EnsureUploadDirExists();
-
-            var path = Path.Combine(UploadDir, blobName);
+            var path = Path.Combine(_uploadDir, blobName);
 
             var fileExists = File.Exists(path);
             if (fileExists) File.Delete(blobName);
@@ -43,23 +44,11 @@ namespace Common.ImageStorage
 
         public Task<Stream> DownloadAsync(string blobName)
         {
-            EnsureUploadDirExists();
-
-            var path = Path.Combine(UploadDir, blobName);
+            var path = Path.Combine(_uploadDir, blobName);
             if (!File.Exists(path)) return null;
 
             var file = new FileStream(path, FileMode.Open);
             return Task.FromResult((Stream)file);
-        }
-
-        private void EnsureUploadDirExists()
-        {
-            if (_ensured) return;
-
-            _ensured = true;
-            if (Directory.Exists(UploadDir)) return;
-
-            Directory.CreateDirectory(UploadDir);
         }
     }
 }

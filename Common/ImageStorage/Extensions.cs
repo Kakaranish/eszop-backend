@@ -1,6 +1,9 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Common.Extensions;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.IO;
+using System.Reflection;
 
 namespace Common.ImageStorage
 {
@@ -15,7 +18,7 @@ namespace Common.ImageStorage
                 configuration.GetSection("UseAzureBlobStorage").Value, out var valueResult) && valueResult;
 
             if (useAzureBlobStorage) ConfigureForAzureBlobStorage(services, configuration);
-            else services.AddSingleton<IBlobStorage, LocalBlobStorage>();
+            else ConfigureForLocalBlobStorage(services, configuration);
 
             return services;
         }
@@ -23,15 +26,10 @@ namespace Common.ImageStorage
         private static void ConfigureForAzureBlobStorage(IServiceCollection services, IConfiguration configuration)
         {
             const string connStrEnvVarName = "ESZOP_AZURE_STORAGE_CONN_STR";
-            
-            var connectionStr = Environment.GetEnvironmentVariable(connStrEnvVarName);
-            if (string.IsNullOrWhiteSpace(connectionStr))
-                connectionStr = configuration.GetValue<string>("AzureStorage:ConnectionString");
-            if (string.IsNullOrWhiteSpace(connectionStr))
-                throw new InvalidOperationException("Connection string provided neither in env variable nor appsettings");
+            const string appsettingsPath = "AzureStorage:ConnectionString";
+            var connectionStr = configuration.GetRequiredConfigValue(connStrEnvVarName, appsettingsPath);
 
             var containerName = configuration.GetValue<string>("AzureStorage:ContainerName");
-
             services.Configure<AzureStorageConfig>(config =>
             {
                 config.ConnectionString = connectionStr;
@@ -39,6 +37,20 @@ namespace Common.ImageStorage
             });
 
             services.AddSingleton<IBlobStorage, AzureBlobStorage>();
+        }
+
+        private static void ConfigureForLocalBlobStorage(IServiceCollection services, IConfiguration configuration)
+        {
+            const string envVarName = "ESZOP_LOCAL_BLOB_STORAGE_WWWROOT_DIR";
+            const string appsettingsPath = "LocalBlobStorageWwwRootDir";
+
+            var uploadDir = Environment.GetEnvironmentVariable(envVarName);
+            if (string.IsNullOrWhiteSpace(uploadDir))
+                uploadDir = configuration.GetValue<string>(appsettingsPath);
+            if (string.IsNullOrWhiteSpace(uploadDir))
+                uploadDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+
+            services.AddSingleton<IBlobStorage>(new LocalBlobStorage(uploadDir));
         }
     }
 }
