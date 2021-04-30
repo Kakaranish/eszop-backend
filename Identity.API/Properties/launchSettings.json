@@ -8,22 +8,22 @@
     }
   },
   "profiles": {
-    "Identity.API.Cloud": {
-      "commandName": "Project",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "DevHostCloud",
-        "ESZOP_SQLSERVER_CONN_STR": "",
-        "ESZOP_AZURE_EVENTBUS_TOPIC_NAME": "",
-        "ESZOP_AZURE_EVENTBUS_CONN_STR": "",
-        "ESZOP_AZURE_EVENTBUS_SUB_NAME": "",
-        "ESZOP_REDIS_CONN_STR": ""
-      },
-      "dotnetRunMessages": "true"
-    },
     "Identity.API": {
       "commandName": "Project",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "DevHostLocal"
+      },
+      "dotnetRunMessages": "true"
+    },
+    "Identity.API.Cloud": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "DevHostCloud",
+        "ESZOP_SQLSERVER_CONN_STR": "[FILL ME]",
+        "ESZOP_AZURE_EVENTBUS_CONN_STR": "[FILL ME]",
+        "ESZOP_AZURE_EVENTBUS_TOPIC_NAME": "[FILL ME]",
+        "ESZOP_AZURE_EVENTBUS_SUB_NAME": "[FILL ME]",
+        "ESZOP_REDIS_CONN_STR": "[FILL ME]"
       },
       "dotnetRunMessages": "true"
     }

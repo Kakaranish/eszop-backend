@@ -9,26 +9,26 @@
   },
   "$schema": "http://json.schemastore.org/launchsettings.json",
   "profiles": {
-    "Offers.API.Cloud": {
-      "commandName": "Project",
-      "launchUrl": "swagger",
-      "dotnetRunMessages": "true",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "DevHostCloud",
-        "ESZOP_SQLSERVER_CONN_STR": "",
-        "ESZOP_AZURE_EVENTBUS_TOPIC_NAME": "",
-        "ESZOP_AZURE_EVENTBUS_CONN_STR": "",
-        "ESZOP_AZURE_STORAGE_CONN_STR": "",
-        "ESZOP_AZURE_EVENTBUS_SUB_NAME": ""
-      }
-    },
     "Offers.API": {
       "commandName": "Project",
       "launchUrl": "swagger",
       "dotnetRunMessages": "true",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "DevHostLocal",
-        "ESZOP_LOCAL_BLOB_STORAGE_WWWROOT_DIR": ""
+        "ESZOP_LOCAL_BLOB_STORAGE_WWWROOT_DIR": "[FILL ME]"
+      }
+    },
+    "Offers.API.Cloud": {
+      "commandName": "Project",
+      "launchUrl": "swagger",
+      "dotnetRunMessages": "true",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "DevHostCloud",
+        "ESZOP_SQLSERVER_CONN_STR": "[FILL ME]",
+        "ESZOP_AZURE_EVENTBUS_CONN_STR": "[FILL ME]",
+        "ESZOP_AZURE_STORAGE_CONN_STR": "[FILL ME]",
+        "ESZOP_AZURE_EVENTBUS_TOPIC_NAME": "[FILL ME]",
+        "ESZOP_AZURE_EVENTBUS_SUB_NAME": "[FILL ME]"
       }
     }
   }

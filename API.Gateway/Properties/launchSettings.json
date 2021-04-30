@@ -8,18 +8,18 @@
     }
   },
   "profiles": {
-    "API.Gateway.Cloud": {
-      "commandName": "Project",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "DevHostCloud",
-        "ESZOP_CLIENT_URI": "https://localhost:3000"
-      },
-      "dotnetRunMessages": "true"
-    },
     "API.Gateway": {
       "commandName": "Project",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "DevHostLocal"
+      },
+      "dotnetRunMessages": "true"
+    },
+    "API.Gateway.Cloud": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "DevHostCloud",
+        "ESZOP_CLIENT_URI": "http://localhost:3000"
       },
       "dotnetRunMessages": "true"
     }
