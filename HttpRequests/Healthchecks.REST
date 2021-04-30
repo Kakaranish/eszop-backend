@@ -1,0 +1,31 @@
+@url_base = http://localhost
+
+####
+
+# Offers.API
+POST {{url_base}}:5000/healthcheck HTTP/1.1
+
+###
+
+# Identity.API
+POST {{url_base}}:6000/healthcheck HTTP/1.1
+
+###
+
+# Carts.API
+POST {{url_base}}:7000/healthcheck HTTP/1.1
+
+###
+
+# Orders.API
+POST {{url_base}}:8000/healthcheck HTTP/1.1
+
+###
+
+# NotificationService
+POST {{url_base}}:9000/healthcheck HTTP/1.1
+
+###
+
+# API.Gateway
+POST {{url_base}}:10000/healthcheck HTTP/1.1

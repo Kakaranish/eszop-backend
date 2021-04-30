@@ -1,7 +1,0 @@
-@url = http://localhost:6000
-@accessToken = 
-
-###
-
-GET {{url}}/api/user/me HTTP/1.1
-Authorization: Bearer {{accessToken}}

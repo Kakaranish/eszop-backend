@@ -1,5 +1,0 @@
-@url = http://localhost:9000
-
-### HEALTHCHECK
-
-POST {{url}}/healthcheck HTTP/1.1
