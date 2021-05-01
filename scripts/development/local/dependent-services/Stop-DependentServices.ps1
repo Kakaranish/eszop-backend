@@ -5,7 +5,7 @@
 #
 # ------------------------------------------------------------------------------
 
-Get-ChildItem -Recurse | `
+Get-ChildItem -Recurse -Path $PSScriptRoot | `
   Where-Object {
   $_.Name -eq "stop-dependent-services.ps1" -and $_.DirectoryName -ne $PSScriptRoot
 } | `
