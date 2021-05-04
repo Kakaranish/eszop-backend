@@ -22,7 +22,9 @@ namespace Common.EventBus
         {
             _busClient.SubscribeAsync<TEvent>(async (@event, _) =>
             {
-                var handler = _provider.GetRequiredService<IntegrationEventHandler<TEvent>>();
+                using var scope = _provider.CreateScope();
+                var handler = scope.ServiceProvider.GetRequiredService<IntegrationEventHandler<TEvent>>();
+
                 await handler.Handle(@event);
             });
 
