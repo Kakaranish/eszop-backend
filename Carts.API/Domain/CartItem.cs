@@ -157,7 +157,7 @@ namespace Carts.API.Domain
         {
             if (string.IsNullOrWhiteSpace(imageUri))
                 throw new CartsDomainException($"{nameof(ImageUri)} cannot be null or empty");
-            if (!Uri.IsWellFormedUriString(imageUri, UriKind.Absolute))
+            if (!Uri.IsWellFormedUriString(imageUri, UriKind.RelativeOrAbsolute))
                 throw new CartsDomainException($"{nameof(ImageUri)} is not well formed uri");
         }
 

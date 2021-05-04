@@ -85,7 +85,7 @@ namespace Orders.API.Domain
         {
             if (string.IsNullOrWhiteSpace(imageUri))
                 throw new OrdersDomainException($"{nameof(imageUri)} cannot be null or empty");
-            if (!Uri.IsWellFormedUriString(imageUri, UriKind.Absolute))
+            if (!Uri.IsWellFormedUriString(imageUri, UriKind.RelativeOrAbsolute))
                 throw new OrdersDomainException($"{nameof(imageUri)} is not well formed uri");
         }
 
