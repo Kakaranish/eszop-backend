@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace NotificationService.Application.Commands.ReadAll
+namespace NotificationService.API.Application.Commands.ReadAll
 {
     public class ReadAllCommand : IRequest
     {

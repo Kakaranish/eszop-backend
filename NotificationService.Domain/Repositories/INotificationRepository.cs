@@ -1,10 +1,10 @@
-﻿using NotificationService.Application.Domain;
+﻿using Common.Domain.Repositories;
+using NotificationService.Domain.Aggregates.NotificationAggregate;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Common.Domain.Repositories;
 
-namespace NotificationService.DataAccess.Repositories
+namespace NotificationService.Domain.Repositories
 {
     public interface INotificationRepository : IDomainRepository<Notification>
     {

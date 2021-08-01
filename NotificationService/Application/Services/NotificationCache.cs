@@ -1,12 +1,12 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
-using NotificationService.Application.Domain;
-using NotificationService.DataAccess.Repositories;
+using NotificationService.Domain.Aggregates.NotificationAggregate;
+using NotificationService.Domain.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace NotificationService.Application.Services
+namespace NotificationService.API.Application.Services
 {
     public class NotificationCache : INotificationCache
     {

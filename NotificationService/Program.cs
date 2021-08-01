@@ -1,12 +1,12 @@
-using Common.Logging;
-using Common.Types;
+using Common.Utilities.Logging;
+using Common.Utilities.Types;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 
-namespace NotificationService
+namespace NotificationService.API
 {
     public class Program
     {

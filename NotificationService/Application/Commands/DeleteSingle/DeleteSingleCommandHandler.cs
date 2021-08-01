@@ -1,14 +1,14 @@
-﻿using Common.Extensions;
+﻿using Common.Utilities.Extensions;
 using MediatR;
 using Microsoft.AspNetCore.Http;
-using NotificationService.Application.Services;
-using NotificationService.DataAccess.Repositories;
+using NotificationService.API.Application.Services;
+using NotificationService.Domain.Repositories;
 using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace NotificationService.Application.Commands.DeleteSingle
+namespace NotificationService.API.Application.Commands.DeleteSingle
 {
     public class DeleteSingleCommandHandler : IRequestHandler<DeleteSingleCommand>
     {

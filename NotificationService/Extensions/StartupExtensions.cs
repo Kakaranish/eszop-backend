@@ -1,13 +1,13 @@
-﻿using Common.Extensions;
+﻿using Common.Utilities.Extensions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using NotificationService.DataAccess;
+using NotificationService.Infrastructure.DataAccess;
 using System.Text.Json;
 
-namespace NotificationService.Extensions
+namespace NotificationService.API.Extensions
 {
     public static class StartupExtensions
     {

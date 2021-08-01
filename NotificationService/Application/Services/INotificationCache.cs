@@ -1,9 +1,9 @@
-﻿using NotificationService.Application.Domain;
+﻿using NotificationService.Domain.Aggregates.NotificationAggregate;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace NotificationService.Application.Services
+namespace NotificationService.API.Application.Services
 {
     public interface INotificationCache
     {

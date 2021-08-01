@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace NotificationService.Application.Services
+namespace NotificationService.API.Application.Services
 {
     public interface IConnectionManager
     {

@@ -1,8 +1,8 @@
-﻿using Common.Extensions;
+﻿using Common.Utilities.Extensions;
 using FluentValidation;
 using MediatR;
 
-namespace NotificationService.Application.Commands.DeleteSingle
+namespace NotificationService.API.Application.Commands.DeleteSingle
 {
     public class DeleteSingleCommand : IRequest
     {

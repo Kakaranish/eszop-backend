@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace NotificationService.Application.Commands.DeleteAll
+namespace NotificationService.API.Application.Commands.DeleteAll
 {
     public class DeleteAllCommand : IRequest
     {

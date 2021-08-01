@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace NotificationService.Application.Dto
+namespace NotificationService.API.Application.Dto
 {
     public class NotificationDto
     {

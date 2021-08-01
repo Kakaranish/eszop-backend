@@ -1,17 +1,17 @@
-﻿using Common.Authentication;
-using Common.Extensions;
+﻿using Common.Utilities.Authentication;
+using Common.Utilities.Extensions;
+using MediatR;
 using Microsoft.AspNetCore.SignalR;
-using NotificationService.Application.Services;
+using NotificationService.API.Application.Commands.DeleteAll;
+using NotificationService.API.Application.Commands.DeleteSingle;
+using NotificationService.API.Application.Commands.ReadAll;
+using NotificationService.API.Application.Services;
+using NotificationService.API.Extensions;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using MediatR;
-using NotificationService.Application.Commands.DeleteAll;
-using NotificationService.Application.Commands.DeleteSingle;
-using NotificationService.Application.Commands.ReadAll;
-using NotificationService.Extensions;
 
-namespace NotificationService.Application.Hubs
+namespace NotificationService.API.Application.Hubs
 {
     [JwtAuthorize]
     public class NotificationHub : Hub<INotificationClient>

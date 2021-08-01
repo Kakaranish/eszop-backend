@@ -1,13 +1,13 @@
-﻿using Common.Extensions;
+﻿using Common.Domain.Repositories;
+using Common.Utilities.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using NotificationService.Application.Domain;
+using NotificationService.Domain.Aggregates.NotificationAggregate;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Common.Domain.Repositories;
 
-namespace NotificationService.DataAccess
+namespace NotificationService.Infrastructure.DataAccess
 {
     public class AppDbContext : DbContext, IUnitOfWork
     {

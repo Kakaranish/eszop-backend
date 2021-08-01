@@ -3,14 +3,14 @@ using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using NotificationService.Application.Commands.RefreshCacheAndSeedUsers;
-using NotificationService.DataAccess.Repositories;
+using NotificationService.API.Application.Commands.RefreshCacheAndSeedUsers;
+using NotificationService.Domain.Repositories;
 using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace NotificationService.Application
+namespace NotificationService.API.Application
 {
     public class CleanupJob : IScheduledJob
     {

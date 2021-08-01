@@ -1,22 +1,23 @@
-using Common.Authentication;
-using Common.EventBus;
-using Common.EventBus.IntegrationEvents;
-using Common.Extensions;
-using Common.Helpers;
+using Common.Utilities.Authentication;
+using Common.Utilities.EventBus;
+using Common.Utilities.EventBus.IntegrationEvents;
+using Common.Utilities.Extensions;
+using Common.Utilities.Helpers;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using NotificationService.Application;
-using NotificationService.Application.Hubs;
-using NotificationService.Application.IntegrationEventHandlers;
-using NotificationService.Application.Services;
-using NotificationService.DataAccess.Repositories;
-using NotificationService.Extensions;
+using NotificationService.API.Application;
+using NotificationService.API.Application.Hubs;
+using NotificationService.API.Application.IntegrationEventHandlers;
+using NotificationService.API.Application.Services;
+using NotificationService.API.Extensions;
+using NotificationService.Domain.Repositories;
+using NotificationService.Infrastructure.DataAccess.Repositories;
 using Serilog;
 
-namespace NotificationService
+namespace NotificationService.API
 {
     public class Startup
     {

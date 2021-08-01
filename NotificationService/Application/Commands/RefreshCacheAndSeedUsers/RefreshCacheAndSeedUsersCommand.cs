@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace NotificationService.Application.Commands.RefreshCacheAndSeedUsers
+namespace NotificationService.API.Application.Commands.RefreshCacheAndSeedUsers
 {
     public class RefreshCacheAndSeedUsersCommand : IRequest
     {

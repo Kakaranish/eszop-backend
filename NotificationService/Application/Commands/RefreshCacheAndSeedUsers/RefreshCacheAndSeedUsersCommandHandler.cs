@@ -1,15 +1,15 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
-using NotificationService.Application.Hubs;
-using NotificationService.Application.Services;
-using NotificationService.Extensions;
+using NotificationService.API.Application.Hubs;
+using NotificationService.API.Application.Services;
+using NotificationService.API.Extensions;
 using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace NotificationService.Application.Commands.RefreshCacheAndSeedUsers
+namespace NotificationService.API.Application.Commands.RefreshCacheAndSeedUsers
 {
     public class RefreshCacheAndSeedUsersCommandHandler : IRequestHandler<RefreshCacheAndSeedUsersCommand>
     {

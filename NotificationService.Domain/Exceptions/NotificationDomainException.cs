@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NotificationService.Application.Domain
+namespace NotificationService.Domain.Exceptions
 {
     public class NotificationDomainException : Exception
     {

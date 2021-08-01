@@ -1,8 +1,8 @@
-﻿using NotificationService.Application.Dto;
+﻿using NotificationService.API.Application.Dto;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace NotificationService.Application.Hubs
+namespace NotificationService.API.Application.Hubs
 {
     public interface INotificationClient
     {

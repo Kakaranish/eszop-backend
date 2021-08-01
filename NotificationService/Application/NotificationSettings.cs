@@ -1,4 +1,4 @@
-﻿namespace NotificationService.Application
+﻿namespace NotificationService.API.Application
 {
     public class NotificationSettings
     {

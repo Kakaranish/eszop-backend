@@ -1,8 +1,9 @@
 ﻿using Common.Domain;
+using NotificationService.Domain.Exceptions;
 using System;
 using System.Collections.Generic;
 
-namespace NotificationService.Application.Domain
+namespace NotificationService.Domain.Aggregates.NotificationAggregate
 {
     public class Notification : EntityBase, IAggregateRoot
     {

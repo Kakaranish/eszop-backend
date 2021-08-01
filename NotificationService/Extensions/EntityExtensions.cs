@@ -1,7 +1,7 @@
-﻿using NotificationService.Application.Domain;
-using NotificationService.Application.Dto;
+﻿using NotificationService.API.Application.Dto;
+using NotificationService.Domain.Aggregates.NotificationAggregate;
 
-namespace NotificationService.Extensions
+namespace NotificationService.API.Extensions
 {
     public static class EntityExtensions
     {

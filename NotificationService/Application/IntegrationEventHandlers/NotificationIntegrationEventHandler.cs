@@ -1,19 +1,19 @@
-﻿using Common.EventBus;
-using Common.EventBus.IntegrationEvents;
-using Common.Extensions;
-using Common.Logging;
+﻿using Common.Utilities.EventBus;
+using Common.Utilities.EventBus.IntegrationEvents;
+using Common.Utilities.Extensions;
+using Common.Utilities.Logging;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
-using NotificationService.Application.Domain;
-using NotificationService.Application.Hubs;
-using NotificationService.Application.Services;
-using NotificationService.DataAccess.Repositories;
-using NotificationService.Extensions;
+using NotificationService.API.Application.Hubs;
+using NotificationService.API.Application.Services;
+using NotificationService.API.Extensions;
+using NotificationService.Domain.Aggregates.NotificationAggregate;
+using NotificationService.Domain.Repositories;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace NotificationService.Application.IntegrationEventHandlers
+namespace NotificationService.API.Application.IntegrationEventHandlers
 {
     public class NotificationIntegrationEventHandler : IntegrationEventHandler<NotificationIntegrationEvent>
     {

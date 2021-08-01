@@ -1,17 +1,18 @@
-﻿using Common.Extensions;
+﻿using Common.Domain.Repositories;
+using Common.Utilities.Extensions;
 using Dapper;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using NotificationService.Application.Domain;
+using NotificationService.Domain.Aggregates.NotificationAggregate;
+using NotificationService.Domain.Repositories;
 using Polly;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Common.Domain.Repositories;
 
-namespace NotificationService.DataAccess.Repositories
+namespace NotificationService.Infrastructure.DataAccess.Repositories
 {
     public class NotificationRepository : INotificationRepository
     {

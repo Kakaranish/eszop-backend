@@ -1,15 +1,15 @@
-﻿using Common.Extensions;
+﻿using Common.Utilities.Extensions;
 using MediatR;
 using Microsoft.AspNetCore.Http;
-using NotificationService.Application.Domain;
-using NotificationService.Application.Services;
-using NotificationService.DataAccess.Repositories;
+using NotificationService.API.Application.Services;
+using NotificationService.Domain.Aggregates.NotificationAggregate;
+using NotificationService.Domain.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace NotificationService.Application.Commands.DeleteAll
+namespace NotificationService.API.Application.Commands.DeleteAll
 {
     public class DeleteAllCommandHandler : IRequestHandler<DeleteAllCommand>
     {
