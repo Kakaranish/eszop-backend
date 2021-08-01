@@ -7,7 +7,7 @@ $services = @("gateway", "carts", "identity", "notification", "offers", "orders"
 
 foreach ($service in $services) {
   $service_dir = Resolve-ServiceLocation -ServiceName $service
-  $scripts_dir = Join-Path (Resolve-Path $service_dir) "scripts" "docker" "DevDockerCloud"
+  $scripts_dir = Join-Path (Resolve-Path $service_dir) ".." "scripts" "docker" "DevDockerCloud"
   $stop_script = Join-Path $scripts_dir "stop-service.ps1"
 
   if (Test-Path $stop_script) {
