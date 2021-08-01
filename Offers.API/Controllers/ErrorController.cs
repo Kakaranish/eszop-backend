@@ -3,7 +3,8 @@ using Common.ErrorHandling;
 using Common.Types;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using Offers.API.Domain;
+using Offers.Domain;
+using Offers.Domain.Exceptions;
 
 namespace Offers.API.Controllers
 {

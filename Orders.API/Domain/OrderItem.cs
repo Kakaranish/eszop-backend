@@ -1,5 +1,5 @@
 ﻿using Common.Domain;
-using Common.Validators;
+using Common.Domain.Validators;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
 

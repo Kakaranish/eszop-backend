@@ -1,13 +1,13 @@
 ﻿using Common.Extensions;
 using Common.Types;
 using MediatR;
-using Offers.API.Application.Dto;
-using Offers.API.DataAccess.Repositories;
-using Offers.API.Extensions;
 using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Offers.Domain.Repositories;
+using Offers.Infrastructure.Dto;
+using Offers.Infrastructure.Extensions;
 
 namespace Offers.API.Application.Queries.GetActiveOffers
 {

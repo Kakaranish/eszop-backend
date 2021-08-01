@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using Offers.API.Application.Commands.EndOffer;
 using Offers.API.Application.Commands.RemoveOffer;
 using Offers.API.Application.Commands.UpdateActiveOffer;
-using Offers.API.Application.Dto;
 using Offers.API.Application.Queries.GetActiveOffers;
 using Offers.API.Application.Queries.GetMyOffer;
 using Offers.API.Application.Queries.GetMyOffers;
@@ -14,6 +13,8 @@ using Offers.API.Application.Queries.GetSellerOffers;
 using Offers.API.Application.Types;
 using System;
 using System.Threading.Tasks;
+using Offers.Domain.Repositories.Types;
+using Offers.Infrastructure.Dto;
 
 namespace Offers.API.Controllers
 {
@@ -61,7 +62,7 @@ namespace Offers.API.Controllers
         {
             return await _mediator.Send(query);
         }
-
+        
         [HttpGet("{offerId}")]
         public async Task<OfferViewDto> GetById(string offerId)
         {

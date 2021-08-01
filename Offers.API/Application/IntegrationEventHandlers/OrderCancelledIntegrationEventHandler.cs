@@ -3,9 +3,9 @@ using Common.EventBus.IntegrationEvents;
 using Common.Extensions;
 using Common.Logging;
 using Microsoft.Extensions.Logging;
-using Offers.API.DataAccess.Repositories;
 using System;
 using System.Threading.Tasks;
+using Offers.Domain.Repositories;
 
 namespace Offers.API.Application.IntegrationEventHandlers
 {

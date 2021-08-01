@@ -1,4 +1,4 @@
-﻿using Common.Domain;
+﻿using Common.Domain.DomainEvents;
 using Common.Dto;
 using Orders.API.Domain;
 using System;

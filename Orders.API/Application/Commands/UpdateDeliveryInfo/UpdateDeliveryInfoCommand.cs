@@ -1,5 +1,5 @@
-﻿using Common.Extensions;
-using Common.Validators;
+﻿using Common.Domain.Validators;
+using Common.Extensions;
 using FluentValidation;
 using MediatR;
 

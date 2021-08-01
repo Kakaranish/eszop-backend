@@ -1,10 +1,10 @@
 ﻿using Common.Domain;
-using Common.Types;
-using Common.Validators;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using Common.Domain.Types;
+using Common.Domain.Validators;
 
 namespace Carts.API.Domain
 {

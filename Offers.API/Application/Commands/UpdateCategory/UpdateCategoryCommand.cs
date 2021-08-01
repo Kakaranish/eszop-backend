@@ -1,7 +1,7 @@
 ﻿using Common.Extensions;
 using FluentValidation;
 using MediatR;
-using Offers.API.Domain.Validators;
+using Offers.Domain.Validators;
 
 namespace Offers.API.Application.Commands.UpdateCategory
 {

@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using MediatR;
-using Offers.API.Domain.Validators;
 using System;
+using Offers.Domain.Validators;
 
 namespace Offers.API.Application.Commands.CreateCategory
 {

@@ -1,5 +1,4 @@
-﻿using Common.DataAccess;
-using Common.Extensions;
+﻿using Common.Extensions;
 using Common.Types;
 using Identity.API.Application.Types;
 using Identity.API.Domain;
@@ -8,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Common.Domain.Repositories;
 
 namespace Identity.API.DataAccess.Repositories
 {

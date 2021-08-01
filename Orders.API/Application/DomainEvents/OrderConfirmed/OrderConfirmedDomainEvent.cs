@@ -1,5 +1,5 @@
-﻿using System;
-using Common.Domain;
+﻿using Common.Domain.DomainEvents;
+using System;
 
 namespace Orders.API.Application.DomainEvents.OrderConfirmed
 {

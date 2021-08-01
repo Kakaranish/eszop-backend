@@ -1,12 +1,37 @@
 ﻿using Common.Extensions;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using NotificationService.DataAccess;
 using System.Text.Json;
 
 namespace NotificationService.Extensions
 {
     public static class StartupExtensions
     {
+        public static IServiceCollection ConfigureDbContext(this IServiceCollection services, IWebHostEnvironment webHostEnvironment)
+        {
+            var connectionString = services.GetSqlServerConnectionString();
+
+            var dbContextScope = webHostEnvironment.IsCustomDevelopment()
+                ? ServiceLifetime.Scoped
+                : ServiceLifetime.Scoped;
+
+            services.AddDbContext<AppDbContext>(builder =>
+                {
+                    builder
+                        .UseSqlServer(connectionString)
+                        .UseLoggerFactory(LoggerFactory.Create(loggingBuilder => loggingBuilder.AddDebug()));
+                },
+                contextLifetime: dbContextScope,
+                optionsLifetime: dbContextScope
+            );
+
+            return services;
+        }
+
         public static IServiceCollection ConfigureSignalR(this IServiceCollection services)
         {
             using var servicesProvider = services.BuildServiceProvider();

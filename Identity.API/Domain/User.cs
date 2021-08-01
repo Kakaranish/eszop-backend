@@ -1,6 +1,6 @@
 ﻿using Common.Domain;
-using Common.Types;
-using Common.Validators;
+using Common.Domain.Types;
+using Common.Domain.Validators;
 using Identity.API.Application.DomainEvents.UserLocked;
 using System;
 using System.Collections.Generic;

@@ -1,5 +1,6 @@
 ﻿using Common.Logging;
 using Microsoft.Azure.ServiceBus;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
@@ -86,7 +87,8 @@ namespace Common.EventBus
             var eventType = typeof(AzureEventBus).Assembly.GetTypes().FirstOrDefault(x => x.Name == eventTypeName);
 
             var eventHandlerType = typeof(IntegrationEventHandler<>).MakeGenericType(eventType);
-            var handler = _serviceProvider.GetService(eventHandlerType);
+            using var scope = _serviceProvider.CreateScope();
+            var handler = scope.ServiceProvider.GetService(eventHandlerType);
 
             if (!_subscribedEvents.Contains(eventTypeName) || handler == null)
             {

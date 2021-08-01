@@ -1,9 +1,9 @@
-﻿using Common.DataAccess;
-using Common.Types;
+﻿using Common.Types;
 using Identity.API.Application.Types;
 using Identity.API.Domain;
 using System;
 using System.Threading.Tasks;
+using Common.Domain.Repositories;
 
 namespace Identity.API.DataAccess.Repositories
 {

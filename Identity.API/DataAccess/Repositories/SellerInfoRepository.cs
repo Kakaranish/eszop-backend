@@ -1,8 +1,8 @@
-﻿using Common.DataAccess;
-using Identity.API.Domain;
+﻿using Identity.API.Domain;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading.Tasks;
+using Common.Domain.Repositories;
 
 namespace Identity.API.DataAccess.Repositories
 {

@@ -1,9 +1,10 @@
-﻿using Common.DataAccess;
-using Common.Types;
+﻿using Common.Types;
 using Orders.API.Domain;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Common.Domain.Repositories;
+using Common.Domain.Types;
 
 namespace Orders.API.DataAccess.Repositories
 {

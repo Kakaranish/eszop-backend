@@ -7,12 +7,13 @@ using Common.Types;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
-using Offers.API.DataAccess.Repositories;
-using Offers.API.Domain;
 using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Offers.Domain;
+using Offers.Domain.Exceptions;
+using Offers.Domain.Repositories;
 
 namespace Offers.API.Application.Commands.RemoveOffer
 {

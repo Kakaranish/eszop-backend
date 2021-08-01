@@ -1,5 +1,4 @@
-﻿using Common.DataAccess;
-using Common.Extensions;
+﻿using Common.Extensions;
 using Common.Types;
 using Microsoft.EntityFrameworkCore;
 using Orders.API.Domain;
@@ -7,6 +6,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Common.Domain.Repositories;
+using Common.Domain.Types;
 
 namespace Orders.API.DataAccess.Repositories
 {

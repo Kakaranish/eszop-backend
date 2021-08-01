@@ -1,11 +1,11 @@
 ﻿using Carts.API.Domain;
-using Common.DataAccess;
 using Common.Extensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Common.Domain.Repositories;
 
 namespace Carts.API.DataAccess
 {

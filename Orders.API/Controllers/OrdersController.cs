@@ -16,6 +16,7 @@ using Orders.API.Application.Queries.GetOrderSummary;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Common.Domain.Types;
 using DeliveryMethodDto = Common.Dto.DeliveryMethodDto;
 
 namespace Orders.API.Controllers

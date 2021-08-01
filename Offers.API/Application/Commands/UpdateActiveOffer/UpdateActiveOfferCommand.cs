@@ -2,9 +2,9 @@
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
+using Common.Domain.Validators;
 using Common.Extensions;
-using Common.Validators;
-using Offers.API.Domain.Validators;
+using Offers.Domain.Validators;
 
 namespace Offers.API.Application.Commands.UpdateActiveOffer
 {

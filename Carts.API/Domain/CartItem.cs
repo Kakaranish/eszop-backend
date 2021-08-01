@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Common.Domain;
+using Common.Domain.Types;
+using Common.Domain.Validators;
+using System;
 using System.ComponentModel.DataAnnotations.Schema;
-using Common.Domain;
-using Common.Types;
-using Common.Validators;
 
 namespace Carts.API.Domain
 {
@@ -34,7 +34,7 @@ namespace Carts.API.Domain
             AvailableStock = availableStock;
             SetQuantity(quantity);
             SetImageUri(imageUri);
-            
+
             CreatedAt = DateTime.UtcNow;
             UpdatedAt = CreatedAt;
         }
@@ -84,7 +84,7 @@ namespace Carts.API.Domain
             {
                 throw new CartsDomainException($"{nameof(quantity)} must be > 0");
             }
-            if(quantity > AvailableStock)
+            if (quantity > AvailableStock)
             {
                 throw new CartsDomainException($"Max {nameof(quantity)} of offer {OfferId} is {AvailableStock}");
             }
@@ -96,7 +96,7 @@ namespace Carts.API.Domain
         public void SetAvailableStock(int availableStock)
         {
             ValidateAvailableStock(availableStock);
-            
+
             if (availableStock < Quantity)
             {
                 // TODO: Generate domain event
@@ -129,7 +129,7 @@ namespace Carts.API.Domain
         {
             ValidateIdAndThrow(offerId, nameof(OfferId));
         }
-        
+
         private static void ValidateSellerId(Guid sellerId)
         {
             ValidateIdAndThrow(sellerId, nameof(SellerId));
@@ -141,7 +141,7 @@ namespace Carts.API.Domain
             var result = validator.Validate(offerName);
             if (!result.IsValid) throw new CartsDomainException($"{nameof(OfferName)} is invalid offer name");
         }
-        
+
         private static void ValidatePricePerItem(decimal pricePerItem)
         {
             if (pricePerItem <= 0) throw new CartsDomainException($"{nameof(PricePerItem)} must be >= 0");

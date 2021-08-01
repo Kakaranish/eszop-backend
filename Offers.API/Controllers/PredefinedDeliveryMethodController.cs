@@ -5,12 +5,12 @@ using Microsoft.AspNetCore.Mvc;
 using Offers.API.Application.Commands.CreatePredefinedDeliveryMethod;
 using Offers.API.Application.Commands.RemovePredefinedDeliveryMethod;
 using Offers.API.Application.Commands.UpdatePredefinedDeliveryMethod;
-using Offers.API.Application.Dto;
 using Offers.API.Application.Queries.GetAllPredefinedDeliveryMethods;
 using Offers.API.Application.Queries.GetPredefinedDeliveryMethodById;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Offers.Infrastructure.Dto;
 
 namespace Offers.API.Controllers
 {

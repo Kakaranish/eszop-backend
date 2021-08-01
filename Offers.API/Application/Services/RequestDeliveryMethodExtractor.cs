@@ -1,6 +1,8 @@
 ﻿using Newtonsoft.Json;
-using Offers.API.Domain;
 using System.Collections.Generic;
+using Offers.Domain;
+using Offers.Domain.Aggregates.OfferAggregate;
+using Offers.Domain.Exceptions;
 
 namespace Offers.API.Application.Services
 {

@@ -1,5 +1,4 @@
-﻿using Common.DataAccess;
-using Common.Extensions;
+﻿using Common.Extensions;
 using Identity.API.Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -8,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Common.Domain.Repositories;
 
 namespace Identity.API.DataAccess
 {

@@ -1,7 +1,7 @@
 ﻿using Common.Domain;
+using Common.Domain.Types;
+using Common.Domain.Validators;
 using Common.Dto;
-using Common.Types;
-using Common.Validators;
 using Orders.API.Application.DomainEvents.OrderCancelled;
 using Orders.API.Application.DomainEvents.OrderConfirmed;
 using Orders.API.Application.DomainEvents.OrderStatusChanged;

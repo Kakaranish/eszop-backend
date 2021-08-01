@@ -1,6 +1,6 @@
-﻿using System;
-using Common.Domain;
-using Common.Validators;
+﻿using Common.Domain;
+using Common.Domain.Validators;
+using System;
 
 namespace Identity.API.Domain
 {

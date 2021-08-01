@@ -1,8 +1,9 @@
 ﻿using Common.Types;
 using FluentValidation;
 using MediatR;
-using Offers.API.Application.Dto;
 using Offers.API.Application.Types;
+using Offers.Domain.Repositories.Types;
+using Offers.Infrastructure.Dto;
 
 namespace Offers.API.Application.Queries.GetActiveOffers
 {

@@ -1,4 +1,5 @@
-﻿using Common.EventBus;
+﻿using Common.Domain.Types;
+using Common.EventBus;
 using Common.EventBus.IntegrationEvents;
 using Common.Extensions;
 using Common.Logging;

@@ -4,10 +4,11 @@ using Common.Extensions;
 using Common.Logging;
 using Microsoft.Extensions.Logging;
 using Offers.API.Application.Types;
-using Offers.API.DataAccess.Repositories;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Offers.Domain.Repositories;
+using Offers.Domain.Repositories.Types;
 
 namespace Offers.API.Application.IntegrationEventHandlers
 {

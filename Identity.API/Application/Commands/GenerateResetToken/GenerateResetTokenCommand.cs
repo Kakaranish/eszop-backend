@@ -1,4 +1,4 @@
-﻿using Common.Validators;
+﻿using Common.Domain.Validators;
 using FluentValidation;
 using MediatR;
 

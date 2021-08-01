@@ -6,15 +6,12 @@ using Common.Helpers;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using NotificationService.Application;
 using NotificationService.Application.Hubs;
 using NotificationService.Application.IntegrationEventHandlers;
 using NotificationService.Application.Services;
-using NotificationService.DataAccess;
 using NotificationService.DataAccess.Repositories;
 using NotificationService.Extensions;
 using Serilog;
@@ -24,10 +21,12 @@ namespace NotificationService
     public class Startup
     {
         public IConfiguration Configuration { get; }
+        public IWebHostEnvironment WebHostEnvironment { get; }
 
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IWebHostEnvironment webHostEnvironment)
         {
             Configuration = configuration;
+            WebHostEnvironment = webHostEnvironment;
         }
 
         public void ConfigureServices(IServiceCollection services)
@@ -41,30 +40,21 @@ namespace NotificationService
 
             services.AddMediatR(typeof(Startup).Assembly);
 
-            var connectionString = services.GetSqlServerConnectionString();
-            services.AddDbContext<AppDbContext>(builder =>
-                {
-                    builder
-                        .UseSqlServer(connectionString)
-                        .UseLoggerFactory(LoggerFactory.Create(loggingBuilder => loggingBuilder.AddDebug()));
-                },
-                contextLifetime: ServiceLifetime.Scoped,
-                optionsLifetime: ServiceLifetime.Scoped
-            );
+            services.ConfigureDbContext(WebHostEnvironment);
             services.ConfigureHealthchecks();
 
             var notificationOptions = Configuration.GetSection("NotificationSettings").Get<NotificationSettings>();
-            services.AddScheduler(builder =>
-            {
-                builder.AddJob<CleanupJob>(configure: options =>
-                {
-                    options.CronSchedule = notificationOptions.CleanupJobCronPattern;
-                });
-            });
+            //services.AddScheduler(builder =>
+            //{
+            //    builder.AddJob<CleanupJob>(configure: options =>
+            //    {
+            //        options.CronSchedule = notificationOptions.CleanupJobCronPattern;
+            //    });
+            //});
 
             services.AddSingleton<IConnectionManager, ConnectionManager>();
             services.AddSingleton<INotificationCache, NotificationCache>();
-            services.AddTransient<INotificationRepository, NotificationRepository>();
+            services.AddScoped<INotificationRepository, NotificationRepository>();
 
             if (!EnvironmentHelpers.IsSeedingDatabase())
             {

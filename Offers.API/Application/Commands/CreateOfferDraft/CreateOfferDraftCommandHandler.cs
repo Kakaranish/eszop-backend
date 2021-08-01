@@ -3,11 +3,12 @@ using Common.Extensions;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Offers.API.Application.Services;
-using Offers.API.DataAccess.Repositories;
-using Offers.API.Domain;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Offers.Domain;
+using Offers.Domain.Aggregates.OfferAggregate;
+using Offers.Domain.Repositories;
 
 namespace Offers.API.Application.Commands.CreateOfferDraft
 {
@@ -38,7 +39,7 @@ namespace Offers.API.Application.Commands.CreateOfferDraft
             var category = await _categoryRepository.GetByIdAsync(categoryId);
             if (category == null) throw new NotFoundException("Category");
 
-            var tokenPayload = _httpContextAccessor.HttpContext.User.Claims.ToTokenPayload();
+            var tokenPayload = _httpContextAccessor.HttpContext!.User.Claims.ToTokenPayload();
 
             var offer = new Offer(
                 ownerId: tokenPayload.UserClaims.Id,

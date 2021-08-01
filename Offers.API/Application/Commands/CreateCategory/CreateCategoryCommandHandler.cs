@@ -3,11 +3,13 @@ using Common.Logging;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using Offers.API.DataAccess.Repositories;
-using Offers.API.Domain;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Offers.Domain;
+using Offers.Domain.Aggregates.CategoryAggregate;
+using Offers.Domain.Exceptions;
+using Offers.Domain.Repositories;
 
 namespace Offers.API.Application.Commands.CreateCategory
 {

@@ -1,8 +1,8 @@
-﻿using Common.DataAccess;
-using NotificationService.Application.Domain;
+﻿using NotificationService.Application.Domain;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Common.Domain.Repositories;
 
 namespace NotificationService.DataAccess.Repositories
 {

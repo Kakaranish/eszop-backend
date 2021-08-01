@@ -1,4 +1,4 @@
-﻿using Common.Types;
+﻿using Common.Domain.Types;
 using System;
 
 namespace Common.EventBus.IntegrationEvents

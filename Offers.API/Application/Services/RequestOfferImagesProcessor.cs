@@ -2,13 +2,15 @@
 using Common.ImageStorage;
 using Microsoft.AspNetCore.Http;
 using Offers.API.Application.Types;
-using Offers.API.Domain;
-using Offers.API.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Offers.Domain;
+using Offers.Domain.Aggregates.OfferAggregate;
+using Offers.Domain.Exceptions;
+using Offers.Infrastructure.Extensions;
 
 namespace Offers.API.Application.Services
 {

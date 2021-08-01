@@ -1,4 +1,4 @@
-﻿using Common.Domain;
+﻿using Common.Domain.DomainEvents;
 using Common.EventBus;
 using Common.EventBus.IntegrationEvents;
 using Common.Extensions;

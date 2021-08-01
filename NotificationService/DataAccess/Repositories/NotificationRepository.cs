@@ -1,5 +1,4 @@
-﻿using Common.DataAccess;
-using Common.Extensions;
+﻿using Common.Extensions;
 using Dapper;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Common.Domain.Repositories;
 
 namespace NotificationService.DataAccess.Repositories
 {

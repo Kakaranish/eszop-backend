@@ -1,4 +1,4 @@
-﻿using Common.Domain;
+﻿using Common.Domain.DomainEvents;
 using System;
 
 namespace Identity.API.Application.DomainEvents.UserLocked

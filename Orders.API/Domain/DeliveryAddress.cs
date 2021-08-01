@@ -1,7 +1,7 @@
 ﻿using Common.Domain;
-using Common.Validators;
+using Common.Domain.Types;
+using Common.Domain.Validators;
 using System;
-using Common.Types;
 
 namespace Orders.API.Domain
 {
@@ -9,7 +9,7 @@ namespace Orders.API.Domain
     {
         public DateTime CreatedAt { get; private set; }
         public DateTime UpdatedAt { get; private set; }
-        
+
         public string FirstName { get; private set; }
         public string LastName { get; private set; }
         public string PhoneNumber { get; private set; }
@@ -36,7 +36,7 @@ namespace Orders.API.Domain
         public void SetFirstName(string firstName)
         {
             ValidateFirstName(firstName);
-            
+
             FirstName = firstName;
             UpdatedAt = DateTime.UtcNow;
         }
@@ -44,7 +44,7 @@ namespace Orders.API.Domain
         public void SetLastName(string lastName)
         {
             ValidateLastName(lastName);
-            
+
             LastName = lastName;
             UpdatedAt = DateTime.UtcNow;
         }
@@ -52,7 +52,7 @@ namespace Orders.API.Domain
         public void SetCountry(string country)
         {
             ValidateCountry(country);
-            
+
             Country = country;
             UpdatedAt = DateTime.UtcNow;
         }
@@ -60,7 +60,7 @@ namespace Orders.API.Domain
         public void SetCity(string city)
         {
             ValidateCity(city);
-            
+
             City = city;
             UpdatedAt = DateTime.UtcNow;
         }
@@ -68,7 +68,7 @@ namespace Orders.API.Domain
         public void SetZipCode(string zipCode)
         {
             ValidateZipCode(zipCode);
-            
+
             ZipCode = zipCode;
             UpdatedAt = DateTime.UtcNow;
         }
@@ -76,7 +76,7 @@ namespace Orders.API.Domain
         public void SetStreet(string street)
         {
             ValidateStreet(street);
-            
+
             Street = street;
             UpdatedAt = DateTime.UtcNow;
         }
@@ -84,7 +84,7 @@ namespace Orders.API.Domain
         public void SetPhoneNumber(string phoneNumber)
         {
             ValidatePhoneNumber(phoneNumber);
-            
+
             PhoneNumber = phoneNumber;
             UpdatedAt = DateTime.UtcNow;
         }

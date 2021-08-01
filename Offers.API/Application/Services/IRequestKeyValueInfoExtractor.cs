@@ -1,5 +1,6 @@
-﻿using Offers.API.Domain;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Offers.Domain;
+using Offers.Domain.Aggregates.OfferAggregate;
 
 namespace Offers.API.Application.Services
 {

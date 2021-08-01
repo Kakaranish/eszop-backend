@@ -1,7 +1,7 @@
 ﻿using Common.Extensions;
 using FluentValidation;
 using MediatR;
-using Offers.API.Application.Dto;
+using Offers.Infrastructure.Dto;
 
 namespace Offers.API.Application.Queries.GetMyOffer
 {
