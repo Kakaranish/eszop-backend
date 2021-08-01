@@ -1,9 +1,9 @@
-﻿using Common.Exceptions;
+﻿using Common.Utilities.Exceptions;
 using MediatR;
+using Offers.Domain.Repositories;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Offers.Domain.Repositories;
 
 namespace Offers.API.Application.Commands.RemovePredefinedDeliveryMethod
 {

@@ -1,5 +1,5 @@
-﻿using Common.Authentication;
-using Common.Types;
+﻿using Common.Utilities.Authentication;
+using Common.Utilities.Types;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Offers.API.Application.Commands.CreatePredefinedDeliveryMethod;
@@ -7,10 +7,10 @@ using Offers.API.Application.Commands.RemovePredefinedDeliveryMethod;
 using Offers.API.Application.Commands.UpdatePredefinedDeliveryMethod;
 using Offers.API.Application.Queries.GetAllPredefinedDeliveryMethods;
 using Offers.API.Application.Queries.GetPredefinedDeliveryMethodById;
+using Offers.Infrastructure.Dto;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Offers.Infrastructure.Dto;
 
 namespace Offers.API.Controllers
 {
@@ -47,7 +47,7 @@ namespace Offers.API.Controllers
 
         [HttpPut("{deliveryMethodId}")]
         [JwtAuthorize("SuperAdmin")]
-        public async Task<IActionResult> Update([FromRoute] string deliveryMethodId, 
+        public async Task<IActionResult> Update([FromRoute] string deliveryMethodId,
             UpdatePredefinedDeliveryMethodCommand command)
         {
             command.DeliveryMethodId = deliveryMethodId;

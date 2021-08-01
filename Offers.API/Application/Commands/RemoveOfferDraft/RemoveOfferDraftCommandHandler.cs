@@ -1,14 +1,13 @@
-﻿using Common.Exceptions;
-using Common.Extensions;
-using Common.ImageStorage;
+﻿using Common.Utilities.Exceptions;
+using Common.Utilities.Extensions;
+using Common.Utilities.ImageStorage;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using Offers.Domain.Exceptions;
+using Offers.Domain.Repositories;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Offers.Domain;
-using Offers.Domain.Exceptions;
-using Offers.Domain.Repositories;
 
 namespace Offers.API.Application.Commands.RemoveOfferDraft
 {

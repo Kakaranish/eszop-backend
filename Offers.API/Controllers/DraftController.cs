@@ -1,5 +1,5 @@
-﻿using Common.Authentication;
-using Common.Types;
+﻿using Common.Utilities.Authentication;
+using Common.Utilities.Types;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Offers.API.Application.Commands.CreateOfferDraft;

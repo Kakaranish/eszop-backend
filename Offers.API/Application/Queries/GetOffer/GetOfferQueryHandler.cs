@@ -1,10 +1,10 @@
 ﻿using MediatR;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 using Offers.Domain.Repositories;
 using Offers.Infrastructure.Dto;
 using Offers.Infrastructure.Extensions;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Offers.API.Application.Queries.GetOffer
 {

@@ -1,13 +1,13 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-using Common.Domain.DomainEvents;
-using Common.EventBus;
-using Common.EventBus.IntegrationEvents;
-using Common.Extensions;
-using Common.Logging;
+﻿using Common.Domain.DomainEvents;
+using Common.Utilities.EventBus;
+using Common.Utilities.EventBus.IntegrationEvents;
+using Common.Utilities.Extensions;
+using Common.Utilities.Logging;
 using Microsoft.Extensions.Logging;
 using Offers.Domain.DomainEvents.ActiveOfferChanged;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Offers.API.Application.DomainEventHandlers.ActiveOfferChanged
 {

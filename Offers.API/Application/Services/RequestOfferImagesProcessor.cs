@@ -1,16 +1,15 @@
-﻿using Common.Extensions;
-using Common.ImageStorage;
+﻿using Common.Utilities.Extensions;
+using Common.Utilities.ImageStorage;
 using Microsoft.AspNetCore.Http;
 using Offers.API.Application.Types;
+using Offers.Domain.Aggregates.OfferAggregate;
+using Offers.Domain.Exceptions;
+using Offers.Infrastructure.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Offers.Domain;
-using Offers.Domain.Aggregates.OfferAggregate;
-using Offers.Domain.Exceptions;
-using Offers.Infrastructure.Extensions;
 
 namespace Offers.API.Application.Services
 {

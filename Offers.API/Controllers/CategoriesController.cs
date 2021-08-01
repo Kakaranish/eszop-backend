@@ -1,15 +1,15 @@
-﻿using Common.Authentication;
-using Common.Types;
+﻿using Common.Utilities.Authentication;
+using Common.Utilities.Types;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Offers.API.Application.Commands.CreateCategory;
 using Offers.API.Application.Commands.UpdateCategory;
 using Offers.API.Application.Queries.GetCategories;
 using Offers.API.Application.Queries.GetCategory;
+using Offers.Infrastructure.Dto;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Offers.Infrastructure.Dto;
 
 namespace Offers.API.Controllers
 {

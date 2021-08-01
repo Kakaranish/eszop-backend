@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Offers.Domain.Aggregates.OfferAggregate;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Offers.Domain;
-using Offers.Domain.Aggregates.OfferAggregate;
 
 namespace Offers.API.Application.Services
 {

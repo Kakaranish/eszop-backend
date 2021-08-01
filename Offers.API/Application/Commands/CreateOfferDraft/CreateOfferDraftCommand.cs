@@ -1,10 +1,10 @@
-﻿using Common.Extensions;
-using FluentValidation;
+﻿using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using Common.Domain.Validators;
+using Common.Utilities.Extensions;
 using Offers.Domain.Validators;
 
 namespace Offers.API.Application.Commands.CreateOfferDraft

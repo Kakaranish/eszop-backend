@@ -1,10 +1,9 @@
 ﻿using MediatR;
+using Offers.Domain.Aggregates.PredefinedDeliveryMethodAggregate;
+using Offers.Domain.Repositories;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Offers.Domain;
-using Offers.Domain.Aggregates.PredefinedDeliveryMethodAggregate;
-using Offers.Domain.Repositories;
 
 namespace Offers.API.Application.Commands.CreatePredefinedDeliveryMethod
 {

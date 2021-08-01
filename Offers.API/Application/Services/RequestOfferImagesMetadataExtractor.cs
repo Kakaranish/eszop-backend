@@ -1,9 +1,8 @@
 ﻿using Newtonsoft.Json;
 using Offers.API.Application.Types;
+using Offers.Domain.Exceptions;
 using System.Collections.Generic;
 using System.Linq;
-using Offers.Domain;
-using Offers.Domain.Exceptions;
 
 namespace Offers.API.Application.Services
 {

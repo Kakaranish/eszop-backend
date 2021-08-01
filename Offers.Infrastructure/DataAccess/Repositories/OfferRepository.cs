@@ -1,16 +1,16 @@
 ﻿using Common.Domain.Repositories;
-using Common.Extensions;
-using Common.Types;
+using Common.Domain.Types;
+using Common.Utilities.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Offers.Domain.Aggregates.OfferAggregate;
 using Offers.Domain.Repositories;
 using Offers.Domain.Repositories.Types;
+using Offers.Infrastructure.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using Offers.Infrastructure.Extensions;
 
 namespace Offers.Infrastructure.DataAccess.Repositories
 {

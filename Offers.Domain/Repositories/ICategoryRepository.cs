@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Common.Domain.Repositories;
+using Offers.Domain.Aggregates.CategoryAggregate;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Common.Domain.Repositories;
-using Offers.Domain.Aggregates.CategoryAggregate;
 
 namespace Offers.Domain.Repositories
 {

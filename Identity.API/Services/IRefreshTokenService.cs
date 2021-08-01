@@ -1,7 +1,6 @@
-﻿using System.Threading.Tasks;
-using Identity.Domain.Aggregates;
-using Identity.Domain.Aggregates.RefreshTokenAggregate;
+﻿using Identity.Domain.Aggregates.RefreshTokenAggregate;
 using Identity.Domain.Aggregates.UserAggregate;
+using System.Threading.Tasks;
 
 namespace Identity.API.Services
 {

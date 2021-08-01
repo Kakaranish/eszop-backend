@@ -1,14 +1,13 @@
-﻿using Common.EventBus;
-using Common.EventBus.IntegrationEvents;
-using Common.Extensions;
-using Common.Logging;
+﻿using Common.Utilities.EventBus;
+using Common.Utilities.EventBus.IntegrationEvents;
+using Common.Utilities.Extensions;
+using Common.Utilities.Logging;
 using Microsoft.Extensions.Logging;
-using Offers.API.Application.Types;
+using Offers.Domain.Repositories;
+using Offers.Domain.Repositories.Types;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Offers.Domain.Repositories;
-using Offers.Domain.Repositories.Types;
 
 namespace Offers.API.Application.IntegrationEventHandlers
 {

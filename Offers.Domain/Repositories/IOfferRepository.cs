@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Common.Domain.Repositories;
-using Common.Types;
+﻿using Common.Domain.Repositories;
+using Common.Domain.Types;
 using Offers.Domain.Aggregates.OfferAggregate;
 using Offers.Domain.Repositories.Types;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Offers.Domain.Repositories
 {

@@ -1,11 +1,11 @@
-﻿using Common.Exceptions;
-using Common.Extensions;
+﻿using Common.Utilities.Exceptions;
+using Common.Utilities.Extensions;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using Offers.Domain.Repositories;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Offers.Domain.Repositories;
 
 namespace Offers.API.Application.Commands.PublishOffer
 {

@@ -1,9 +1,8 @@
-﻿using System.Collections.Generic;
-using Common.Domain.DomainEvents;
-using Offers.Domain;
+﻿using Common.Domain.DomainEvents;
 using Offers.Domain.Aggregates.OfferAggregate;
 using Offers.Domain.DomainEvents.ActiveOfferChanged;
 using Offers.Domain.DomainEvents.ActiveOfferChanged.PartialEvents;
+using System.Collections.Generic;
 
 namespace Offers.API.Application.DomainEventHandlers.ActiveOfferChanged.Reducers
 {

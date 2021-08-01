@@ -1,15 +1,14 @@
-﻿using Common.Extensions;
-using Common.Logging;
+﻿using Common.Utilities.Extensions;
+using Common.Utilities.Logging;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
-using Offers.Domain;
 using Offers.Domain.Aggregates.CategoryAggregate;
 using Offers.Domain.Exceptions;
 using Offers.Domain.Repositories;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Offers.API.Application.Commands.CreateCategory
 {

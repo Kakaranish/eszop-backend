@@ -1,4 +1,4 @@
-﻿using Common.ImageStorage;
+﻿using Common.Utilities.ImageStorage;
 using Offers.Domain.Aggregates.OfferAggregate;
 
 namespace Offers.Infrastructure.Extensions

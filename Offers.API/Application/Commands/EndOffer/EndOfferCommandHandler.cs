@@ -1,10 +1,10 @@
-﻿using Common.Exceptions;
-using Common.Extensions;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Common.Utilities.Exceptions;
+using Common.Utilities.Extensions;
 using Offers.Domain.Repositories;
 
 namespace Offers.API.Application.Commands.EndOffer

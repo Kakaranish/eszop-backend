@@ -1,6 +1,6 @@
 ﻿using MediatR;
-using System.Collections.Generic;
 using Offers.Infrastructure.Dto;
+using System.Collections.Generic;
 
 namespace Offers.API.Application.Queries.GetAllPredefinedDeliveryMethods
 {

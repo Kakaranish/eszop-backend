@@ -1,19 +1,18 @@
-﻿using Common.Exceptions;
-using Common.Extensions;
-using Common.Grpc;
+﻿using Common.Grpc;
 using Common.Grpc.Services.OrdersService;
 using Common.Grpc.Services.OrdersService.GetOfferHasOrders;
-using Common.Types;
+using Common.Utilities.Exceptions;
+using Common.Utilities.Extensions;
+using Common.Utilities.Types;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
+using Offers.Domain.Exceptions;
+using Offers.Domain.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Offers.Domain;
-using Offers.Domain.Exceptions;
-using Offers.Domain.Repositories;
 
 namespace Offers.API.Application.Commands.RemoveOffer
 {

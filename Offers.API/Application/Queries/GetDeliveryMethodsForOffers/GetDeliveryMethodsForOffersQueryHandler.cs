@@ -1,14 +1,13 @@
 ﻿using Common.Dto;
 using MediatR;
+using Offers.Domain.Exceptions;
+using Offers.Domain.Repositories;
+using Offers.Infrastructure.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Offers.Domain;
-using Offers.Domain.Exceptions;
-using Offers.Domain.Repositories;
-using Offers.Infrastructure.Extensions;
 
 namespace Offers.API.Application.Queries.GetDeliveryMethodsForOffers
 {

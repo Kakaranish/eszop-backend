@@ -1,5 +1,5 @@
 ﻿using Common.Dto;
-using Common.Types;
+using Common.Utilities.Types;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Offers.API.Application.Queries.GetDeliveryMethodsForOffers;

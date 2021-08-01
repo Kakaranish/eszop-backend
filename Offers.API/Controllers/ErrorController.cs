@@ -1,10 +1,9 @@
-﻿using System;
-using Common.ErrorHandling;
-using Common.Types;
+﻿using Common.Utilities.ErrorHandling;
+using Common.Utilities.Types;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using Offers.Domain;
 using Offers.Domain.Exceptions;
+using System;
 
 namespace Offers.API.Controllers
 {

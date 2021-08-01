@@ -1,8 +1,7 @@
-﻿using Common.Extensions;
-using Common.Types;
+﻿using Common.Domain.Types;
+using Common.Utilities.Extensions;
 using FluentValidation;
 using MediatR;
-using Offers.API.Application.Types;
 using Offers.Domain.Repositories.Types;
 using Offers.Infrastructure.Dto;
 

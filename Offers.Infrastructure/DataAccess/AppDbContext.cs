@@ -1,6 +1,6 @@
 ﻿using Common.Domain.EventDispatching;
 using Common.Domain.Repositories;
-using Common.Extensions;
+using Common.Utilities.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Offers.Domain.Aggregates.CategoryAggregate;
