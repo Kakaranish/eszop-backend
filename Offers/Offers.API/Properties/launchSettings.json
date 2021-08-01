@@ -12,24 +12,24 @@
     "Offers.API": {
       "commandName": "Project",
       "launchUrl": "swagger",
-      "dotnetRunMessages": "true",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "DevHostLocal",
-        "ESZOP_LOCAL_BLOB_STORAGE_WWWROOT_DIR": "[FILL ME]"
-      }
+        "ESZOP_LOCAL_BLOB_STORAGE_WWWROOT_DIR": "", // When empty default img location is used
+        "ASPNETCORE_ENVIRONMENT": "DevHostLocal"
+      },
+      "dotnetRunMessages": "true"
     },
     "Offers.API.Cloud": {
       "commandName": "Project",
       "launchUrl": "swagger",
-      "dotnetRunMessages": "true",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "DevHostCloud",
-        "ESZOP_SQLSERVER_CONN_STR": "[FILL ME]",
+        "ESZOP_AZURE_EVENTBUS_SUB_NAME": "[FILL ME]",
         "ESZOP_AZURE_EVENTBUS_CONN_STR": "[FILL ME]",
         "ESZOP_AZURE_STORAGE_CONN_STR": "[FILL ME]",
         "ESZOP_AZURE_EVENTBUS_TOPIC_NAME": "[FILL ME]",
-        "ESZOP_AZURE_EVENTBUS_SUB_NAME": "[FILL ME]"
-      }
+        "ASPNETCORE_ENVIRONMENT": "DevHostCloud",
+        "ESZOP_SQLSERVER_CONN_STR": "[FILL ME]"
+      },
+      "dotnetRunMessages": "true"
     }
   }
 }

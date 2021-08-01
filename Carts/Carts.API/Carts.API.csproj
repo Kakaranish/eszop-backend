@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-    <DockerfileContext>..\eSzop-backend</DockerfileContext>
+    <DockerfileContext>..\..</DockerfileContext>
     <UserSecretsId>8428b12d-e87f-42ba-8e20-01cd5353bb47</UserSecretsId>
   </PropertyGroup>
 

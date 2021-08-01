@@ -11,4 +11,4 @@ Import-Module "${scripts_dir}\modules\Get-GlobalConfig.psm1" -Force
 $global_config = Get-GlobalConfig
 $container_repo = if ($ContainerRepository) { $ContainerRepository } else { $global_config.AZ_CONTAINER_REPO }
 
-docker build -f $PSScriptRoot/../../Dockerfile -t "${container_repo}/eszop-offers-api:$ImageTag" $PSScriptRoot/../../..
+docker build -f $PSScriptRoot/../../Orders.API/Dockerfile -t "${container_repo}/eszop-orders-api:$ImageTag" $PSScriptRoot/../../..

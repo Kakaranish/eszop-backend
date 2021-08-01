@@ -5,6 +5,7 @@
     <UserSecretsId>ec02decd-e464-4129-bfe3-7e712a7101ca</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerfileRunArguments>--network eszop-network -p 6000:80 -p 6001:443</DockerfileRunArguments>
+    <DockerfileContext>..\..</DockerfileContext>
   </PropertyGroup>
 
   <ItemGroup>
