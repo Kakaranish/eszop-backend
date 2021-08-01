@@ -1,7 +1,8 @@
 ﻿using Carts.API.Application.Dto;
-using Carts.API.Domain;
 using System.Collections.Generic;
 using System.Linq;
+using Carts.Domain.Aggregates.CartAggregate;
+using Carts.Domain.Aggregates.CartItemAggregate;
 
 namespace Carts.API.Extensions
 {

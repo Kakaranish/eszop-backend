@@ -1,13 +1,14 @@
-﻿using Carts.API.Domain;
-using Common.Extensions;
+﻿using Carts.Domain.Aggregates.CartAggregate;
+using Carts.Domain.Aggregates.CartItemAggregate;
+using Common.Domain.Repositories;
+using Common.Utilities.Extensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Common.Domain.Repositories;
 
-namespace Carts.API.DataAccess
+namespace Carts.Infrastructure.DataAccess
 {
     public class AppDbContext : DbContext, IUnitOfWork
     {

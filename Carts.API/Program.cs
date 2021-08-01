@@ -1,11 +1,11 @@
-using Common.Logging;
-using Common.Types;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using System;
+using Common.Utilities.Logging;
+using Common.Utilities.Types;
 
 namespace Carts.API
 {

@@ -1,10 +1,10 @@
-﻿using Carts.API.DataAccess.Repositories;
-using Carts.API.Domain;
-using Common.EventBus;
-using Common.EventBus.IntegrationEvents;
-using Common.Extensions;
-using Common.Logging;
-using Common.Types;
+﻿using Carts.Domain.Aggregates.CartItemAggregate;
+using Carts.Domain.Aggregates.Repositories;
+using Common.Utilities.EventBus;
+using Common.Utilities.EventBus.IntegrationEvents;
+using Common.Utilities.Extensions;
+using Common.Utilities.Logging;
+using Common.Utilities.Types;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -67,10 +67,10 @@ namespace Carts.API.Application.IntegrationEventsHandlers
 
                         continue;
                     }
-                        
+
                     cartItem.SetAvailableStock(@event.AvailableStockChange.NewValue);
                 }
-                
+
                 if (@event.PriceChange?.Changed ?? false)
                 {
                     cartItem.SetPricePerItem(@event.PriceChange.NewValue);

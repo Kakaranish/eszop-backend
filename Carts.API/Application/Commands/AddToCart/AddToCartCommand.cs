@@ -1,5 +1,5 @@
 ﻿using Carts.API.Application.Dto;
-using Common.Extensions;
+using Common.Utilities.Extensions;
 using FluentValidation;
 using MediatR;
 

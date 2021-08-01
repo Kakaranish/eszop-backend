@@ -1,9 +1,9 @@
-﻿using Carts.API.DataAccess.Repositories;
-using Common.EventBus;
-using Common.EventBus.IntegrationEvents;
-using Common.Extensions;
-using Common.Logging;
-using Common.Types;
+﻿using Carts.Domain.Aggregates.Repositories;
+using Common.Utilities.EventBus;
+using Common.Utilities.EventBus.IntegrationEvents;
+using Common.Utilities.Extensions;
+using Common.Utilities.Logging;
+using Common.Utilities.Types;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;

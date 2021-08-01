@@ -5,12 +5,12 @@ using Carts.API.Application.Commands.RemoveFromCart;
 using Carts.API.Application.Commands.UpdateCartItemQuantity;
 using Carts.API.Application.Dto;
 using Carts.API.Application.Queries.GetOrCreateCart;
-using Common.Authentication;
-using Common.Types;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
+using Common.Utilities.Authentication;
+using Common.Utilities.Types;
 
 namespace Carts.API.Controllers
 {

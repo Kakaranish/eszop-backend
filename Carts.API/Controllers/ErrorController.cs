@@ -1,9 +1,9 @@
-﻿using Carts.API.Domain;
-using Common.ErrorHandling;
-using Common.Types;
-using Microsoft.AspNetCore.Diagnostics;
+﻿using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using Carts.Domain.Exceptions;
+using Common.Utilities.ErrorHandling;
+using Common.Utilities.Types;
 
 namespace Carts.API.Controllers
 {

@@ -1,10 +1,10 @@
-﻿using Carts.API.Domain;
+﻿using Carts.Domain.Aggregates.CartItemAggregate;
+using Common.Domain.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Common.Domain.Repositories;
 
-namespace Carts.API.DataAccess.Repositories
+namespace Carts.Domain.Aggregates.Repositories
 {
     public interface ICartItemRepository : IDomainRepository<CartItem>
     {

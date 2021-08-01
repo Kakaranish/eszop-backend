@@ -1,7 +1,7 @@
 ﻿using Carts.API.Application.Dto;
-using Carts.API.DataAccess.Repositories;
 using Carts.API.Extensions;
-using Common.Extensions;
+using Carts.Domain.Aggregates.Repositories;
+using Common.Utilities.Extensions;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using System;

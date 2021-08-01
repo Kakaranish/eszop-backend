@@ -1,6 +1,6 @@
-﻿using Carts.API.DataAccess.Repositories;
-using Common.Extensions;
-using Common.Logging;
+﻿using Carts.Domain.Aggregates.Repositories;
+using Common.Utilities.Extensions;
+using Common.Utilities.Logging;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;

@@ -1,9 +1,9 @@
-﻿using Carts.API.Domain;
+﻿using Carts.Domain.Aggregates.CartAggregate;
+using Common.Domain.Repositories;
 using System;
 using System.Threading.Tasks;
-using Common.Domain.Repositories;
 
-namespace Carts.API.DataAccess.Repositories
+namespace Carts.Domain.Aggregates.Repositories
 {
     public interface ICartRepository : IDomainRepository<Cart>
     {

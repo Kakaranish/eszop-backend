@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Carts.API.Domain
+namespace Carts.Domain.Exceptions
 {
     public class CartsDomainException : Exception
     {

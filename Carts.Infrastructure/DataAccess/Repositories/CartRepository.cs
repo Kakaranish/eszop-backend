@@ -1,10 +1,11 @@
-﻿using Carts.API.Domain;
+﻿using Carts.Domain.Aggregates.CartAggregate;
+using Carts.Domain.Aggregates.Repositories;
+using Common.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading.Tasks;
-using Common.Domain.Repositories;
 
-namespace Carts.API.DataAccess.Repositories
+namespace Carts.Infrastructure.DataAccess.Repositories
 {
     public class CartRepository : ICartRepository
     {

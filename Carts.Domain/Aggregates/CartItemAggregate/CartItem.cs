@@ -1,10 +1,11 @@
-﻿using Common.Domain;
+﻿using Carts.Domain.Exceptions;
+using Common.Domain;
 using Common.Domain.Types;
 using Common.Domain.Validators;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Carts.API.Domain
+namespace Carts.Domain.Aggregates.CartItemAggregate
 {
     public class CartItem : EntityBase, IAggregateRoot, ITimeStamped
     {
