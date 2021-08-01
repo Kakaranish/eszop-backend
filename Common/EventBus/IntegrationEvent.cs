@@ -1,7 +1,7 @@
-﻿using RawRabbit.Context;
-using System;
+﻿using System;
+using RawRabbit.Context;
 
-namespace Common.EventBus
+namespace Common.Utilities.EventBus
 {
     public abstract class IntegrationEvent : IMessageContext
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Common.Helpers
+namespace Common.Utilities.Helpers
 {
     public static class EnvironmentHelpers
     {

@@ -1,12 +1,12 @@
-﻿using Common.ErrorHandling.ActionResults;
-using Common.EventBus;
-using Common.Exceptions;
+﻿using System;
+using System.Diagnostics;
+using Common.Utilities.ErrorHandling.ActionResults;
+using Common.Utilities.EventBus;
+using Common.Utilities.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Diagnostics;
 
-namespace Common.ErrorHandling
+namespace Common.Utilities.ErrorHandling
 {
     public class ExceptionHandler<TDomainException> where TDomainException : Exception
     {

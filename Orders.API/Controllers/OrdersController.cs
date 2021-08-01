@@ -1,5 +1,6 @@
-﻿using Common.Authentication;
-using Common.Types;
+﻿using Common.Domain.Types;
+using Common.Utilities.Authentication;
+using Common.Utilities.Types;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Orders.API.Application.Commands.CancelOrder;
@@ -16,7 +17,6 @@ using Orders.API.Application.Queries.GetOrderSummary;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Common.Domain.Types;
 using DeliveryMethodDto = Common.Dto.DeliveryMethodDto;
 
 namespace Orders.API.Controllers

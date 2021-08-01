@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Common.Exceptions
+namespace Common.Utilities.Exceptions
 {
     public class UnauthorizedException : Exception
     {

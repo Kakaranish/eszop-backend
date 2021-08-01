@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Common.EventBus.IntegrationEvents
+namespace Common.Utilities.EventBus.IntegrationEvents
 {
     public class UserLockedIntegrationEvent : IntegrationEvent
     {

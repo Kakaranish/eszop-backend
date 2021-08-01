@@ -3,7 +3,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace Common.Extensions
+namespace Common.Utilities.Extensions
 {
     public static class GenericExtensions
     {

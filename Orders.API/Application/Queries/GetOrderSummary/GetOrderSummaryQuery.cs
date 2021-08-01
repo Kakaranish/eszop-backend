@@ -1,4 +1,4 @@
-﻿using Common.Extensions;
+﻿using Common.Utilities.Extensions;
 using FluentValidation;
 using MediatR;
 using Orders.API.Application.Dto;

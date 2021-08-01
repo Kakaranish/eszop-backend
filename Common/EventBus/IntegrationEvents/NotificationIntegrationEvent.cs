@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Common.EventBus.IntegrationEvents
+namespace Common.Utilities.EventBus.IntegrationEvents
 {
     public class NotificationIntegrationEvent : IntegrationEvent
     {

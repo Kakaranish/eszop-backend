@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Common.Types
+namespace Common.Domain.Types
 {
     public class Pagination<T>
     {

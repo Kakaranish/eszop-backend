@@ -1,8 +1,8 @@
-﻿using Common.ErrorHandling;
-using Common.Types;
+﻿using Common.Utilities.ErrorHandling;
+using Common.Utilities.Types;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using Orders.API.Domain;
+using Orders.Domain.Exceptions;
 using System;
 
 namespace Orders.API.Controllers

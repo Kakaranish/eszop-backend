@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Security.Claims;
 
-namespace Common.Authentication
+namespace Common.Utilities.Authentication
 {
     public static class UserClaimsExtensions
     {

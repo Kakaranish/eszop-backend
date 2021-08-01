@@ -1,11 +1,11 @@
-﻿using Microsoft.Extensions.Configuration;
-using Serilog;
-using Serilog.Events;
-using System;
+﻿using System;
 using System.IO;
 using System.Reflection;
+using Microsoft.Extensions.Configuration;
+using Serilog;
+using Serilog.Events;
 
-namespace Common.Logging
+namespace Common.Utilities.Logging
 {
     public static class LogConfiguration
     {

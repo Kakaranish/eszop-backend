@@ -1,10 +1,10 @@
-﻿using Common.Extensions;
-using Common.Types;
+﻿using Common.Domain.Types;
+using Common.Utilities.Extensions;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Orders.API.Application.Dto;
-using Orders.API.DataAccess.Repositories;
 using Orders.API.Extensions;
+using Orders.Domain.Repositories;
 using System;
 using System.Linq;
 using System.Threading;

@@ -1,7 +1,7 @@
-﻿using Common.Extensions;
+﻿using Common.Utilities.Extensions;
 using FluentValidation;
 using MediatR;
-using Orders.API.Domain;
+using Orders.Domain.Aggregates.OrderAggregate;
 using System.Collections.Generic;
 
 namespace Orders.API.Application.Commands.ChangeOrderState

@@ -2,7 +2,7 @@
 using System.Linq;
 using FluentValidation.Results;
 
-namespace Common.ErrorHandling
+namespace Common.Utilities.ErrorHandling
 {
     public static class Extensions
     {

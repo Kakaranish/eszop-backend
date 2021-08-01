@@ -1,7 +1,7 @@
-﻿using Common.Domain.Types;
-using System;
+﻿using System;
+using Common.Domain.Types;
 
-namespace Common.EventBus.IntegrationEvents
+namespace Common.Utilities.EventBus.IntegrationEvents
 {
     public class ActiveOfferChangedIntegrationEvent : IntegrationEvent
     {

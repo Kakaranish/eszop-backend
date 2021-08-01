@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Common.Types
+namespace Common.Domain.Types
 {
     public class PageCriteria
     {

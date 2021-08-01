@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Common.Authentication
+namespace Common.Utilities.Authentication
 {
     public class UserClaims
     {

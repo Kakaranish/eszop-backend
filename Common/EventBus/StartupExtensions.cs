@@ -1,15 +1,15 @@
-﻿using Common.Extensions;
-using Common.Helpers;
+﻿using System.Linq;
+using System.Reflection;
+using Common.Utilities.Extensions;
+using Common.Utilities.Helpers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using RawRabbit;
 using RawRabbit.Configuration;
 using RawRabbit.vNext;
-using System.Linq;
-using System.Reflection;
 using ILoggerFactory = RawRabbit.Logging.ILoggerFactory;
 
-namespace Common.EventBus
+namespace Common.Utilities.EventBus
 {
     public static class StartupExtensions
     {

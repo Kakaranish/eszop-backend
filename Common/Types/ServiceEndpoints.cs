@@ -1,4 +1,4 @@
-﻿namespace Common.Types
+﻿namespace Common.Utilities.Types
 {
     public class ServiceEndpoints
     {

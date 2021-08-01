@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
-using Common.ErrorHandling;
-using Common.ErrorHandling.ActionResults;
+using Common.Utilities.ErrorHandling;
+using Common.Utilities.ErrorHandling.ActionResults;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Common.Types
+namespace Common.Utilities.Types
 {
     public class BaseController : Controller
     {

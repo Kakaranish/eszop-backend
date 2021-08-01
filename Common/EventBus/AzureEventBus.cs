@@ -1,17 +1,17 @@
-﻿using Common.Logging;
-using Microsoft.Azure.ServiceBus;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Common.Utilities.Logging;
+using Microsoft.Azure.ServiceBus;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 
-namespace Common.EventBus
+namespace Common.Utilities.EventBus
 {
     public class AzureEventBus : IEventBus
     {

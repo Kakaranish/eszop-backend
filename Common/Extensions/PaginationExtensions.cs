@@ -1,11 +1,11 @@
-﻿using Common.Types;
-using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Common.Domain.Types;
+using Microsoft.EntityFrameworkCore;
 
-namespace Common.Extensions
+namespace Common.Utilities.Extensions
 {
     public static class PaginationExtensions
     {

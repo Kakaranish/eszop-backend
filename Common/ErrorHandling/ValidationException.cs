@@ -1,8 +1,8 @@
-﻿using FluentValidation.Results;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using FluentValidation.Results;
 
-namespace Common.ErrorHandling
+namespace Common.Utilities.ErrorHandling
 {
     public class ValidationException : Exception
     {

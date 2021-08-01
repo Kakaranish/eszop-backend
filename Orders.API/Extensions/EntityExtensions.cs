@@ -1,6 +1,8 @@
 ﻿using Common.Dto;
 using Orders.API.Application.Dto;
-using Orders.API.Domain;
+using Orders.Domain.Aggregates.DeliveryAddressAggregate;
+using Orders.Domain.Aggregates.OrderAggregate;
+using Orders.Domain.Aggregates.OrderItemAggregate;
 using System.Linq;
 using OrderItemDto = Orders.API.Application.Dto.OrderItemDto;
 

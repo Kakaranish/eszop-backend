@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace Common.Extensions
+namespace Common.Utilities.Extensions
 {
     public static class CollectionExtensions
     {

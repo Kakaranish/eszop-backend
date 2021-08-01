@@ -1,10 +1,10 @@
-﻿using Common.Exceptions;
-using Common.Extensions;
+﻿using Common.Utilities.Exceptions;
+using Common.Utilities.Extensions;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Orders.API.Application.Dto;
-using Orders.API.DataAccess.Repositories;
 using Orders.API.Extensions;
+using Orders.Domain.Repositories;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -29,7 +29,7 @@ namespace Orders.API.Application.Queries.GetOrderSummary
             var orderId = Guid.Parse(request.OrderId);
 
             var order = await _orderRepository.GetByIdAsync(orderId);
-            if (order == null || (order.BuyerId != userId && order.SellerId != userId)) 
+            if (order == null || (order.BuyerId != userId && order.SellerId != userId))
                 throw new NotFoundException();
 
             return order.ToDto();

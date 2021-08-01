@@ -1,4 +1,4 @@
-﻿namespace Common.ImageStorage
+﻿namespace Common.Utilities.ImageStorage
 {
     public class AzureStorageConfig
     {

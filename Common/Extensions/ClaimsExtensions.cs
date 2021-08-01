@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
-using Common.Authentication;
+using Common.Utilities.Authentication;
 
-namespace Common.Extensions
+namespace Common.Utilities.Extensions
 {
     public static class ClaimsExtensions
     {

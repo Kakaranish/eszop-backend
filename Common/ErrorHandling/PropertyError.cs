@@ -1,4 +1,4 @@
-﻿namespace Common.ErrorHandling
+﻿namespace Common.Utilities.ErrorHandling
 {
     public class PropertyError
     {

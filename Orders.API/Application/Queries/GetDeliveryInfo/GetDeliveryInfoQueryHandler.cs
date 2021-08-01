@@ -1,10 +1,10 @@
-﻿using Common.Exceptions;
-using Common.Extensions;
+﻿using Common.Utilities.Exceptions;
+using Common.Utilities.Extensions;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Orders.API.Application.Dto;
-using Orders.API.DataAccess.Repositories;
 using Orders.API.Extensions;
+using Orders.Domain.Repositories;
 using System;
 using System.Threading;
 using System.Threading.Tasks;

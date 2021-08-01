@@ -1,11 +1,11 @@
-﻿using Common.Extensions;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using System;
+﻿using System;
 using System.IO;
 using System.Reflection;
+using Common.Utilities.Extensions;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace Common.ImageStorage
+namespace Common.Utilities.ImageStorage
 {
     public static class Extensions
     {

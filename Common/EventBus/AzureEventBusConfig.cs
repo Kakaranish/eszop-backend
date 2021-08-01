@@ -1,4 +1,4 @@
-﻿namespace Common.EventBus
+﻿namespace Common.Utilities.EventBus
 {
     public class AzureEventBusConfig
     {

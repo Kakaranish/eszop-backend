@@ -1,4 +1,4 @@
-﻿namespace Common.Authentication
+﻿namespace Common.Utilities.Authentication
 {
     public interface IAccessTokenDecoder
     {

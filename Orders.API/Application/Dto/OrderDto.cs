@@ -1,6 +1,6 @@
-﻿using Common.Dto;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Common.Dto;
 
 namespace Orders.API.Application.Dto
 {

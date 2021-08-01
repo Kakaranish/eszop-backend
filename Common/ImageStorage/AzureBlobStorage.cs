@@ -1,11 +1,11 @@
-﻿using Azure.Storage.Blobs;
-using Azure.Storage.Blobs.Models;
-using Microsoft.Extensions.Options;
-using System;
+﻿using System;
 using System.IO;
 using System.Threading.Tasks;
+using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
+using Microsoft.Extensions.Options;
 
-namespace Common.ImageStorage
+namespace Common.Utilities.ImageStorage
 {
     public class AzureBlobStorage : IBlobStorage
     {

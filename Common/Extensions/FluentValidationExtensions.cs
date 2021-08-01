@@ -1,7 +1,7 @@
-﻿using FluentValidation;
-using System;
+﻿using System;
+using FluentValidation;
 
-namespace Common.Extensions
+namespace Common.Utilities.Extensions
 {
     public static class FluentValidationExtensions
     {

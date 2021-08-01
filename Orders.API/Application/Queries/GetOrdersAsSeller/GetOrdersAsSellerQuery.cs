@@ -1,6 +1,5 @@
 ﻿using Common.Domain.Types;
 using Common.Domain.Validators;
-using Common.Types;
 using FluentValidation;
 using MediatR;
 using Orders.API.Application.Dto;

@@ -1,9 +1,9 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using RawRabbit;
-using System;
+﻿using System;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
+using RawRabbit;
 
-namespace Common.EventBus
+namespace Common.Utilities.EventBus
 {
     public class RabbitMqEventBus : IEventBus
     {

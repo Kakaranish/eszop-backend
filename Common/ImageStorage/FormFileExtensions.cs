@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Http;
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using Microsoft.AspNetCore.Http;
 
-namespace Common.ImageStorage
+namespace Common.Utilities.ImageStorage
 {
     public static class FormFileExtensions
     {

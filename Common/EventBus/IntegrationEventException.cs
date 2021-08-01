@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Common.EventBus
+namespace Common.Utilities.EventBus
 {
     public class IntegrationEventException : Exception
     {

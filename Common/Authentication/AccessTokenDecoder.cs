@@ -1,12 +1,12 @@
-﻿using Common.Extensions;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
+using Common.Utilities.Extensions;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 
-namespace Common.Authentication
+namespace Common.Utilities.Authentication
 {
     public class AccessTokenDecoder : IAccessTokenDecoder
     {

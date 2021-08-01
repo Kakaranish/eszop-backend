@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
 
-namespace Common.ImageStorage
+namespace Common.Utilities.ImageStorage
 {
     public interface IBlobStorage
     {

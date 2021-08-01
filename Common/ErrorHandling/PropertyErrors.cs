@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Common.ErrorHandling
+namespace Common.Utilities.ErrorHandling
 {
     public class PropertyErrors
     {
