@@ -10,8 +10,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Carts.Domain\Carts.Domain.csproj" />
-    <ProjectReference Include="..\Common\Common.Utilities.csproj" />
+    <ProjectReference Include="..\..\Common\Common.Grpc\Common.Grpc.csproj" />
+    <ProjectReference Include="..\..\Common\Common.Utilities\Common.Utilities.csproj" />
+    <ProjectReference Include="..\Identity.Domain\Identity.Domain.csproj" />
   </ItemGroup>
 
 </Project>

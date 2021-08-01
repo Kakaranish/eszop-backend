@@ -44,8 +44,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Common.Grpc\Common.Grpc.csproj" />
-    <ProjectReference Include="..\Common\Common.Utilities.csproj" />
     <ProjectReference Include="..\Offers.Domain\Offers.Domain.csproj" />
     <ProjectReference Include="..\Offers.Infrastructure\Offers.Infrastructure.csproj" />
   </ItemGroup>

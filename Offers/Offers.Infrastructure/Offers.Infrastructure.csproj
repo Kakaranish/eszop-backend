@@ -10,9 +10,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Common.Grpc\Common.Grpc.csproj" />
-    <ProjectReference Include="..\Common\Common.Utilities.csproj" />
-    <ProjectReference Include="..\Orders.Domain\Orders.Domain.csproj" />
+    <ProjectReference Include="..\..\Common\Common.Grpc\Common.Grpc.csproj" />
+    <ProjectReference Include="..\..\Common\Common.Utilities\Common.Utilities.csproj" />
+    <ProjectReference Include="..\Offers.Domain\Offers.Domain.csproj" />
   </ItemGroup>
 
 </Project>
