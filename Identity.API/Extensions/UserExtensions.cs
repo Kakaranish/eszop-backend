@@ -1,5 +1,5 @@
-﻿using Common.Authentication;
-using Identity.API.Domain;
+﻿using Common.Utilities.Authentication;
+using Identity.Domain.Aggregates.UserAggregate;
 
 namespace Identity.API.Extensions
 {

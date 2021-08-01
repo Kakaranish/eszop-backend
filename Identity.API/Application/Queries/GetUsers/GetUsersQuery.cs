@@ -1,7 +1,7 @@
-﻿using Common.Types;
+﻿using Common.Domain.Types;
 using FluentValidation;
 using Identity.API.Application.Dto;
-using Identity.API.Application.Types;
+using Identity.Domain.Repositories.Types;
 using MediatR;
 
 namespace Identity.API.Application.Queries.GetUsers

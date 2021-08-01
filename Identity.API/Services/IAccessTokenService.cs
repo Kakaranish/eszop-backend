@@ -1,4 +1,4 @@
-﻿using Common.Authentication;
+﻿using Common.Utilities.Authentication;
 
 namespace Identity.API.Services
 {

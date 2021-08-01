@@ -1,6 +1,5 @@
-﻿using Common.Authentication;
-using Common.Dto;
-using Common.Types;
+﻿using Common.Utilities.Authentication;
+using Common.Utilities.Types;
 using Identity.API.Application.Commands.CreateOrUpdateSellerInfo;
 using Identity.API.Application.Dto;
 using Identity.API.Application.Queries.CanSell;

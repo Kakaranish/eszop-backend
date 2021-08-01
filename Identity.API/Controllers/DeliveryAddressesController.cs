@@ -1,5 +1,5 @@
-﻿using Common.Authentication;
-using Common.Types;
+﻿using Common.Utilities.Authentication;
+using Common.Utilities.Types;
 using Identity.API.Application.Commands.CreateDeliveryAddress;
 using Identity.API.Application.Commands.RemoveDeliveryAddress;
 using Identity.API.Application.Commands.UpdateDeliveryAddress;

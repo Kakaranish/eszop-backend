@@ -1,11 +1,12 @@
-﻿using Common.Authentication;
-using Common.Types;
+﻿using Common.Domain.Types;
+using Common.Utilities.Authentication;
+using Common.Utilities.Types;
 using Identity.API.Application.Commands.LockUser;
 using Identity.API.Application.Commands.UnlockUser;
 using Identity.API.Application.Dto;
 using Identity.API.Application.Queries.GetUser;
 using Identity.API.Application.Queries.GetUsers;
-using Identity.API.Application.Types;
+using Identity.Domain.Repositories.Types;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System;

@@ -1,4 +1,4 @@
-﻿using Common.Authentication;
+﻿using Common.Utilities.Authentication;
 using Identity.API.Application.Dto;
 using Identity.API.Application.Queries.GetMe;
 using MediatR;

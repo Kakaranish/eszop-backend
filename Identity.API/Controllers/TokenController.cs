@@ -1,11 +1,11 @@
-﻿using Common.Authentication;
-using Common.Types;
+﻿using Common.Utilities.Authentication;
+using Common.Utilities.Types;
+using Identity.API.Application.Commands.RefreshAccessToken;
 using Identity.API.Services;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
-using Identity.API.Application.Commands.RefreshAccessToken;
 
 namespace Identity.API.Controllers
 {
@@ -54,7 +54,7 @@ namespace Identity.API.Controllers
         {
             var command = new RefreshAccessTokenCommand();
             var result = await _mediator.Send(command);
-            
+
             return result != null
                 ? Ok(result)
                 : ErrorResponse("Invalid/expired/revoked refresh token");

@@ -1,8 +1,9 @@
-﻿using Common.Authentication;
-using Common.Extensions;
-using Identity.API.DataAccess.Repositories;
-using Identity.API.Domain;
+﻿using Common.Utilities.Authentication;
+using Common.Utilities.Extensions;
 using Identity.API.Extensions;
+using Identity.Domain.Aggregates.RefreshTokenAggregate;
+using Identity.Domain.Aggregates.UserAggregate;
+using Identity.Domain.Repositories;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;

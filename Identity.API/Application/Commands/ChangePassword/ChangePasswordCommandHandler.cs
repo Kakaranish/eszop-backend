@@ -1,6 +1,6 @@
-﻿using Identity.API.DataAccess.Repositories;
-using Identity.API.Domain;
-using Identity.API.Services;
+﻿using Identity.API.Services;
+using Identity.Domain.Exceptions;
+using Identity.Domain.Repositories;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using System;

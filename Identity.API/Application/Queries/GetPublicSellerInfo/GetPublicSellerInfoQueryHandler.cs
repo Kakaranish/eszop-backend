@@ -1,5 +1,5 @@
-﻿using Common.Dto;
-using Identity.API.DataAccess.Repositories;
+﻿using Identity.API.Application.Dto;
+using Identity.Domain.Repositories;
 using MediatR;
 using System;
 using System.Threading;

@@ -1,7 +1,7 @@
-﻿using Common.Extensions;
+﻿using Common.Utilities.Extensions;
 using Identity.API.Application.Dto;
-using Identity.API.DataAccess.Repositories;
 using Identity.API.Extensions;
+using Identity.Domain.Repositories;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using System;

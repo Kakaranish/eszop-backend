@@ -1,4 +1,4 @@
-﻿using Identity.API.Domain;
+﻿using Identity.Domain.Aggregates.UserAggregate;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using System;
 using System.Security.Cryptography;

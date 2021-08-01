@@ -1,6 +1,6 @@
 ﻿using Identity.API.Application.Dto;
-using Identity.API.DataAccess.Repositories;
 using Identity.API.Extensions;
+using Identity.Domain.Repositories;
 using MediatR;
 using System;
 using System.Threading;

@@ -1,7 +1,7 @@
-﻿using Common.Exceptions;
-using Common.Extensions;
-using Identity.API.DataAccess.Repositories;
-using Identity.API.Domain;
+﻿using Common.Utilities.Exceptions;
+using Common.Utilities.Extensions;
+using Identity.Domain.Exceptions;
+using Identity.Domain.Repositories;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using System;

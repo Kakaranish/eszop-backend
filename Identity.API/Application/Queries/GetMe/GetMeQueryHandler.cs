@@ -1,4 +1,4 @@
-﻿using Common.Extensions;
+﻿using Common.Utilities.Extensions;
 using Identity.API.Application.Dto;
 using MediatR;
 using Microsoft.AspNetCore.Http;

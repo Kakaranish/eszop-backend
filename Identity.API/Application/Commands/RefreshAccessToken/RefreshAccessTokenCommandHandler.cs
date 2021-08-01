@@ -1,7 +1,7 @@
-﻿using Common.Authentication;
+﻿using Common.Utilities.Authentication;
 using Identity.API.Configuration;
-using Identity.API.Domain;
 using Identity.API.Services;
+using Identity.Domain.Exceptions;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;

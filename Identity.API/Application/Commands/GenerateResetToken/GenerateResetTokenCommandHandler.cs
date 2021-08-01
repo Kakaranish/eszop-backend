@@ -1,6 +1,6 @@
-﻿using Common.Exceptions;
-using Identity.API.DataAccess.Repositories;
+﻿using Common.Utilities.Exceptions;
 using Identity.API.Services;
+using Identity.Domain.Repositories;
 using MediatR;
 using Microsoft.Extensions.Caching.Distributed;
 using System;
@@ -28,7 +28,7 @@ namespace Identity.API.Application.Commands.GenerateResetToken
             if (user == null) throw new NotFoundException("User");
 
             if (user.Role.IsAdminRole()) throw new ForbiddenException();
-            
+
             var resetToken = RandomStringGenerator.Generate(50);
             var userId = Encoding.UTF8.GetBytes(user.Id.ToString());
             await _distributedCache.SetAsync(resetToken, userId, new DistributedCacheEntryOptions

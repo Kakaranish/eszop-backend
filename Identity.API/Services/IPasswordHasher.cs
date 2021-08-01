@@ -1,4 +1,4 @@
-﻿using Identity.API.Domain;
+﻿using Identity.Domain.Aggregates.UserAggregate;
 
 namespace Identity.API.Services
 {

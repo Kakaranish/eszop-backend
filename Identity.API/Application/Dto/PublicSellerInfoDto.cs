@@ -1,4 +1,4 @@
-﻿namespace Common.Dto
+﻿namespace Identity.API.Application.Dto
 {
     public class PublicSellerInfoDto
     {

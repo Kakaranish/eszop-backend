@@ -1,4 +1,4 @@
-﻿using Common.Types;
+﻿using Common.Utilities.Types;
 using Identity.API.Application.Commands.SignIn;
 using Identity.API.Application.Commands.SignOut;
 using Identity.API.Application.Commands.SignUp;

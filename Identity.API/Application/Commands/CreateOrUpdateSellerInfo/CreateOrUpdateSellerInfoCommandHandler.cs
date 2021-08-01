@@ -1,6 +1,6 @@
-﻿using Common.Extensions;
-using Identity.API.DataAccess.Repositories;
-using Identity.API.Domain;
+﻿using Common.Utilities.Extensions;
+using Identity.Domain.Aggregates.SellerInfoAggregate;
+using Identity.Domain.Repositories;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -21,7 +21,7 @@ namespace Identity.API.Application.Commands.CreateOrUpdateSellerInfo
                            throw new ArgumentNullException(nameof(httpContextAccessor.HttpContext));
             _sellerInfoRepository = sellerInfoRepository ?? throw new ArgumentNullException(nameof(sellerInfoRepository));
         }
-        
+
         public async Task<Unit> Handle(CreateOrUpdateSellerInfoCommand request, CancellationToken cancellationToken)
         {
             var userId = _httpContext.User.Claims.ToTokenPayload().UserClaims.Id;
@@ -42,7 +42,7 @@ namespace Identity.API.Application.Commands.CreateOrUpdateSellerInfo
                 if (request.AdditionalInfo != null) sellerInfo.SetAdditionalInfo(request.AdditionalInfo);
             }
 
-            if(sellerInfoExists) _sellerInfoRepository.Update(sellerInfo);
+            if (sellerInfoExists) _sellerInfoRepository.Update(sellerInfo);
 
             await _sellerInfoRepository.UnitOfWork.SaveChangesAndDispatchDomainEventsAsync(cancellationToken);
 

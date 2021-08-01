@@ -1,6 +1,6 @@
-﻿using Common.Dto;
-using Common.Extensions;
+﻿using Common.Utilities.Extensions;
 using FluentValidation;
+using Identity.API.Application.Dto;
 using MediatR;
 
 namespace Identity.API.Application.Queries.GetPublicSellerInfo

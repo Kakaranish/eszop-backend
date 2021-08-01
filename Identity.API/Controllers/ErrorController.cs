@@ -1,6 +1,6 @@
-﻿using Common.ErrorHandling;
-using Common.Types;
-using Identity.API.Domain;
+﻿using Common.Utilities.ErrorHandling;
+using Common.Utilities.Types;
+using Identity.Domain.Exceptions;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using System;

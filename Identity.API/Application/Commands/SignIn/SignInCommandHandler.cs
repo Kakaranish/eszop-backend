@@ -1,10 +1,10 @@
-﻿using Common.Authentication;
-using Common.Exceptions;
+﻿using Common.Utilities.Authentication;
+using Common.Utilities.Exceptions;
 using Identity.API.Application.Dto;
 using Identity.API.Configuration;
-using Identity.API.DataAccess.Repositories;
 using Identity.API.Extensions;
 using Identity.API.Services;
+using Identity.Domain.Repositories;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;

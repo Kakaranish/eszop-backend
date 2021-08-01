@@ -1,6 +1,6 @@
 ﻿using Common.Domain.Validators;
 using FluentValidation;
-using Identity.API.Domain.CommonValidators;
+using Identity.Domain.Aggregates.CommonValidators;
 using MediatR;
 
 namespace Identity.API.Application.Commands.CreateOrUpdateSellerInfo
