@@ -31,7 +31,7 @@ namespace Orders.Domain.Aggregates.OrderAggregate
             Name = name.ToUpperInvariant();
         }
 
-        private OrderState()
+        protected OrderState()
         {
         }
 

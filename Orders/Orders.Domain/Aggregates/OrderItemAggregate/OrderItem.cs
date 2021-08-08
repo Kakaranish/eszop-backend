@@ -11,7 +11,7 @@ namespace Orders.Domain.Aggregates.OrderItemAggregate
 
         [NotMapped] public decimal TotalPrice => Quantity * OfferDetails.PricePerItem;
 
-        private OrderItem()
+        protected OrderItem()
         {
         }
 

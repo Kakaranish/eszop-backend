@@ -11,7 +11,7 @@ namespace Orders.Domain.Aggregates.OrderItemAggregate
         public decimal PricePerItem { get; private set; }
         public string ImageUri { get; private set; }
 
-        private OfferDetails()
+        protected OfferDetails()
         {
         }
 
