@@ -29,11 +29,11 @@ namespace Orders.API.Application.Queries.GetDeliveryInfo
             var orderId = Guid.Parse(request.OrderId);
 
             var order = await _orderRepository.GetByIdAsync(orderId);
-            if (order == null || order.BuyerId != userId) throw new NotFoundException();
+            if (order == null || order.Buyer.Id != userId) throw new NotFoundException();
 
             return new DeliveryInfoDto
             {
-                DeliveryAddress = order.DeliveryAddress.ToDto(),
+                DeliveryAddress = order.Buyer.DeliveryAddress.ToDto(),
                 DeliveryMethod = order.DeliveryMethod.ToDto()
             };
         }

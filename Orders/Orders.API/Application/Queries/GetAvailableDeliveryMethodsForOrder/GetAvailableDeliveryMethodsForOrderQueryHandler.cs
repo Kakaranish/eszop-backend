@@ -42,7 +42,7 @@ namespace Orders.API.Application.Queries.GetAvailableDeliveryMethodsForOrder
             var orderId = Guid.Parse(request.OrderId);
 
             var order = await _orderRepository.GetByIdAsync(orderId);
-            if (order.BuyerId != userId) throw new NotFoundException();
+            if (order.Buyer.Id != userId) throw new NotFoundException();
 
             var offerIds = order.OrderItems.Select(orderItem => orderItem.OfferDetails.Id);
 

@@ -64,7 +64,7 @@ namespace Orders.API.Application.IntegrationEvents
             {
                 var notification = new NotificationIntegrationEvent
                 {
-                    UserId = orderToCancel.BuyerId,
+                    UserId = orderToCancel.Buyer.Id,
                     Code = NotificationCodes.OfferBecameUnavailable,
                     Message = "Offer became unavailable",
                     Metadata = new Dictionary<string, string>

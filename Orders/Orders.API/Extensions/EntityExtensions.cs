@@ -34,11 +34,11 @@ namespace Orders.API.Extensions
                 Id = order.Id,
                 CreatedAt = order.CreatedAt,
                 SellerId = order.SellerId,
-                BuyerId = order.BuyerId,
+                BuyerId = order.Buyer.Id,
                 OrderState = order.OrderState.Name,
                 TotalPrice = order.OrderItems.Sum(x => x.TotalPrice),
                 OrderItems = order.OrderItems.Select(x => x.ToDto()).ToList(),
-                DeliveryAddress = order.DeliveryAddress.ToDto(),
+                DeliveryAddress = order.Buyer.DeliveryAddress.ToDto(),
                 DeliveryMethod = order.DeliveryMethod.ToDto()
             };
         }

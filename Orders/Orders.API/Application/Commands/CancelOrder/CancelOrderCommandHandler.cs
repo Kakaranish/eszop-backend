@@ -33,7 +33,7 @@ namespace Orders.API.Application.Commands.CancelOrder
             var userId = userClaims.Id;
             var userRole = userClaims.Role;
 
-            if (userId == order.BuyerId) order.SetCancelled(OrderState.CancelledByBuyer);
+            if (userId == order.Buyer.Id) order.SetCancelled(OrderState.CancelledByBuyer);
             else if (userId == order.SellerId) order.SetCancelled(OrderState.CancelledBySeller);
             else if (userRole.ToUpperInvariant() == "ADMIN") order.SetCancelled(OrderState.Cancelled);
             else throw new NotFoundException();

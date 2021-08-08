@@ -43,7 +43,7 @@ namespace Orders.Infrastructure.DataAccess.Repositories
         {
             var orders = _appDbContext.Orders
                 .AsQueryable()
-                .Where(x => x.BuyerId == userId)
+                .Where(x => x.Buyer.Id == userId)
                 .OrderByDescending(x => x.CreatedAt)
                 .Include(x => x.OrderItems);
             var pageDetails = new PageCriteria(filter.PageIndex, filter.PageSize);

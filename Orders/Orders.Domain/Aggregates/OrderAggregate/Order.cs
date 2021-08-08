@@ -19,11 +19,10 @@ namespace Orders.Domain.Aggregates.OrderAggregate
         public DateTime UpdatedAt { get; private set; }
 
         private List<OrderItem> _orderItems;
-        public Guid BuyerId { get; private set; }
         public Guid SellerId { get; private set; }
+        public Buyer Buyer { get; private set; }
         public OrderState OrderState { get; private set; }
         public virtual IReadOnlyCollection<OrderItem> OrderItems => _orderItems ?? new List<OrderItem>();
-        public virtual DeliveryAddress DeliveryAddress { get; private set; }
         public virtual DeliveryMethod DeliveryMethod { get; private set; }
 
         [NotMapped] public bool IsCancelled => OrderState?.IsCancelled() ?? false;
@@ -34,11 +33,11 @@ namespace Orders.Domain.Aggregates.OrderAggregate
         {
         }
 
-        public Order(Guid buyerId, Guid sellerId, IList<OrderItem> orderItems)
+        public Order(Buyer buyer, Guid sellerId, IList<OrderItem> orderItems)
         {
             OrderState = OrderState.Started;
 
-            SetBuyerId(buyerId);
+            SetBuyer(buyer);
             SetSellerId(sellerId);
             SetOrderItems(orderItems);
 
@@ -46,13 +45,18 @@ namespace Orders.Domain.Aggregates.OrderAggregate
             UpdatedAt = CreatedAt;
         }
 
-        private void SetBuyerId(Guid buyerId)
+        private void SetBuyer(Buyer buyer)
         {
-            ValidateBuyerId(buyerId);
-
-            BuyerId = buyerId;
+            ValidateBuyer(buyer);
+            Buyer = buyer;
         }
 
+        private void ValidateBuyer(Buyer buyer)
+        {
+            if (buyer == null)
+                throw new OrdersDomainException($"'{nameof(buyer)}' cannot be null");
+        }
+        
         private void SetSellerId(Guid sellerId)
         {
             ValidateSellerId(sellerId);
@@ -79,7 +83,7 @@ namespace Orders.Domain.Aggregates.OrderAggregate
             var domainEvent = new OrderCancelledDomainEvent
             {
                 OrderId = Id,
-                BuyerId = BuyerId,
+                BuyerId = Buyer.Id,
                 SellerId = SellerId,
                 PreviousState = previousState,
                 CurrentState = orderState,
@@ -102,18 +106,10 @@ namespace Orders.Domain.Aggregates.OrderAggregate
             var domainEvent = new OrderConfirmedDomainEvent
             {
                 OrderId = Id,
-                BuyerId = BuyerId,
+                BuyerId = Buyer.Id,
                 SellerId = SellerId
             };
             AddDomainEvent(domainEvent);
-        }
-
-        public void SetDeliveryAddress(DeliveryAddress deliveryAddress)
-        {
-            ValidateDeliveryAddress(deliveryAddress);
-
-            DeliveryAddress = deliveryAddress;
-            UpdatedAt = DateTime.UtcNow;
         }
 
         public void SetDeliveryMethod(DeliveryMethod deliveryMethod)
@@ -138,7 +134,7 @@ namespace Orders.Domain.Aggregates.OrderAggregate
             var domainEvent = new OrderStatusChangedDomainEvent
             {
                 OrderId = Id,
-                BuyerId = BuyerId,
+                BuyerId = Buyer.Id,
                 PreviousState = previousOrderState,
                 CurrentState = orderState
             };
@@ -153,13 +149,6 @@ namespace Orders.Domain.Aggregates.OrderAggregate
         }
 
         #region Validation
-
-        private static void ValidateBuyerId(Guid buyerId)
-        {
-            var validator = new IdValidator();
-            var result = validator.Validate(buyerId);
-            if (!result.IsValid) throw new OrdersDomainException(nameof(buyerId));
-        }
 
         private static void ValidateSellerId(Guid sellerId)
         {
@@ -193,14 +182,8 @@ namespace Orders.Domain.Aggregates.OrderAggregate
                 throw new OrdersDomainException("Invalid state transition");
             if (DeliveryMethod == null)
                 throw new OrdersDomainException($"Order must have {nameof(DeliveryMethod)}");
-            if (DeliveryAddress == null)
+            if (Buyer.DeliveryAddress == null)
                 throw new OrdersDomainException($"Order must have {nameof(DeliveryAddress)}");
-        }
-
-        private static void ValidateDeliveryAddress(DeliveryAddress deliveryAddress)
-        {
-            if (deliveryAddress == null)
-                throw new OrdersDomainException($"'{nameof(deliveryAddress)}' cannot be null");
         }
 
         private static void ValidateDeliveryMethod(DeliveryMethod deliveryMethod)

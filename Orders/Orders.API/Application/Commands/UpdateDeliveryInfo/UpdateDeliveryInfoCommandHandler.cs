@@ -42,11 +42,11 @@ namespace Orders.API.Application.Commands.UpdateDeliveryInfo
             var orderId = Guid.Parse(request.OrderId);
 
             var order = await _orderRepository.GetByIdAsync(orderId);
-            if (order == null || order.BuyerId != userId) throw new NotFoundException();
+            if (order == null || order.Buyer.Id != userId) throw new NotFoundException();
 
             var deliveryAddress = new DeliveryAddress(request.FirstName, request.LastName, request.PhoneNumber,
             request.Country, request.City, request.ZipCode, request.Street);
-            order.SetDeliveryAddress(deliveryAddress);
+            order.Buyer.SetDeliveryAddress(deliveryAddress);
 
             var offerIds = order.OrderItems.Select(orderItem => orderItem.OfferDetails.Id);
 

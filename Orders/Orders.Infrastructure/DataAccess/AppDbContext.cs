@@ -29,6 +29,12 @@ namespace Orders.Infrastructure.DataAccess
         {
             modelBuilder.Entity<Order>()
                 .HasKey(x => x.Id);
+            
+            modelBuilder.Entity<Order>()
+                .OwnsOne(x => x.Buyer);
+            modelBuilder.Entity<DeliveryAddress>()
+                .HasKey(x => x.Id);
+
             modelBuilder.Entity<Order>()
                 .Property(x => x.OrderState)
                 .HasConversion(x => x.Name, x => OrderState.Parse(x))
@@ -41,9 +47,6 @@ namespace Orders.Infrastructure.DataAccess
                     x => x.OfferDetails,
                     x => x.Property(y => y.PricePerItem).HasColumnType("decimal(18,4)")
                 );
-
-            modelBuilder.Entity<DeliveryAddress>()
-                .HasKey(x => x.Id);
 
             modelBuilder.Entity<DeliveryMethod>()
                 .HasKey(x => x.Id);

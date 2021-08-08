@@ -42,7 +42,7 @@ namespace Orders.API.Application.Commands.GetBankTransferDetails
 
             var userClaims = _httpContext.User.Claims.ToTokenPayload().UserClaims;
             if (userClaims.Role.ToUpperInvariant() != "ADMIN" &&
-                userClaims.Id != order.BuyerId && userClaims.Id != order.SellerId)
+                userClaims.Id != order.Buyer.Id && userClaims.Id != order.SellerId)
             {
                 throw new NotFoundException("Order");
             }

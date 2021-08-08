@@ -39,7 +39,9 @@ namespace Orders.Infrastructure.Grpc
                 var orderItem = new OrderItem(offerDetails, cartItem.Quantity);
                 orderItems.Add(orderItem);
             }
-            var order = new Order(request.UserId, request.SellerId, orderItems);
+
+            var buyer = new Buyer(request.UserId);
+            var order = new Order(buyer, request.SellerId, orderItems);
 
             _orderRepository.Add(order);
             await _orderRepository.UnitOfWork.SaveChangesAndDispatchDomainEventsAsync();
@@ -67,7 +69,7 @@ namespace Orders.Infrastructure.Grpc
                 Metadata = new Dictionary<string, string>
                 {
                     {"OrderId",  order.Id.ToString()},
-                    {"BuyerId", order.BuyerId.ToString() },
+                    {"BuyerId", order.Buyer.Id.ToString() },
                     {"OfferIds", string.Join(",", request.CartItems.Select(x => x.OfferId)) }
                 }
 
