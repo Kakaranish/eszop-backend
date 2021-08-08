@@ -30,13 +30,13 @@ namespace Orders.Infrastructure.DataAccess.Repositories
         public async Task<IList<Order>> GetAllStartedOrdersByOfferId(Guid offerId)
         {
             return await _appDbContext.Orders.Where(x =>
-                    x.OrderState == OrderState.Started && x.OrderItems.Any(order => order.OfferId == offerId))
+                    x.OrderState == OrderState.Started && x.OrderItems.Any(order => order.OfferDetails.Id == offerId))
                 .ToListAsync();
         }
 
         public async Task<bool> GetOfferHasAnyOrders(Guid offerId)
         {
-            return await _appDbContext.OrderItems.AnyAsync(x => x.OfferId == offerId);
+            return await _appDbContext.OrderItems.AnyAsync(x => x.OfferDetails.Id == offerId);
         }
 
         public async Task<Pagination<Order>> GetAllByBuyerIdAsync(Guid userId, BasicPaginationFilter filter)

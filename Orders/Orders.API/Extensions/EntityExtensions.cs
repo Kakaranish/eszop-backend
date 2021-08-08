@@ -50,11 +50,11 @@ namespace Orders.API.Extensions
             return new OrderItemDto
             {
                 Id = orderItem.Id,
-                OfferId = orderItem.OfferId,
-                OfferName = orderItem.OfferName,
-                PricePerItem = orderItem.PricePerItem,
                 Quantity = orderItem.Quantity,
-                ImageUri = orderItem.ImageUri
+                OfferId = orderItem.OfferDetails.Id,
+                OfferName = orderItem.OfferDetails.Name,
+                PricePerItem = orderItem.OfferDetails.PricePerItem,
+                ImageUri = orderItem.OfferDetails.ImageUri
             };
         }
 

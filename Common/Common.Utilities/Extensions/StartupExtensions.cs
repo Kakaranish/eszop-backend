@@ -1,12 +1,12 @@
-﻿using System;
-using System.Linq;
-using Common.Domain.EventDispatching;
+﻿using Common.Domain.EventDispatching;
 using Common.Utilities.ErrorHandling;
 using Common.Utilities.Types;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Linq;
 
 namespace Common.Utilities.Extensions
 {

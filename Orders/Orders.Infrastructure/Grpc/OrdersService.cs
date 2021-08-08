@@ -32,8 +32,13 @@ namespace Orders.Infrastructure.Grpc
 
         public async Task<CreateOrderResponse> CreateOrder(CreateOrderRequest request)
         {
-            var orderItems = request.CartItems.Select(item => new OrderItem(
-                item.OfferId, item.OfferName, item.Quantity, item.PricePerItem, item.ImageUri)).ToList();
+            var orderItems = new List<OrderItem>();
+            foreach (var cartItem in request.CartItems)
+            {
+                var offerDetails = new OfferDetails(cartItem.OfferId, cartItem.OfferName, cartItem.PricePerItem, cartItem.ImageUri);
+                var orderItem = new OrderItem(offerDetails, cartItem.Quantity);
+                orderItems.Add(orderItem);
+            }
             var order = new Order(request.UserId, request.SellerId, orderItems);
 
             _orderRepository.Add(order);
@@ -44,7 +49,7 @@ namespace Orders.Infrastructure.Grpc
                 OrderId = order.Id,
                 OrderItems = order.OrderItems.Select(orderItem => new OrderItemDto
                 {
-                    OfferId = orderItem.OfferId,
+                    OfferId = orderItem.OfferDetails.Id,
                     Quantity = orderItem.Quantity
                 }).ToList()
             };

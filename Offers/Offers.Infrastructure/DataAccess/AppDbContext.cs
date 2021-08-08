@@ -16,6 +16,7 @@ namespace Offers.Infrastructure.DataAccess
     public class AppDbContext : DbContext, IUnitOfWork
     {
         private readonly IEventDispatcher _eventDispatcher;
+
         public DbSet<Offer> Offers { get; private set; }
         public DbSet<Category> Categories { get; private set; }
         public DbSet<PredefinedDeliveryMethod> PredefinedDeliveryMethods { get; private set; }

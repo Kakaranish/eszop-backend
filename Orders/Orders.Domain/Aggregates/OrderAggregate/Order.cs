@@ -85,7 +85,7 @@ namespace Orders.Domain.Aggregates.OrderAggregate
                 CurrentState = orderState,
                 OrderItems = OrderItems.Select(orderItem => new OrderItemDto
                 {
-                    OfferId = orderItem.OfferId,
+                    OfferId = orderItem.OfferDetails.Id,
                     Quantity = orderItem.Quantity
                 }).ToList()
             };
@@ -170,9 +170,9 @@ namespace Orders.Domain.Aggregates.OrderAggregate
 
         private static void ValidateOrderItems(IList<OrderItem> orderItems)
         {
-            var hashSetCount = orderItems.Select(x => x.OfferId).ToHashSet().Count;
+            var hashSetCount = orderItems.Select(x => x.OfferDetails.Id).ToHashSet().Count;
             if (hashSetCount != orderItems.Count)
-                throw new OrdersDomainException($"Two order items cannot have the same {nameof(OrderItem.OfferId)}");
+                throw new OrdersDomainException($"Two order items cannot have the same {nameof(OrderItem.OfferDetails.Id)}");
         }
 
         private void ValidateCancellation(OrderState orderState)

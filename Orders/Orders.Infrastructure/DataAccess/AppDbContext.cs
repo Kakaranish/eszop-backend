@@ -37,8 +37,10 @@ namespace Orders.Infrastructure.DataAccess
             modelBuilder.Entity<OrderItem>()
                 .HasKey(x => x.Id);
             modelBuilder.Entity<OrderItem>()
-                .Property(x => x.PricePerItem)
-                .HasColumnType("decimal(18,4)");
+                .OwnsOne(
+                    x => x.OfferDetails,
+                    x => x.Property(y => y.PricePerItem).HasColumnType("decimal(18,4)")
+                );
 
             modelBuilder.Entity<DeliveryAddress>()
                 .HasKey(x => x.Id);

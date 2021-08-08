@@ -44,7 +44,7 @@ namespace Orders.API.Application.Queries.GetAvailableDeliveryMethodsForOrder
             var order = await _orderRepository.GetByIdAsync(orderId);
             if (order.BuyerId != userId) throw new NotFoundException();
 
-            var offerIds = order.OrderItems.Select(orderItem => orderItem.OfferId);
+            var offerIds = order.OrderItems.Select(orderItem => orderItem.OfferDetails.Id);
 
             var offersServiceClient = _offersServiceClientFactory.Create(_endpointsConfig.Offers.Grpc.ToString());
             var grpcRequest = new GetDeliveryMethodsForOffersRequest { OfferIds = offerIds };
